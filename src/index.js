@@ -1,37 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SearchBtn from './components/Helper/SearchBtn';
+import {
+  BrowserRouter as Router
+} from "react-router-dom";
 import './index.css';
-// import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import Dashboard from './Dashboard';
-import Appbar from './views/Appbar';
-// import Appbar from './Appbar';
-// import Library from './Library';
-// import Folders from './Folders';
-// import Assignment from './Assignment';
-// import CreateAssginment from './CreateAssginment';
-// import CreateAssgin from './CreateAssgin';
-// import BriefInfo from './BriefInfo';
-// import RandQuizOptions from './RandQuizOptions';
-// import Profile from './Profile';
-// import TransferQuizList from './TransferQuizList';
+import HeadBar from './views/Common/HeadBar';
 ReactDOM.render(
   <React.StrictMode>
-    <Appbar/>
-    {/* <SearchBtn/> */}
-    {/* <App /> */}
-    {/* <Appbar/> */}
-    {/* <Dashboard/> */}
-    {/* <Library/> */}
-    {/* <Profile/> */}
-    {/* <BriefInfo/> */}
-    {/* <RandQuizOptions/> */}
-    {/* <TransferQuizList/> */}
-    {/* <Folders/> */}
-    {/* <Assignment/> */}
-    {/* <CreateAssgin/> */}
-    {/* <CreateAssginment/> */}
+    <Router>
+
+      <HeadBar />
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
