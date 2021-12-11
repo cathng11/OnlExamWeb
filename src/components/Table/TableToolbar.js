@@ -16,8 +16,7 @@ import ModalDialog from './../Dialog/ModalDialog';
 
 export default function TableToolbar(props) {
     let history = useHistory();
-    console.log(props)
-    const pageview = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignments' }
+    const pageview = { 'Result': 'result', 'Student': 'student', 'Assignment': 'assignments' }
     const match = matchPath(history.location.pathname, {
         path: `/classes/:id/${pageview[props.view]}`,
         exact: true,
@@ -26,15 +25,15 @@ export default function TableToolbar(props) {
     const { numSelected, view } = props;
     // let { id_class } = useParams();
     const [open, setOpen] = React.useState({
-        pageName: 'Students', isOpen: false, id: ''
+        pageName: 'Student', isOpen: false, id: ''
     });
     function handleClickAdd() {
         if (view === 'Assignment') {
             history.push(`/create-assignment?inClass=${match.params.id}`);
         }
-        else if (view === 'Classes') {
+        else if (view === 'Student') {
             // history.push(`/add`);
-            setOpen({ pageName: 'Students', isOpen: true, id: '' });
+            setOpen({ pageName: 'Student', isOpen: true, id: '' });
         }
         else if (view === 'Result') {
             // history.push(`/${data.id_class}/grade`);
@@ -44,7 +43,7 @@ export default function TableToolbar(props) {
         if (view === 'Assignment') {
             history.push(`/assignment/${props.selected}/edit`);
         }
-        else if (view === 'Classes') {
+        else if (view === 'Student') {
             history.push(`/`);
         }
         else if (view === 'Result') {
@@ -52,7 +51,7 @@ export default function TableToolbar(props) {
         }
     }
     const handleClose = (value) => {
-        setOpen({ pageName: 'Students', isOpen: value, id: '' });
+        setOpen({ pageName: 'Student', isOpen: value, id: '' });
     };
     return (
         <Toolbar
@@ -81,7 +80,7 @@ export default function TableToolbar(props) {
                     id="tableTitle"
                     component="div"
                 >
-                    <SearchBtn />
+                    <SearchBtn onClick={()=>alert('hi')}/>
                 </Typography>
             )}
             {numSelected > 0 ? (
@@ -92,9 +91,12 @@ export default function TableToolbar(props) {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Edit">
-                        <IconButton disabled={numSelected > 1 ? true : false} onClick={handleClickEdit}>
-                            <EditIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton disabled={numSelected > 1 ? true : false} onClick={handleClickEdit}>
+                                <EditIcon />
+                            </IconButton>
+                        </div>
+
                     </Tooltip>
                 </>
 
@@ -115,7 +117,7 @@ export default function TableToolbar(props) {
                             <FileDownloadIcon />
                         </IconButton>
                     </Tooltip> */}
-                    {props.view==='Result'?<></>:<Button color="inherit" startIcon={<AddIcon />} onClick={handleClickAdd}>ADD</Button>}
+                    {props.view === 'Result' ? <></> : <Button color="inherit" startIcon={<AddIcon />} onClick={handleClickAdd}>ADD</Button>}
                     {/* <Button color="inherit" startIcon={<FileUploadIcon />}>IMPORT</Button>
                     <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
                 </>

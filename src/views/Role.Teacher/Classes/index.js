@@ -1,11 +1,10 @@
 import { Container, CssBaseline, Grid, styled } from '@mui/material';
 import React, { memo } from 'react';
-import ClassFolder from '../../../components/Card/ClassFolder';
 import HeaderPage from '../../../components/HeaderPage';
-import data_class from '../../../data/data_class.json';
-// import ClassRoom from '../ClassRoom';
+import Folders from './Folders/index';
+import ClassService from './../../../services/class.service';
+import LoadingFolder from '../../../components/Skeleton/LoadingFolder';
 
-const data = data_class;
 const WrapperContainer = styled(Container)(({ theme }) => ({
     background: 'white',
     marginTop: '50px',
@@ -17,8 +16,8 @@ const FolderGridContainer = styled(Grid)(({ theme }) => ({
     justifyContent: 'space-around',
     alignItems: 'flex-start',
 }));
-function Classes({children}) {
-    const [loading, setLoading] = React.useState(false)
+function Classes({ children }) {
+    const [data, setData] = React.useState(null)
     const [dialog, setDialog] = React.useState({
         pageName: 'Classes',
         isOpen: false,
@@ -27,12 +26,23 @@ function Classes({children}) {
     const handleEdit = (id) => {
         setDialog({ pageName: 'Classes', isOpen: true, id: id })
     }
+    React.useEffect(() => {
+        let mounted = true;
+        let classService = ClassService.getInstance()
+        classService.getList()
+            .then(items => {
+                if (mounted) {
+                    setData(items);
+                }
+            })
+        return () => { mounted = false };
+    }, [])
     return (
         <WrapperContainer maxWidth="full">
             <CssBaseline />
             <HeaderPage dialog={dialog} />
             <FolderGridContainer container >
-                <ClassFolder title={"Students"} data={data} view={"Classes"} edit={handleEdit} loading={loading}/>
+                {data?<Folders data={data} view={"Classes"} edit={handleEdit}/>:<LoadingFolder view={'Classes'}/>}
             </FolderGridContainer>
             {/* <ClassRoom/> */}
         </ WrapperContainer>

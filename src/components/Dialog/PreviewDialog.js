@@ -50,7 +50,6 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function PreviewDialog({ open, handleClose }) {
-    // console.log(open)
     const Close = () => {
         handleClose(false)
     };

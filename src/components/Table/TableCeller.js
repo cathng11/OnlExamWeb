@@ -7,7 +7,7 @@ import React from 'react';
 import { matchPath } from 'react-router';
 import { useHistory } from "react-router-dom";
 
-export default function TableCeller({view, role, row, setSelectedRow, labelId, isItemSelected,preview}) {
+export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected, preview }) {
     // const { view, role, row, setSelectedRow, labelId, isItemSelected } = props;
     // const [selected, setSelected] = React.useState(selectedRow);
     const statusColor = {
@@ -29,39 +29,36 @@ export default function TableCeller({view, role, row, setSelectedRow, labelId, i
         setSelectedRow(event, id);
     };
     let history = useHistory();
-    // let { id_class } = useParams();
-    // console.log(id)
-    const pageview={'Result':'result','Classes':'classes','Assignment':'assignment'}
+
+    const pageview = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment' }
     const match = matchPath(history.location.pathname, {
         path: `/classes/:id/${pageview[view]}`,
         exact: true,
         strict: false
-      });
-    function handleClickGrade(){
+    });
+    function handleClickGrade() {
         history.push(`/grade-assignment?inClass=${match.params.id}&id=${row.id}`);
     }
-    function handleSAClick(){
-        if(row.status==='Active')
-        {
+    function handleSAClick() {
+        if (row.status === 'Active') {
             history.push(`/idStudent/take-assignment?id=${row.id}`);
         }
-        else if(row.status==='Completed')
-        {
+        else if (row.status === 'Completed') {
 
         }
-        
+
     }
-    const Preview=()=>{
+    const Preview = () => {
         preview(row.id)
     }
     if (role === 'Teacher') {
-        if (view === 'Classes') {
+        if (view === 'Student') {
             return (
                 <>
                     <TableCell padding="normal">
                         <Checkbox
                             color="primary"
-                            onClick={(event) => handleClick(event, row.id)}
+                            onClick={(event) => handleClick(event, row.UserID)}
                             checked={isItemSelected}
                             inputProps={{
                                 'aria-labelledby': labelId,
@@ -69,19 +66,20 @@ export default function TableCeller({view, role, row, setSelectedRow, labelId, i
                         />
                     </TableCell>
                     <TableCell padding="none" align="left">
-                        <Avatar alt={row.name} src={row.avatar} />
+                        <Avatar alt={row.Username} src={row.Avatar} />
                     </TableCell>
-                    <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="left">{row.firstname}</TableCell>
-                    <TableCell align="left">{row.lastname}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.phone}</TableCell>
-                    <TableCell align="left">{row.gender}</TableCell>
-                    <TableCell align="left">{row.verified}</TableCell>
+                    <TableCell align="left">{row.UserID}</TableCell>
+                    <TableCell align="left">{row.Username}</TableCell>
+                    <TableCell align="left">{row.Firstname}</TableCell>
+                    <TableCell align="left">{row.Lastname}</TableCell>
+                    <TableCell align="left">{row.Email}</TableCell>
                     <TableCell align="left"><Tooltip title="Detail">
-                        <IconButton>
-                            <ArrowForwardIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton>
+                                <ArrowForwardIcon />
+                            </IconButton>
+                        </div>
+
                     </Tooltip></TableCell>
                 </>
 
@@ -95,9 +93,9 @@ export default function TableCeller({view, role, row, setSelectedRow, labelId, i
                             color="primary"
                             onClick={(event) => handleClick(event, row.id)}
                             checked={isItemSelected}
-                            inputProps={{
-                                'aria-labelledby': labelId,
-                            }}
+                        // inputProps={{
+                        //     'aria-labelledby': labelId,
+                        // }}
                         />
                     </TableCell>
                     <TableCell padding="none" align="left">
@@ -113,41 +111,53 @@ export default function TableCeller({view, role, row, setSelectedRow, labelId, i
                         : <TableCell align="left"><Chip label="Pending" color="warning" /></TableCell>}
                     <TableCell align="left">
                         <Tooltip title="Grade">
-                        <IconButton onClick={handleClickGrade}>
-                            <EditIcon />
-                        </IconButton>
-                    </Tooltip></TableCell>
+                            <div>
+                                <IconButton onClick={handleClickGrade} >
+                                    <EditIcon />
+                                </IconButton>
+                            </div>
+                        </Tooltip></TableCell>
                 </>
             )
         }
         else if (view === 'Assignment') {
-
+            let timeBegin = new Date(row.TimeBegin)
+            let timeEnd = new Date(row.TimeEnd)
+            let today = new Date()
+            let status = '';
+            if (timeEnd < today) status = 'Completed'
+            else if (timeEnd > today) status = 'Active'
+            else if (today < timeBegin) status = 'Inactive'
             return (
                 <>
                     <TableCell padding="normal">
                         <Checkbox
                             color="primary"
-                            onClick={(event) => handleClick(event, row.id)}
+                            onClick={(event) => handleClick(event, row.ExamID)}
                             checked={isItemSelected}
                             inputProps={{
                                 'aria-labelledby': labelId,
                             }}
                         />
                     </TableCell>
-                    <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.subject}</TableCell>
-                    <TableCell align="left">{row.totalQuiz}</TableCell>
-                    <TableCell align="left">{row.createdOn}</TableCell>
+                    <TableCell align="left">{row.ExamName}</TableCell>
+                    <TableCell align="left">{row.TotalQuestions}</TableCell>
+                    <TableCell align="left">{row.Duration}</TableCell>
+                    <TableCell align="left">{row.TimeBegin}</TableCell>
+                    <TableCell align="left">{row.TimeEnd}</TableCell>
+
+
                     <TableCell align="left">
-                        <Chip label={row.status} color={statusColor[row.status]} />
+                        <Chip label={status} color={statusColor[status]} />
                     </TableCell>
                     <TableCell align="left"><Tooltip title="Detail">
-                        <IconButton onClick={Preview}>
-                            <ArrowForwardIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton onClick={Preview}>
+                                <ArrowForwardIcon />
+                            </IconButton>
+                        </div>
                     </Tooltip></TableCell>
-                    
+
                 </>
             )
         }
@@ -182,9 +192,12 @@ export default function TableCeller({view, role, row, setSelectedRow, labelId, i
                         {row.status === 'Accepted' ? row.grade : <Chip label="Pending" color="warning" />}
                     </TableCell>
                     <TableCell align="left"><Tooltip title="Detail">
-                        <IconButton>
-                            <ArrowForwardIcon />
-                        </IconButton>
+                        <div>
+                            <IconButton>
+                                <ArrowForwardIcon />
+                            </IconButton>
+                        </div>
+
                     </Tooltip></TableCell>
 
                 </>

@@ -16,6 +16,7 @@ import ListResultInClass from '../views/Role.Teacher/Classes/Results/ListResultI
 import ListAssignmentsInClass from './../views/Role.Teacher/Classes/Assignments/ListAssignmentsInClass';
 import Roles from './Roles';
 import ClassRoom from './../views/Role.Teacher/Classes/ClassRoom';
+import Performance from '../views/Role.Teacher/Classes/Performance';
 
 const PrivateRoutesConfig = [
 
@@ -34,7 +35,7 @@ const PrivateRoutesConfig = [
     },
     {
         path: '/profile',
-        exact: false,
+        exact: true,
         title: 'My Profile',
         type: 'MenuLink',
         component: MyProfile
@@ -88,7 +89,7 @@ const PrivateRoutesConfig = [
         ],
         children: [
             {
-                component: ListStudents,
+                component: Performance,
                 exact: true,
                 path: '',
                 title: 'Performance',

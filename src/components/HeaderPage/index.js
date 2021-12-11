@@ -9,11 +9,9 @@ const HeadGridContainer = styled(Grid)(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     background: 'white',
-    paddingLeft: '50px',
-    paddingRight: '50px',
+    paddingLeft: '60px',
+    paddingRight: '60px',
 }));
-
-
 const SearchBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',

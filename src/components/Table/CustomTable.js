@@ -38,7 +38,14 @@ export default function CustomTable({ rows, view, headCells, role }) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.id);
+            
+            const newSelecteds = rows.map((n) => {
+                let id=-1;
+                if(view === 'Assignment') id=n.ExamID
+                else if(view==='Student') id=n.UserID
+                else if (view==='Result') id=n.id
+                return id
+            });
             setSelected(newSelecteds);
             return;
         }
@@ -62,7 +69,6 @@ export default function CustomTable({ rows, view, headCells, role }) {
             );
         }
         setSelected(newSelected);
-        // console.log(selected)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -121,8 +127,13 @@ export default function CustomTable({ rows, view, headCells, role }) {
                         <TableBody>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy))
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    let id=-1;
+                                    if(view === 'Assignment') id=row.ExamID
+                                    else if(view==='Student') id=row.UserID
+                                    else if (view==='Result') id=row.id
+                                    const isItemSelected = isSelected(id);
+
+                                    const labelId = `enhanced-table-checkbox-${id}`;
 
                                     return (
                                         <TableRow
@@ -131,12 +142,12 @@ export default function CustomTable({ rows, view, headCells, role }) {
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.id}
+                                            key={id}
                                             selected={isItemSelected}
                                         >
 
                                             <TableCeller
-                                                key={index}
+                                                key={id}
                                                 isItemSelected={isItemSelected}
                                                 labelId={labelId}
                                                 row={row}

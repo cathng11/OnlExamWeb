@@ -22,7 +22,6 @@ export default function RowTable({ handleClickItem, row, isItemSelected, labelId
     const handleClick = (event, id) => {
         // setSelected(id);
         handleClickItem(id);
-        console.log(id)
     };
     return (
         <React.Fragment>

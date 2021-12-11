@@ -1,26 +1,14 @@
 import { Container } from '@mui/material';
 import * as React from 'react';
-import { useHistory } from "react-router-dom";
 import LoadingTable from '../../../../../components/Skeleton/LoadingTable';
 import CustomTable from '../../../../../components/Table/CustomTable';
-import data from '../../../../../data/Data_CA.json';
+import { matchPath, useHistory } from "react-router-dom";
+import AssignmentService from '../../../../../services/assignment.service';
 
-const rows = data
 const headCells = [
-    {
-        id: 'id',
-        label: 'ID',
-        disablePadding: false,
-    },
-
     {
         id: 'name',
         label: 'Name',
-        disablePadding: false,
-    },
-    {
-        id: 'subject',
-        label: 'Subject',
         disablePadding: false,
     },
     {
@@ -29,8 +17,18 @@ const headCells = [
         disablePadding: false,
     },
     {
-        id: 'createdOn',
-        label: 'Created On',
+        id: 'duration',
+        label: 'Duration',
+        disablePadding: false,
+    },
+    {
+        id: 'timeBegin',
+        label: 'Time Begin',
+        disablePadding: true,
+    },
+    {
+        id: 'timeEnd',
+        label: 'Time End',
         disablePadding: true,
     },
     {
@@ -46,19 +44,35 @@ const headCells = [
 
 ];
 export default function ListAssignmentsInClass() {
-    // let { id_class } = useParams();
-    console.log("stu", useHistory())
-    const [loading, setLoading] = React.useState(false)
-    if (loading) {
+    let history = useHistory();
+    const [data, setData] = React.useState(null)
+    const match = matchPath(history.location.pathname, {
+        path: `/classes/:id/assignments`,
+        exact: true,
+        strict: false
+    });
+    React.useEffect(() => {
+        let mounted = true;
+        let assignmentService = AssignmentService.getInstance()
+        assignmentService.getList()
+            .then(items => {
+                if (mounted) {
+                    setData(items);
+                }
+            })
+        return () => { mounted = false };
+    }, [])
+    if (data) {
         return (
-        <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
-            <LoadingTable />
-        </Container>)
+            <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
+                <CustomTable rows={data} headCells={headCells} view={'Assignment'} role={'Teacher'} />
+            </Container>
+        )
     }
     else {
         return (
             <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
-                <CustomTable rows={rows} headCells={headCells} view={'Assignment'} role={'Teacher'} />
+                <LoadingTable />
             </Container>
         )
     }

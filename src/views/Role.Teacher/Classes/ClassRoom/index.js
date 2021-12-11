@@ -1,26 +1,47 @@
 import { Avatar, Container, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import {Tabs,styled} from '@mui/material';
 import * as React from 'react';
 import { useHistory, useParams } from "react-router-dom";
 import MapAllowedRoutes from '../../../../routes/MapAllowedRoutes';
 import { getAllowedRoutes } from '../../../../utils/index';
+const StyledTabs = styled((props) => (
+    <Tabs
+      {...props}
+      TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+    />
+  ))({
+    '& .css-19ta96l-MuiButtonBase-root-MuiTab-root': {
+        color: '#3D4E81'
+    },
+    '& .MuiTabs-indicator': {
+      display: 'flex',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    '& .css-19ta96l-MuiButtonBase-root-MuiTab-root.Mui-selected':{
+        color:'#A2DBFA'
+    },
+    '& .MuiTabs-indicatorSpan': {
+      maxWidth: 100,
+      width: '100%',
+      backgroundColor: '#A2DBFA',
+    },
 
+  });
 export default function ClassRoom({ children }) {
 
     let allowedRoutes = [];
     allowedRoutes = getAllowedRoutes(children);
-    // console.log(allowedRoutes)
     const [value, setValue] = React.useState('performance');
     let { id_class } = useParams();
     let history = useHistory();
-
+    let user = JSON.parse(localStorage.getItem('user'))
     const basePath = `/classes/${id_class}`;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        // console.log(newValue);
         if (newValue === 'students') {
             history.replace(`/classes/${id_class}/students`);
         } else if (newValue === 'assignments') {
@@ -39,32 +60,30 @@ export default function ClassRoom({ children }) {
             }
         }}>
             <Grid container >
-                <Grid item sx={{ background: '#262632', borderBottom: '1px solid gray', width: '100%' }} >
+                <Grid item sx={{ background: '#041C32', borderBottom: '1px solid gray', width: '100%' }} >
                     <Container>
                         <Box >
-                            <Grid container sx={{ p: 2,pt:4 }} columnSpacing={2}>
+                            <Grid container sx={{ p: 2, pt: 4 }} columnSpacing={2}>
                                 <Grid item>
                                     <Avatar
-                                        alt="Remy Sharp"
-                                        src="/static/images/avatar/1.jpg"
-                                        sx={{ width: 72, height: 72 }}
+                                        alt={user.Username}
+                                        src={user.Avatar}
+                                        sx={{ width: 72, height: 72,border:'1px solid black',background:'#47597E' }}
                                     />
                                 </Grid>
                                 <Grid item>
                                     <Typography variant="h4" gutterBottom component="div" color="white">
-                                        cathng11
+                                        {user.Username}
                                     </Typography>
                                     <Typography variant="h6" gutterBottom component="div" color="white">
-                                        Ha Vinh Nguyen
+                                        {user.Firstname} {user.Lastname}
                                     </Typography>
                                 </Grid>
                             </Grid>
                         </Box>
-                        <Tabs
+                        <StyledTabs
                             value={value}
                             onChange={handleChange}
-                            textColor="secondary"
-                            indicatorColor="secondary"
                             aria-label="secondary tabs example"
 
                         >
@@ -75,7 +94,7 @@ export default function ClassRoom({ children }) {
                             {/* {allowedRoutes.map(({ path, title }) =>
                                 <Link key={path} to={`${basePath}${path}`} style={{ marginRight: '10px' }}>{title}</Link>
                             )} */}
-                        </Tabs>
+                        </StyledTabs>
                     </Container>
 
                 </Grid>

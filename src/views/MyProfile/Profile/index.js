@@ -15,13 +15,13 @@ import UserProfile from './Box/BriefInformation';
 import GeneralProfile from './Tab/GeneralInformation';
 import ActivitiesProfile from './Tab/MyActivities';
 import ClassesProfile from './Tab/MyActiveClasses';
-export default function Profile({ data, view }) {
+export default function Profile({ data }) {
     const [value, setValue] = React.useState('general')
     const [isUpdate, setIsUpdate] = React.useState(false)
-    const [visibleBtn, setVisibleBtn] = React.useState(view === "MyProfile" ? true : false)
+    const [visibleBtn, setVisibleBtn] = React.useState(true)
     const handleChange = (event, newValue) => {
         setValue(newValue)
-        if (view === "MyProfile" && newValue === 'general')
+        if (newValue === 'general')
             setVisibleBtn(true);
         else setVisibleBtn(false);
     }
@@ -50,7 +50,7 @@ export default function Profile({ data, view }) {
                     sx={{ background: 'white' }}
                     rowSpacing={{ xs: 4, md: 0, lg: 0 }}
                     columnSpacing={8}>
-                    <Grid item xs={12} md={4} lg={4} sx={{ background: 'white' }}>
+                    <Grid item xs={12} md={12} lg={4} sx={{ background: 'white' }}>
                         <Paper
                             sx={{
                                 borderRadius: '20px',
@@ -67,7 +67,7 @@ export default function Profile({ data, view }) {
                             <UserProfile data={data} />
                         </Paper>
                     </Grid>
-                    <Grid item xs={12} lg={8}>
+                    <Grid item xs={12} md={12} lg={8}>
                         <Paper
                             sx={{
                                 height: '65vh',
@@ -110,7 +110,7 @@ export default function Profile({ data, view }) {
                 <Grid container item xs={12} lg={12} direction="row" sx={{ background: 'white' }} columnSpacing={8}   >
                     <Grid item xs={1} md={4} lg={4} sx={{ background: 'white' }}>
                     </Grid>
-                    <Grid item xs={12} md={8} lg={8} sx={{ background: 'white' }}>
+                    <Grid item xs={12} md={12} lg={8} sx={{ background: 'white' }}>
                         <Paper sx={{
                             height: '15vh',
                             width: '100%',

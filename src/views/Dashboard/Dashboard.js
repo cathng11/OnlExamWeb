@@ -6,13 +6,14 @@ import {
 import {
     Avatar, Box, Container,
     CssBaseline,
-    Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, styled, ToggleButton,
+    Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, styled, ToggleButton, Button,
     ToggleButtonGroup, Typography
 } from '@mui/material'
 import React, { memo, useState } from 'react'
 import Calendar from 'react-calendar'
 import CONST from '../../constants'
 import '../../styles/Calendar.css'
+import Sticker from '../../assets/images/Illustration 1.png'
 
 function generate(element) {
     return [0, 1, 2, 4, 5].map((value) =>
@@ -29,7 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
-    borderRadius: theme.spacing(3),
+    borderRadius: theme.spacing(2),
     color: theme.palette.text.secondary,
 }))
 const UpcomingSchedule = () => {
@@ -57,8 +58,8 @@ const UpcomingSchedule = () => {
                         {value.date}
                     </TimelineOppositeContent>
                     <TimelineSeparator >
-                        <TimelineDot sx={{ background: '#403d39' }} />
-                        {index !== data.length - 1 ? <TimelineConnector sx={{ background: '#403d39' }} /> : <></>}
+                        <TimelineDot sx={{ background: '#3D4E81'}} />
+                        {index !== data.length - 1 ? <TimelineConnector sx={{ background: '#3D4E81' }} /> : <></>}
                     </TimelineSeparator>
                     <TimelineContent>{value.name}</TimelineContent>
                 </TimelineItem>
@@ -85,7 +86,7 @@ const UpcomingSchedule = () => {
 
 function Dashboard(route) {
     const [value, onChange] = useState(new Date())
-    console.log(route)
+    const user = JSON.parse(localStorage.getItem('user'))
     return (
         <Container sx={{ mt: 5, mb: 2 }} maxWidth="full">
             <CssBaseline />
@@ -119,7 +120,7 @@ function Dashboard(route) {
                                 >
                                     <Box>
                                         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                            Good everning, Vinh
+                                            Good evening, {user.Firstname}
                                         </Typography>
                                         <Typography variant="subtitle1">
                                             Here's what's happening in your account today.
@@ -139,6 +140,9 @@ function Dashboard(route) {
                                         color="primary"
                                         fullWidth={true}
                                         size={'small'}
+                                        sx={{
+                                            background: '#ECF674 '
+                                        }}
                                     >
                                         <ToggleButton sx={{ textTransform: 'capitalize', p: 0 }} value={0}>
                                             Week 10
@@ -174,8 +178,9 @@ function Dashboard(route) {
                                             maxHeight: 200,
                                             maxWeight: 240,
                                             overflow: 'hidden',
-                                            background: '#bebbbb',
-                                            boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                                            backdropFilter: 'blur(50px)',
+                                            background:'linear-gradient(to left, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
                                         <UpcomingSchedule />
@@ -187,21 +192,25 @@ function Dashboard(route) {
                                             maxHeight: 200,
                                             maxWeight: 240,
                                             overflow: 'hidden',
-                                            background: '#bebbbb',
-                                            boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                                            backdropFilter: 'blur(50px)',
+                                            background:'linear-gradient(to bottom, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            // boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;',
+                                            // background: 'linear-gradient(to bottom, #799f0c 0%,#799f0c 20%,#ffffff 20%,#ffffff 100%)',
+                                            boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
                                         <UpcomingSchedule />
                                     </Item>
                                 </Grid>
-                                <Grid item xs={12} md={12} lg={4}>
+                                <Grid item xs={12} md={12} lg={4} pr={1}>
                                     <Item
                                         sx={{
                                             maxHeight: 200,
                                             maxWeight: 240,
                                             overflow: 'hidden',
-                                            background: '#bebbbb',
-                                            boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                                            backdropFilter: 'blur(50px)',
+                                            background:'linear-gradient(to right, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
                                         <UpcomingSchedule />
@@ -217,18 +226,22 @@ function Dashboard(route) {
                             lg={3}
                             sx={{
                                 height: '50vh',
-                                p: 1,
+                                pr: 1,
                                 background: 'white',
                             }}
                         >
                             <Item
                                 sx={{
                                     height: '100%',
-                                    backgroundImage: `url(${CONST.URL_DEFAULT_IMAGE})`,
+                                    backgroundColor:'#F0F1F5',
+                                    backdropFilter: 'blur(50px)',
+                                    backgroundImage: `url(${user.Avatar})`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
-                                    boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                                    // boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px #3D4E81'
+
                                 }}
                             ></Item>
                         </Grid>
@@ -239,6 +252,7 @@ function Dashboard(route) {
                         xs={12}
                         rowSpacing={{ xs: 0, md: 0, lg: 0 }}
                         columnSpacing={12}
+                        
                     >
                         <Grid
                             item
@@ -248,6 +262,7 @@ function Dashboard(route) {
                             sx={{
                                 backgroundColor: 'white',
                                 pt: 3,
+                                
                             }}
                         >
                             <Typography
@@ -260,14 +275,16 @@ function Dashboard(route) {
                             </Typography>
                             <Item
                                 sx={{
-                                    background: '#1C1C1C',
-                                    boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
+                                    background: '#041C32',
+                                    backdropFilter: 'blur(50px) ',
+                                    boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)',
                                     // backgroundImage: `url(${logo})`,
                                     // backgroundRepeat: 'no-repeat',
                                     // backgroundSize: 'cover',
                                     // backgroundPosition: 'center',
                                     height: 200,
-                                    color: 'white'
+                                    color: 'white',
+
                                 }}
                             >
                                 <Calendar onChange={onChange} value={value} className="react-calendar" />
@@ -279,14 +296,64 @@ function Dashboard(route) {
                             md={4}
                             lg={3}
                             sx={{
-                                pt: 3,
-                                // backgroundImage: `url(${Sticker})`,
-                                // backgroundRepeat: 'no-repeat',
-                                // backgroundSize: 'cover',
-                                // backgroundPosition: 'center',
+                                pt: 5,
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center'
                             }}
+
                         >
-                            <Typography
+                            <Box>
+                                <Typography
+                                    mb={2}
+                                    variant="h6"
+                                    component="div"
+                                    sx={{ fontWeight: 'bold', color: '#3D4E81' }}
+                                >
+                                    Keep in touch with us to update new features
+                                </Typography>
+                                <Button variant="contained" sx={{
+
+                                    backgroundImage: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
+                                    // margin: '10px',
+                                    // padding: '15px 45px',
+                                    textAlign: 'center',
+                                    textTransform: 'uppercase',
+                                    transition: '0.5s',
+                                    backgroundSize: '200% auto',
+                                    color: 'white',
+                                    boxShadow: '0 0 20px #eee',
+                                    borderradius: '10px',
+                                    display: 'block',
+
+
+                                    '&:hover': {
+                                        backgroundPosition: 'right center',
+                                        color: '#fff',
+                                        textDecoration: 'none',
+
+                                    }
+                                }}>Connect</Button>
+
+                            </Box>
+
+
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    
+                                    backgroundImage: `url(https://static.turbosquid.com/Preview/001270/138/81/_D.jpg)`,
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundSize: 'contain',
+                                    backgroundPosition: 'center',
+                                }}
+                            >
+
+                            </Box>
+
+                            {/* <Typography
                                 mb={2}
                                 variant="h5"
                                 component="div"
@@ -322,8 +389,8 @@ function Dashboard(route) {
                                                 // padding:0,
                                                 mb: '10px',
                                                 borderRadius: '20px',
-                                                background: '#461220',
-                                                color: 'white',
+                                                background: '#FFFFFF',
+                                                color: '#EBE645',
                                                 boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;',
                                                 '&:hover': {
                                                     background: '#2f243a',
@@ -357,13 +424,13 @@ function Dashboard(route) {
                                         </Paper>,
                                     )}
                                 </List>
-                            </Demo>
+                            </Demo> */}
                         </Grid>
                     </Grid>
                 </Grid>
                 <Grid item lg={1} sx={{ background: 'white' }}></Grid>
             </Grid>
-        </Container>
+        </Container >
     )
 }
 

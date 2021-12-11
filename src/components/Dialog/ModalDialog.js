@@ -68,8 +68,6 @@ function AssignmentsDialog() {
                 fullWidth={true}
                 sx={{ pb: 3 }}
                 size="small"
-
-            // helperText={<HelperText txt={'*Required'} isError={false} />}
             />
             <TextField
                 id="name-text"
@@ -78,8 +76,6 @@ function AssignmentsDialog() {
                 fullWidth={true}
                 sx={{ pb: 3 }}
                 size="small"
-
-            // helperText={<HelperText txt={'*Required'} isError={false} />}
             />
         </Box>
     )
@@ -113,8 +109,6 @@ function LibraryDialog() {
                 fullWidth={true}
                 sx={{ pb: 3 }}
                 size="small"
-
-            // helperText={<HelperText txt={'*Required'} isError={false} />}
             />
             <TextField
                 id="name-text"
@@ -130,13 +124,6 @@ function LibraryDialog() {
     )
 }
 function ClassesDialog() {
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
-
-    const handleDelete = () => {
-        console.info('You clicked the delete icon.');
-    };
     return (
         <Box>
             <TextField
@@ -192,8 +179,6 @@ function ResultDialog() {
                 fullWidth={true}
                 sx={{ pb: 3 }}
                 size="small"
-
-            // helperText={<HelperText txt={'*Required'} isError={false} />}
             />
         </Box>
     )
@@ -202,7 +187,6 @@ export default function ModalDialog({ open, handleClose }) {
     const Close = () => {
         handleClose(false)
     };
-    // console.log(open)
     const pageDialog = {
         'Library': <LibraryDialog />,
         'Assignments': <AssignmentsDialog />,

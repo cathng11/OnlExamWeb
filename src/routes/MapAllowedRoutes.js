@@ -1,40 +1,44 @@
 import React, { memo } from 'react';
-import { 
-	Switch, 
-	Route, 
-	// useRouteMatch 
+import {
+	Switch,
+	Route,
+	Redirect,
+	useRouteMatch
 } from 'react-router-dom';
 import NotFound from './../views/Common/NotFound';
+import { authentication } from './Authentication';
 
-function MapAllowedRoutes({routes, basePath, isAddNotFound}) {
-	// const match = useRouteMatch(basePath);
-	
-	console.log(basePath)
+function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
+	const match = useRouteMatch(basePath);
+	let _path = "";
+
 	return (
 		<Switch>
 			{routes.map((route) => {
-				/*
-				* some variables are used by below code
-				* some are not used by the code but destructure due to remove from rest object
-				* just make sure that rest object only contain props that supported by react-router's route component
-				* you may find props list here https://reactrouter.com/web/api/Route
-				*/
 				const { path, component: Component, children, title, permission, ...rest } = route;
-				
+				if (match && localStorage.getItem('roles')==='STUDENT') {
+					_path = `${match.path}${path}`
+				}
+				else if (match && localStorage.getItem('roles')==='TEACHER')
+				{
+					_path = `${basePath}${path}`
+				}else{
+					_path = `${basePath}${path}`
+				}
 				return (
-					<Route 
-					{...rest} 
-					key={path} 
-					path={`${basePath}${path}`}
-					// path={`${match.path}${path}`}
+					<Route
+						{...rest}
+						key={path}
+						// path={`${basePath}${path}`}
+						path={_path}
 					>
-						
-						<Component children={children} />
+
+						{authentication.isAuthentication() ? <Component children={children} /> : <Redirect to='/login' />}
 					</Route>
 				)
 			})}
 			{isAddNotFound && <Route><NotFound /></Route>}
-		</Switch>
+		</Switch >
 	)
 }
 export default memo(MapAllowedRoutes);

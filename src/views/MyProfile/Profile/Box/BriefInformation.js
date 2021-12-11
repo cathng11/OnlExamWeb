@@ -22,7 +22,7 @@ function DetailItem({ data }) {
             }
             disablePadding
         >
-            <ListItemButton disabled sx={{ color: 'green' }}>
+            <ListItemButton sx={{ color: '#3D4E81' }}>
 
                 <ListItemText primary={data.content} />
             </ListItemButton>
@@ -62,7 +62,7 @@ export default function BriefInformation({ data }) {
             />
             <label htmlFor="icon-button-file">
                 <Input accept="image/*" id="icon-button-file" type="file" />
-                <IconButton color="primary" aria-label="upload picture" component="span">
+                <IconButton sx={{color:'#3D4E81'}} aria-label="upload picture" component="span">
                     <PhotoCamera />
                 </IconButton>
             </label>

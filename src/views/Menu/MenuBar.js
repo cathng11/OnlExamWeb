@@ -1,26 +1,46 @@
-import React from 'react'
-import {
-    MenuItem,
-    Menu,
-    Divider,
-    ListItemIcon,
-    Box
-} from '@mui/material'
-import Settings from '@mui/icons-material/Settings'
-import Logout from '@mui/icons-material/Logout'
-import FaceIcon from '@mui/icons-material/Face';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import Logout from '@mui/icons-material/Logout';
+import Settings from '@mui/icons-material/Settings';
 import {
-    Link,
+    Box, Divider,
+    ListItemIcon, Menu, MenuItem
+} from '@mui/material';
+import React from 'react';
+import { GoogleLogout } from 'react-google-login';
+import {
+    Link, Redirect
 } from "react-router-dom";
+import CONSTANTS from './../../constants/index';
 function ItemMenu({ to, name, exact, icon }) {
+    const [navigate, setNavigate] = React.useState(false);
+
+    function handleLogout() {
+        localStorage.clear("token");
+        localStorage.clear("roles")
+        setNavigate(true);
+    }
+    if (navigate) {
+        window.location.reload(false);
+        return <Redirect to="/login" />
+    }
+    let _exact = exact ? 1 : 0
     return (
         <Box>
             <MenuItem>
                 <ListItemIcon>
                     {icon}
                 </ListItemIcon>
-                <Link to={to} exact={exact}>{name}</Link>
+                {name === 'Logout' ?
+                    <GoogleLogout
+                        clientId={CONSTANTS.CLIENT_ID}
+                        render={renderProps => (
+                            <Link to={to} exact={_exact} onClick={renderProps.onClick} disabled={renderProps.disabled}>{name}</Link>
+                            // <button onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout</button>
+                        )}
+                        buttonText={"Logout"}
+                        onLogoutSuccess={handleLogout}
+                    ></GoogleLogout>
+                    : <Link to={to} exact={_exact}>{name}</Link>}
 
             </MenuItem>
             {name === 'My Account' ? <Divider /> : <></>}

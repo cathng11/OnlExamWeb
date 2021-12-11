@@ -9,10 +9,6 @@ import Paper from '@mui/material/Paper';
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
 const rows = [0, 1, 2, 3, 4];
 function generate(element) {
     return rows.map((value) =>
