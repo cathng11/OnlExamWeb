@@ -11,10 +11,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import ClassDialog from './ChildDialog/ClassDialog';
+import LibraryDialog from './ChildDialog/LibraryDialog';
+import StudentDialog from './ChildDialog/StudentDialog';
 
-const Input = styled('input')({
-    display: 'none',
-});
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -53,11 +54,7 @@ BootstrapDialogTitle.propTypes = {
     children: PropTypes.node,
     onClose: PropTypes.func.isRequired,
 };
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-    width: 36,
-    height: 36,
-    border: `2px solid ${theme.palette.background.paper}`,
-}));
+
 function AssignmentsDialog() {
     return (
         <Box>
@@ -80,95 +77,7 @@ function AssignmentsDialog() {
         </Box>
     )
 }
-function LibraryDialog() {
-    return (
-        <Box>
-            <Stack direction="row" spacing={2} justifyContent="center" sx={{ pb: 4 }}>
-                <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                        <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" >
-                            <label htmlFor="icon-button-file">
-                                <Input accept="image/*" id="icon-button-file" type="file" />
-                                <IconButton color="primary" aria-label="upload picture" component="span">
-                                    <PhotoCamera />
-                                </IconButton>
-                            </label>
-                        </SmallAvatar>
-                    }
-                >
-                    <Avatar sx={{ width: '150px', height: '150px' }} alt="Travis Howard" src="/static/images/avatar/2.jpg" />
 
-                </Badge>
-            </Stack>
-            <TextField
-                id="name-text"
-                label="Name Folder"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-            />
-            <TextField
-                id="name-text"
-                label="Description"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-                multiline={true}
-                rows={5}
-            />
-        </Box>
-    )
-}
-function ClassesDialog() {
-    return (
-        <Box>
-            <TextField
-                id="name-text"
-                label="Class Name"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-            />
-        </Box>
-    )
-}
-function StudentsDialog() {
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
-
-    const handleDelete = () => {
-        console.info('You clicked the delete icon.');
-    };
-    return (
-        <Box>
-            <TextField
-                id="name-text"
-                label="Class Name"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-            />
-            <Chip
-                label="Clickable Deletable"
-                onClick={handleClick}
-                onDelete={handleDelete}
-            />
-            <Chip
-                label="Clickable Deletable"
-                variant="outlined"
-                onClick={handleClick}
-                onDelete={handleDelete}
-            />
-        </Box>
-    )
-}
 function ResultDialog() {
     return (
         <Box>
@@ -187,12 +96,28 @@ export default function ModalDialog({ open, handleClose }) {
     const Close = () => {
         handleClose(false)
     };
-    const pageDialog = {
-        'Library': <LibraryDialog />,
+    const [isSave, setIsSave] = React.useState(false)
+    const [isEdit, setIsEdit] = React.useState({
+        value: open.id !== '' ? true : false,
+        id: open.id
+    })
+    console.log(open)
+    const handleSave = () => {
+        setIsSave(true)
+        // setIsEdit(s => { return { ...s, value: false } })
+    }
+    React.useEffect(() => {
+        setIsEdit({
+            value: open.id !== '' ? true : false,
+            id: open.id
+        })
+    }, [open])
+    let pageDialog = {
+        'Library': <LibraryDialog isSave={isSave} isEdit={isEdit} inserted={() => setIsSave(false)} />,
         'Assignments': <AssignmentsDialog />,
-        'Classes': <ClassesDialog />,
+        'Classes': <ClassDialog />,
         'Result': <ResultDialog />,
-        'Students': <StudentsDialog />
+        'Students': <StudentDialog />
     }
     const titleCreate = {
         'Library': 'Create New Questions Folder',
@@ -242,7 +167,7 @@ export default function ModalDialog({ open, handleClose }) {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={Close}>
+                    <Button autoFocus onClick={handleSave}>
                         Save
                     </Button>
                 </DialogActions>

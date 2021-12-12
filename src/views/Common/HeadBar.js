@@ -19,7 +19,7 @@ const MenuLink = ({ title, path, activeOnlyWhenExact, username }) => {
     <Route
       path={path} exact={activeOnlyWhenExact} children={({ match }) => {
         var color = match ? '#3D4E81' : 'black';
-        var weight= match ? 'bold' : 'normal';
+        var weight = match ? 'bold' : 'normal';
         return (
           <Button
             sx={{ mr: 5, fontSize: '1rem' }}
@@ -107,11 +107,11 @@ function HeadBar({ allowedRoutes }) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  let TOKEN= localStorage.getItem(CONSTANTS.USER_TOKEN)
+  let TOKEN = localStorage.getItem(CONSTANTS.USER_TOKEN)
   // React.useEffect(() => {
   //   let mounted = true;
   //   let profileService = ProfileService.getInstance();
-    
+
   //   console.log(TOKEN)
   //   if (localStorage.getItem(CONSTANTS.USER_TOKEN))
   //   console.log('hi')
@@ -159,7 +159,7 @@ function HeadBar({ allowedRoutes }) {
                 <CaptionTypo title="193 Nguyen Luong Bang, Da Nang city, Viet Nam" />
               </Grid>
             </CaptionGridContainer>
-            <Grid container item xs={12} md={12} lg={12} sx={{background:'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);'}}>
+            <Grid container item xs={12} md={12} lg={12} sx={{ background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' }}>
               <Grid item lg={10} sx={{ p: 2 }}>
                 <div
                   style={{ display: 'flex', flexDirection: 'row' }}
@@ -178,7 +178,7 @@ function HeadBar({ allowedRoutes }) {
                   }
                 </div>
               </Grid>
-              <Grid item xs={2} md={2} lg={2} sx={{ p: 2,background:'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' }}>
+              <Grid item xs={2} md={2} lg={2} sx={{ p: 2, background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' }}>
                 <MenuBox onClick={handleClick} >
                   <Typography
                     variant="p"
@@ -187,11 +187,11 @@ function HeadBar({ allowedRoutes }) {
                     fontSize="small"
                     color="black "
                   >
-                    {user.Username}
+                    {user ? user.Username : ''}
                   </Typography>
                   <Tooltip title="Account settings">
                     <IconButton size="small" sx={{ ml: 1 }}>
-                      <Avatar sx={{ width: 24, height: 24,background:'#3D4E81' }}>{user.Firstname.substring(0, 1)}</Avatar>
+                      <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>{user ? user.Firstname.substring(0, 1) : ''}</Avatar>
                     </IconButton>
                   </Tooltip>
                 </MenuBox>

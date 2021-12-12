@@ -33,6 +33,7 @@ export default class ProfileService {
         if (data) {
             options.body = JSON.stringify({ ...data })
         }
+        console.log(options)
         return fetch(_url, options)
     }
     async get() {
@@ -42,7 +43,7 @@ export default class ProfileService {
 
     }
     async update(data) {
-        let url = 'profile';
+        let url = 'profile/update';
         let method = "POST";
         return await this.request(url, method, data).then(res => res.json())
     }

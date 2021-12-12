@@ -13,95 +13,106 @@ const CLIENT_ID = APP_CONSTANTS.CLIENT_ID;
 function Login() {
     const history = useHistory();
     const user = useUserInfo();
-    const username = useRef(null);
-    const password = useRef(null);
-    const un_signup = useRef(null);
-    const email_signup = useRef(null);
-    const pass_signup = useRef(null);
-    const confirm_pass = useRef(null);
 
+    const [loginForm, setLoginForm] = useState({
+        username: null,
+        password: null,
+    })
+    const [signupForm, setSignupForm] = useState({
+        username: null,
+        email: null,
+        password: null,
+        conf: null
+    })
     const [rightPanelActive, setRightPanelActive] = useState("");
     const [mobileRes, setMobileRes] = useState({ login: "m-container", signup: "display-none" });
 
-    const [loading, setLoading] = React.useState(false);
-    const [alert, setAlert] = useState({ value: false, count: 0 });
-    const [title, setTitle] = useState('')
+    const [state, setState] = useState({
+        loading: false,
+        alert: false,
+        title: ''
+    });
+
     let TOKEN = localStorage.getItem(APP_CONSTANTS.USER_TOKEN);
+
     useEffect(() => {
         if (TOKEN) {
             let role = localStorage.getItem('roles')
             let username = JSON.parse(TOKEN).Username
-
-            setLoading(false)
+            setState(s => { return { ...s, loading: false } });
             if (role === 'STUDENT') history.push(`/${username}`)
             else history.push(`/`)
         }
-        // if (user.message && user.message.status.Code & alert.count === 0) {
-        //     setLoading(false)
-        //     setAlert({ value: true, count: 1 })
-        //     setTitle(user.message)
-        // }
-        if (user.message != null && user.message.status.Code === 601 && alert.count === 0) {
-            setLoading(false)
-            setAlert({ value: true, count: 1 })
-            setTitle(user.message.message)
+        if (user.message != null && user.message.status.Code === 601) {
+            setState(s => { return { loading: false, alert: true, title: user.message.message } })
             user.setMessage(null)
         }
-        if (user.message && user.message.status.Code === 200 ){
-            setLoading(false)
-            setAlert({ value: true, count: 1 })
-            setTitle("Signup Successfully")
+        if (user.message && user.message.status.Code === 200) {
+            setState(s => { return { loading: false, alert: true, title: "Signup Successfully" } })
             user.setMessage(null)
             openLogin()
             history.push('/login')
         }
-    }, [mobileRes, TOKEN, user, loading]);
+    }, [mobileRes, TOKEN, user, state]);
 
-
-    function stringContainsNumber(_input) {
-        let string1 = String(_input);
-        for (let i = 0; i < string1.length; i++) {
-            if (!isNaN(string1.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
     const handleClose = () => {
-        setLoading(false);
+        setState(s => { return { ...s, loading: false } });
     };
     const handleLogin = e => {
-        setLoading(true);
-        setAlert({ value: false, count: 0 })
+        setState(s => { return { ...s, loading: true, alert: false } });
         e.preventDefault();
-        const userInfo = {
-            username: username.current.value,
-            password: password.current.value
-        };
         user.setUserInfo({
-            username: userInfo.username,
-            password: userInfo.password,
+            username: loginForm.username,
+            password: loginForm.password,
             isLogin: true
         });
 
     }
+    const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);//eslint-disable-line
+
     const handleSignUp = e => {
-        setLoading(true);
-        setAlert({ value: false, count: 0 })
         e.preventDefault();
-        const userInfo = {
-            username: un_signup.current.value,
-            password: pass_signup.current.value,
-            email: email_signup.current.value
-        };
-        user.setUserInfo({
-            username: userInfo.username,
-            password: userInfo.password,
-            email: userInfo.email,
-            isLogin: false
-        });
-        // history.push(`./login`)
+        console.log(signupForm)
+        let { username, email, password, conf } = signupForm
+        if (!username || !email || !password || !conf) {
+            setState(s => { return { ...s, alert: true, title: 'Input fields is required!' } });
+        }
+        else if (username.length < 5) {
+            setState(s => { return { ...s, alert: true, title: 'Username must be 5 characters long!' } });
+        }
+        else if (!validEmailRegex.test(email)) {
+            setState(s => { return { ...s, alert: true, title: 'Email is not valid!' } });
+        }
+        else if (password.length < 8) {
+            setState(s => { return { ...s, alert: true, title: 'Password must be 8 characters long1' } });
+        }
+        else if (password !== conf) {
+            setState(s => { return { ...s, alert: true, title: 'Confirm password is not matched!' } });
+        }
+        else {
+            setState(s => { return { ...s, loading: true, alert: false } });
+            user.setUserInfo({
+                username: username,
+                password: password,
+                email: email,
+                isLogin: false
+            });
+        }
+
     }
+    const handleChangeLogin = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        setLoginForm(s => { return { ...s, [name]: value } })
+    }
+
+    const handleChangeSignup = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        let info = signupForm;
+        setSignupForm(s => { return { ...s, [name]: value } },)
+    }
+
     const responseGoogleSuccess = async (response, isLogin) => {
         const userInfo = {
             name: response.profileObj.name,
@@ -118,8 +129,7 @@ function Login() {
         }
     };
     function responseGoogleError(response) {
-        setAlert({ value: true })
-        setTitle(response)
+        setState(s => { return { ...s, alert: true, title: response } })
         console.log(response);
     };
     function openLogin(e) {
@@ -149,15 +159,15 @@ function Login() {
             <div className={"container" + rightPanelActive} id="login">
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={loading}
+                    open={state.loading}
                     onClick={handleClose}
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>
                 <AlertBar
-                    title={title}
-                    openAlert={alert.value}
-                    closeAlert={() => setAlert({ value: false, count: alert.count })}
+                    title={state.title}
+                    openAlert={state.alert}
+                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
                 />
                 <div className={"form-container sign-up-container  " + mobileRes.signup}>
                     <form action="#" >
@@ -181,10 +191,10 @@ function Login() {
                             />
                         </div>
                         <span>or use your email for registration</span>
-                        <input type="text" placeholder="Username" ref={un_signup} required autoComplete="new-password"/>
-                        <input type="text" placeholder="Email" ref={email_signup} required autoComplete="new-password"/>
-                        <input type="password" placeholder="Password" ref={pass_signup} required autoComplete="new-password"/>
-                        <input type="password" placeholder="Confirm Password" ref={confirm_pass} required autoComplete="new-password"/>
+                        <input type="text" placeholder="Username" id="username-su" name="username" onChange={handleChangeSignup} required autoComplete="new-password" />
+                        <input type="text" placeholder="Email" id="email-su" name="email" required onChange={handleChangeSignup} autoComplete="new-password" />
+                        <input type="password" placeholder="Password" id="password-su" name="password" required onChange={handleChangeSignup} autoComplete="new-password" />
+                        <input type="password" placeholder="Confirm Password" id="conf-su" name="conf" required onChange={handleChangeSignup} autoComplete="new-password" />
                         <button onClick={handleSignUp}>Sign Up</button>
                         <button className="ghost-m" id="signIn" onClick={openLogin} >Sign In</button>
 
@@ -213,8 +223,8 @@ function Login() {
                         </div>
                         <span>or use your account</span>
 
-                        <input type="email" placeholder="Email" ref={username} required />
-                        <input type="password" placeholder="Password" ref={password} required />
+                        <input type="email" placeholder="Email" id="username" name="username" onChange={handleChangeLogin} required />
+                        <input type="password" placeholder="Password" id="password" name="password" onChange={handleChangeLogin} required />
                         <a href="/#">Forgot your password?</a>
                         <button onClick={handleLogin}>Sign In</button>
                         <button className="ghost-m" id="signUp" onClick={openSignUp} >Sign Up</button>

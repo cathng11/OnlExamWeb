@@ -22,6 +22,7 @@ export default function HeaderPage({ dialog }) {
     const [open, setOpen] = React.useState({
         pageName: '', isOpen: false, id: ''
     });
+    // const [data, setData] = React.useState(null)
     React.useEffect(() => {
         setOpen({ pageName: dialog.pageName, isOpen: dialog.isOpen, id: dialog.id })
     }, [dialog])

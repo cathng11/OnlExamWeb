@@ -35,19 +35,30 @@ export default function useUserInfo() {
             }
         }
         async function signup() {
-            console.log("signup begin")
             let authService = AuthService.getInstance();
-            const result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
-            console.log(result);
-            setUserInfo({
-                username: '',
-                password: '',
-                confirm_pass: '',
-                fullName: '',
-                imageURL: '',
-                isLogin: null,
-            })
+            let result=null
+            try{
+                result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
+                console.log(result);
+                setUserInfo({
+                    username: '',
+                    password: '',
+                    confirm_pass: '',
+                    fullName: '',
+                    imageURL: '',
+                    isLogin: null,
+                })
+            }catch{
+                result={
+                    status:{
+                        Status:'Error',
+                        Code:601
+                    },
+                    message: 'Can not register. Try again!'
+                }
+            }
             setMessage(result)
+
         }
         if (userInfo.isLogin) login();
         else if (userInfo.isLogin === false) signup()

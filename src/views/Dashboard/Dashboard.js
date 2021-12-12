@@ -4,16 +4,13 @@ import {
     TimelineDot, TimelineItem, TimelineOppositeContent, TimelineSeparator
 } from '@mui/lab'
 import {
-    Avatar, Box, Container,
+    Box, Button, Container,
     CssBaseline,
-    Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, styled, ToggleButton, Button,
-    ToggleButtonGroup, Typography
+    Grid, Paper, styled, ToggleButton, ToggleButtonGroup, Typography
 } from '@mui/material'
 import React, { memo, useState } from 'react'
 import Calendar from 'react-calendar'
-import CONST from '../../constants'
 import '../../styles/Calendar.css'
-import Sticker from '../../assets/images/Illustration 1.png'
 
 function generate(element) {
     return [0, 1, 2, 4, 5].map((value) =>

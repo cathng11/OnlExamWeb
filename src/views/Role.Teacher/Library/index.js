@@ -21,6 +21,7 @@ const FolderGridContainer = styled(Grid)(({ theme }) => ({
 }));
 export default function Library() {
     const [data, setData] = React.useState(null)
+    const [refresh, setRefresh] = React.useState(false)
     const [dialog, setDialog] = React.useState({
         pageName: 'Library',
         isOpen: false,
@@ -35,17 +36,20 @@ export default function Library() {
         libraryService.getList()
             .then(items => {
                 if (mounted) {
-                    setData(items);
+                    console.log(items)
+                    if (items.status.Code === 200)
+                        setData(items.data);
                 }
             })
-        return () => { mounted = false };
-    }, [])
+        return () => { mounted = false; setRefresh(false) };
+    }, [refresh])
+
     return (
         <WrapperContainer maxWidth="full" >
             <CssBaseline />
             <HeaderPage dialog={dialog} />
             <FolderGridContainer container>
-                {data ? <Folders edit={handleEdit} data={data}/> : <LoadingFolder view={'Library'} />}
+                {data ? <Folders edit={handleEdit} data={data} isDeleted={()=>setRefresh(true)} /> : <LoadingFolder view={'Library'} />}
             </FolderGridContainer>
         </WrapperContainer>
     )

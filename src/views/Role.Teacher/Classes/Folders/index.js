@@ -3,7 +3,6 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 import FolderItem from '../../../../components/Card/FolderItem'
-import LoadingFolder from './../../../../components/Skeleton/LoadingFolder'
 
 export default function Folders({ data, view, edit }) {
     return (

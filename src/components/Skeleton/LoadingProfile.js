@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Grid, Paper, styled } from '@mui/material';
+import { Container, CssBaseline, Grid, Paper, styled } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import React from 'react';
@@ -20,15 +20,15 @@ const BriefPaper = styled(Paper)(({ theme }) => ({
     padding: '50px',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
 
-})); 
+}));
 const MainPaper = styled(Paper)(({ theme }) => ({
-    height: '65vh',
+    height: '75vh',
     backgroundColor: 'white',
-    borderRadius: '20px 20px 0px 0px',
+    borderRadius: '20px',
     overflow: 'auto',
     padding: '20px',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
-})); 
+}));
 const FooterPaper = styled(Paper)(({ theme }) => ({
     height: '15vh',
     width: '100%',
@@ -40,7 +40,7 @@ const FooterPaper = styled(Paper)(({ theme }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
-})); 
+}));
 export default function LoadingProfile() {
     return (
         <div>
@@ -63,7 +63,7 @@ export default function LoadingProfile() {
                                 <Skeleton variant="rectangular" width={"100%"} height={"40%"} />
                             </BriefPaper>
                         </Grid>
-                        <Grid item xs={12} lg={8}>
+                        <Grid item xs={12} lg={8} >
                             <MainPaper>
                                 <Stack spacing={2}>
                                     <Skeleton variant="text" width={"100%"} height={40} />
@@ -73,21 +73,11 @@ export default function LoadingProfile() {
                                 </Stack>
 
                             </MainPaper>
+                            <Grid item xs={1} md={4} lg={4}>
+                            </Grid>
                         </Grid>
                     </Grid>
-                    <Grid container item xs={12} lg={12} direction="row" sx={{ background: 'white' }} columnSpacing={8}   >
-                        <Grid item xs={1} md={4} lg={4}>
-                        </Grid>
-                        <Grid item xs={12} md={8} lg={8}>
-                            <FooterPaper >
-                                <Box sx={{ width: 300 }}>
-                                    <Skeleton />
-                                    <Skeleton animation="wave" />
-                                    <Skeleton animation={false} />
-                                </Box>
-                            </FooterPaper>
-                        </Grid>
-                    </Grid>
+
                 </Grid>
             </WrapperContainer >
         </div>

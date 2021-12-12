@@ -32,13 +32,13 @@ export default function RowTable({ handleClickItem, row, isItemSelected, labelId
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
-                key={row.id}
+                key={row.QuestionID}
                 selected={isItemSelected}
             >
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
-                        onClick={(event) => handleClick(event, row.id)}
+                        onClick={(event) => handleClick(event, row.QuestionID)}
                         checked={isItemSelected}
                         inputProps={{
                             'aria-labelledby': labelId,
@@ -51,12 +51,12 @@ export default function RowTable({ handleClickItem, row, isItemSelected, labelId
                     scope="row"
                     padding="none"
                 >
-                    {row.id}
+                    {row.QuestionID}
                 </TableCell>
                 {/* <TableCell align="right">{row.id}</TableCell> */}
-                <TableCell align="left" >{row.question}</TableCell>
-                <TableCell align="left">{row.type}</TableCell>
-                {/* <TableCell align="right">{row.protein}</TableCell> */}
+                <TableCell align="left" >{row.Question}</TableCell>
+                <TableCell align="left">{row.Type}</TableCell>
+                <TableCell align="left">{row.Level}</TableCell>
                 <TableCell align="left">
                     <IconButton
                         aria-label="expand row"
@@ -83,14 +83,14 @@ export default function RowTable({ handleClickItem, row, isItemSelected, labelId
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {row.solution.map((sol,index) => (
+                                    {row.Solution.map((sol,index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {index}
                                             </TableCell>
-                                            <TableCell>{sol.options}</TableCell>
+                                            <TableCell>{sol.Solution}</TableCell>
                                             
-                                            <TableCell align="right">{sol.answer===1?<CheckIcon fontSize="small"/>:''}</TableCell>
+                                            <TableCell align="right">{sol.Correct===true?<CheckIcon fontSize="small"/>:''}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

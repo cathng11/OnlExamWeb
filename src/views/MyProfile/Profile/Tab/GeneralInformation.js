@@ -1,20 +1,13 @@
-import React, { useRef } from 'react'
-import {
-    Box,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    RadioGroup,
-    Radio,
-    Typography,
-    styled
-} from '@mui/material'
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-import HelperText from './../../../../components/HelperText/HelperText';
-import APP_CONSTANTS from '../../../../constants'
-const token = APP_CONSTANTS.TOKEN_TEACHER
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import {
+    Box, FormControl,
+    FormControlLabel, Radio, RadioGroup, styled, TextField, Typography
+} from '@mui/material';
+import React, { useRef, useState } from 'react';
+import ProfileService from './../../../../services/profile.service';
+
 const CustomInput = styled(TextField)(({ theme }) => ({
     paddingBottom: '50px',
     '& label.Mui-focused': {
@@ -28,72 +21,107 @@ const CustomInput = styled(TextField)(({ theme }) => ({
             borderColor: '#3D4E81',
         },
     },
-  })); 
-export default function GeneralInformation({ data, isUpdate }) {
-    const name = useRef(null)
-    const [firstName, setFirstName] = React.useState(data.Firstname);
-    const [lastName, setLastName] = React.useState(data.Lastname);
-    const [email, setEmail] = React.useState(data.Email);
-    const [address, setAddress] = React.useState(data.Address);
-    const [userID] = React.useState(data.UserID);
-    const [phone, setPhone] = React.useState(data.Phone);
-    const [gender, setGender] = React.useState(data.Gender)
-    const [birthday, setBirthday] = React.useState(data.DateOfBirth);
+}));
+const InputField = ({ id, name, label, value, handleChange }) => {
+    return (
+        <CustomInput
+            id={`${id}-${name}`}
+            name={name}
+            label={label}
+            fullWidth={true}
+            size="small"
+            value={value}
+            onChange={(e) => handleChange(e)}
+            disabled={name === 'userID' ? true : false}
+        />
+    )
+}
 
+export default function GeneralInformation({ data, isUpdate, setUpdated }) {
+    const [input, setInput] = useState({
+        Firstname: data.Firstname,
+        Lastname: data.Lastname,
+        Email: data.Email,
+        Address: data.Address,
+        Phone: data.Phone,
+        Gender: data.Gender === false ? "false" : "true",
+        DateOfBirth: data.DateOfBirth,
+        Avatar: data.Avatar,
+    })
+    let inputClone = useRef(input);
     const handleChange = (e, tag) => {
-        if (tag === 'firstName') setFirstName(e.target.value)
-        else if (tag === 'lastName') setLastName(e.target.value)
-        else if (tag === 'email') setEmail(e.target.value)
-        else if (tag === 'address') setAddress(e.target.value)
-        else if (tag === 'gender') setGender(e.target.value)
-        else if (tag === 'phone') setPhone(e.target.value)
-        else if (tag === 'birthday') {
-            setBirthday(e)
+        const name = tag ? 'DateOfBirth' : e.target.name;
+        let value = name === 'DateOfBirth' ? e : e.target.value;
+        if (name === "Gender") {
+            value = e.target.value === "true" ? true : false;
         }
+        setInput(s => { return { ...s, [name]: value } })
     }
-    async function updateProfile(data) {
-        return fetch('https://onlxam.herokuapp.com/api/profile/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify(data)
-        })
-            .then(data => data.json())
-            .catch(err => console.log(err))
-    }
+
     React.useEffect(() => {
         let mounted = true;
         if (isUpdate) {
-            const edit = {
-                FirstName: firstName,
-                LastName: lastName,
-                Email: email,
-                Address: address,
-                Gender: gender,
-                DateOfBirth: birthday
-            }
-            const origin = {
-                FirstName: data.FirstName,
-                LastName: data.LastName,
-                Email: data.Email,
-                Address: data.Address,
-                Gender: data.Gender,
-                DateOfBirth: data.DateOfBirth
-            }
-            if (JSON.stringify(edit) !== JSON.stringify(origin)) {
-                updateProfile(edit)
+            if (input !== inputClone.current) {
+
+                let profileService = ProfileService.getInstance();
+                profileService.update(input)
                     .then(items => {
                         if (mounted) {
-                            // setData(items.data[0]);
+                            inputClone.current = input
+                            setUpdated()
                         }
                     })
-
+                    .catch(err => console.error(err))
             }
+            else {
+                setUpdated()
+            }
+
         }
         return () => mounted = false;
-    }, [data, isUpdate])
+    }, [data, isUpdate, input, setUpdated])
+    let content = [
+        {
+            row1: [
+                {
+                    name: "Firstname",
+                    label: "First Name",
+                    value: input.Firstname
+                },
+                {
+                    name: "Email",
+                    label: "Email",
+                    value: input.Email
+                },
+                {
+                    name: "Address",
+                    label: "Address",
+                    value: input.Address
+                },
+                {
+                    name: "userID",
+                    label: "User ID",
+                    value: data.UserID
+                },
+            ]
+        },
+        {
+            row2: [
+
+                {
+                    name: "Lastname",
+                    label: "Last Name",
+                    value: input.Lastname
+                },
+                {
+                    name: "Phone",
+                    label: "Phone Number",
+                    value: input.Phone
+                },
+            ]
+        }
+
+    ]
     return (
         <React.Fragment>
             <Box sx={{
@@ -105,76 +133,37 @@ export default function GeneralInformation({ data, isUpdate }) {
                 background: 'white'
             }}>
                 <Box sx={{ width: '50%', pr: 4 }}>
-                    <CustomInput
-                        id="first-name"
-                        label="First Name"
-                        fullWidth={true}
-                        size="small"
-                        value={firstName}
-                        // inputRef={name}
-                        onChange={(e) => handleChange(e, "firstName")}
-                    />
-                    <CustomInput
-                        id="email"
-                        label="Email"
-                        fullWidth={true}
-                        size="small"
-                        autoFocus
-                        value={email}
-                        // defaultValue={email}
-                        onChange={(e) => handleChange(e, "email")}
-                    />
-                    <CustomInput
-                        id="address"
-                        label="Address"
-                        fullWidth={true}
-                        sx={{ pb: 5 }}
-                        size="small"
-                        autoFocus
-                        value={address}
-                        // defaultValue={address}
-                        onChange={(e) => handleChange(e, "address")}
-                    />
-                    <CustomInput
-                        id="userID"
-                        label="User ID"
-                        fullWidth={true}
-                        sx={{ pb: 5 }}
-                        size="small"
-                        autoFocus
-                        value={userID}
-                        disabled
-                    // defaultValue={userID}
-                    />
+                    {content[0].row1.map((value, index) =>
+                        <InputField
+                            key={index}
+                            id={index}
+                            name={value.name}
+                            label={value.label}
+                            value={value.value}
+                            handleChange={handleChange} />)}
+
                 </Box>
                 <Box sx={{ width: '50%' }}>
-                    <CustomInput
-                        id="last-name"
-                        label="Last Name"
-                        fullWidth={true}
-                        size="small"
-                        value={lastName}
-                        // inputRef={name}
-                        onChange={(e) => handleChange(e, "lastName")}
-                    />
-                    <CustomInput
-                        id="name-text"
-                        label="Phone Number"
-                        fullWidth={true}
-                        size="small"
-                        autoFocus
-                        value={phone}
-                        onChange={(e) => handleChange(e, "phone")}
-                    />
+                    {content[1].row2.map((value, index) =>
+                        <InputField
+                            key={index}
+                            id={index}
+                            name={value.name}
+                            label={value.label}
+                            value={value.value}
+                            handleChange={handleChange} />)}
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             label="Date Of Birth"
-                            value={birthday}
-                            onChange={(e) => handleChange(e, "birthday")}
+                            name="DateOfBirth"
+                            value={input.DateOfBirth}
+                            onChange={(e) => handleChange(e, 'DateOfBirth')}
                             renderInput={(params) => <CustomInput {...params} autoFocus
+                                // value={input.DateOfBirth}
                                 id="dateOfBirth"
                                 label="Date Of Birth"
                                 fullWidth={true}
+                                name="DateOfBirth"
                                 size="small" />}
                         />
                     </LocalizationProvider>
@@ -188,9 +177,9 @@ export default function GeneralInformation({ data, isUpdate }) {
                     }}>
                         <Typography component="div" sx={{ pr: 5 }}>Gender:</Typography>
                         <RadioGroup
-                            row aria-label="gender" name="row-radio-buttons-group"
-                            defaultValue={gender}
-                            value={gender} onChange={(e) => handleChange(e, "gender")}
+                            row aria-label="Gender" name="Gender"
+                            defaultValue={input.Gender}
+                            value={input.Gender} onChange={handleChange}
                         >
                             <FormControlLabel value={false} control={<Radio />} label="Female" />
                             <FormControlLabel value={true} control={<Radio />} label="Male" />

@@ -93,7 +93,7 @@ export default function Profile({ data }) {
                                     </Tabs>
                                 </Box>
                                 <TabPanel value="general" >
-                                    <GeneralProfile data={data} isUpdate={isUpdate} />
+                                    <GeneralProfile data={data} isUpdate={isUpdate} setUpdated={()=>setIsUpdate(false)}/>
                                 </TabPanel>
                                 <TabPanel value="activities" >
                                     <ActivitiesProfile data={data} />

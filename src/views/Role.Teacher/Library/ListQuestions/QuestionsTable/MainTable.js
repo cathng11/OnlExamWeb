@@ -8,6 +8,7 @@ import {
 import HeadTable from './HeadTable';
 import RowTable from './RowTable';
 import TableToolbar from '../../../../../components/Table/TableToolbar';
+import ToolbarTable from './ToolbarTable';
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -62,9 +63,9 @@ export default function MainTable({ rows, headCells }) {
     }
     return (
         <Box sx={{ width: '100%' }}>
-            <TableToolbar numSelected={selected.length} />
-            <TableContainer 
-            sx={{ maxHeight: '65vh' }}
+            <ToolbarTable numSelected={selected.length} selected={selected}/>
+            <TableContainer
+                sx={{ maxHeight: '65vh' }}
             >
                 <Table stickyHeader aria-label="sticky collapsible table">
 
@@ -81,11 +82,11 @@ export default function MainTable({ rows, headCells }) {
                     <TableBody>
                         {rows.slice().sort(getComparator(order, orderBy))
                             .map((row, index) => {
-                                const isItemSelected = isSelected(row.id);
+                                const isItemSelected = isSelected(row.QuestionID);
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
                                     <RowTable
-                                        key={row.id}
+                                        key={row.QuestionID}
                                         row={row}
                                         isItemSelected={isItemSelected}
                                         labelId={labelId}
