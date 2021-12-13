@@ -23,7 +23,7 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-export default function CustomTable({ rows, view, headCells, role }) {
+export default function CustomTable({ rows, view, headCells, role, refresh }) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('name');
     const [selected, setSelected] = React.useState([]);
@@ -38,12 +38,12 @@ export default function CustomTable({ rows, view, headCells, role }) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            
+
             const newSelecteds = rows.map((n) => {
-                let id=-1;
-                if(view === 'Assignment') id=n.ExamID
-                else if(view==='Student') id=n.UserID
-                else if (view==='Result') id=n.id
+                let id = -1;
+                if (view === 'Assignment') id = n.ExamID
+                else if (view === 'Student') id = n.UserID
+                else if (view === 'Result') id = n.id
                 return id
             });
             setSelected(newSelecteds);
@@ -105,14 +105,14 @@ export default function CustomTable({ rows, view, headCells, role }) {
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
                 borderRadius: '10px',
             }}>
-                {view === 'Result' & role === 'Student' ? <></> : 
-                <TableToolbar numSelected={selected.length} view={view} role={role} selected={selected}/>}
-                {/* <TableToolbar numSelected={selected.length} view={view} role={role}/> */}
-                <TableContainer>
+                {role === 'Student' ? <></> :
+                    <TableToolbar numSelected={selected.length} view={view} role={role} selected={selected} refresh={() => refresh()} />}
+                <TableContainer component={'div'}>
                     <Table
-                        sx={{ minWidth: 750 }}
+                        // sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={'medium'}
+                        component={'div'}
                     >
                         <TableHeader
                             numSelected={selected.length}
@@ -123,14 +123,20 @@ export default function CustomTable({ rows, view, headCells, role }) {
                             rowCount={rows.length}
                             headCells={headCells}
                             role={role}
+                            component={'div'}
                         />
-                        <TableBody>
+                        <TableBody component={'div'}>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy))
                                 .map((row, index) => {
-                                    let id=-1;
-                                    if(view === 'Assignment') id=row.ExamID
-                                    else if(view==='Student') id=row.UserID
-                                    else if (view==='Result') id=row.id
+                                    let id = -1;
+                                    if (role === 'Teacher') {
+                                        if (view === 'Assignment') id = row.ExamID
+                                        else if (view === 'Student') id = row.UserID
+                                        else if (view === 'Result') id = row.id
+                                    } else {
+                                        id = row.id
+                                    }
+
                                     const isItemSelected = isSelected(id);
 
                                     const labelId = `enhanced-table-checkbox-${id}`;
@@ -144,6 +150,7 @@ export default function CustomTable({ rows, view, headCells, role }) {
                                             tabIndex={-1}
                                             key={id}
                                             selected={isItemSelected}
+                                            component={'div'}
                                         >
 
                                             <TableCeller
@@ -154,19 +161,20 @@ export default function CustomTable({ rows, view, headCells, role }) {
                                                 view={view}
                                                 role={role}
                                                 // selectedRow={selected}
-                                                setSelectedRow={setSelectedRow} 
-                                                preview={handlePreview}/>
+                                                setSelectedRow={setSelectedRow}
+                                                preview={handlePreview} />
 
                                         </TableRow>
                                     );
                                 })}
                             {emptyRows > 0 && (
                                 <TableRow
+                                    component="div"
                                     style={{
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6} />
+                                    <TableCell colSpan={6} component="div"/>
                                 </TableRow>
                             )}
                         </TableBody>

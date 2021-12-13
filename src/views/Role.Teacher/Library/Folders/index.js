@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 import * as React from 'react'
 import FolderItem from '../../../../components/Card/FolderItem'
 
-export default function Folders({ edit, data, isDeleted }) {
+export default function Folders({ edit, data, refresh }) {
 
     return (
         <Grid
@@ -15,7 +15,7 @@ export default function Folders({ edit, data, isDeleted }) {
         >
             {data.map((value, index) => (
                 <Grid item xs={12} md={6} lg={3} key={index}>
-                    <FolderItem key={value.LibraryFolderID} data={value} edit={edit} isDeleted={()=>isDeleted()} view={'Library'} />
+                    <FolderItem key={value.LibraryFolderID} data={value} edit={edit} refresh={()=>refresh()} view={'Library'} />
                 </Grid>
             ))}
         </Grid>

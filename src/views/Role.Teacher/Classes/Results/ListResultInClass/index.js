@@ -109,15 +109,20 @@ export default function ListResultInClass() {
     });
     React.useEffect(() => {
         let mounted = true;
+        let classID = match.params.id
         let assignmentService = AssignmentService.getInstance()
-        assignmentService.getList()
+        assignmentService.getListByClassID(classID)
             .then(items => {
                 if (mounted) {
-                    let list = []
-                    items.map(item => list.push(item.ExamID))
-                    setAssignment(list);
+                    if (items.status.Code === 200)
+                    {
+                        let list = []
+                        items.data.map(item => list.push(item.ExamID))
+                        setAssignment(list);
+                    }
                 }
             })
+            .catch((err) => { console.error(err) });
         return () => { mounted = false };
     }, [])
     if (assignment) {

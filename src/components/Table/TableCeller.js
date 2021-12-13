@@ -6,6 +6,7 @@ import {
 import React from 'react';
 import { matchPath } from 'react-router';
 import { useHistory } from "react-router-dom";
+import MemberClassDialog from '../Dialog/MemberClassDialog';
 
 export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected, preview }) {
     // const { view, role, row, setSelectedRow, labelId, isItemSelected } = props;
@@ -29,8 +30,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         setSelectedRow(event, id);
     };
     let history = useHistory();
-
-    const pageview = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment' }
+    const pageview = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment','Student':'students' }
     const match = matchPath(history.location.pathname, {
         path: `/classes/:id/${pageview[view]}`,
         exact: true,
@@ -41,7 +41,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     }
     function handleSAClick() {
         if (row.status === 'Active') {
-            history.push(`/idStudent/take-assignment?id=${row.id}`);
+            history.push(`/student1/take-assignment?id=${row.id}`);
         }
         else if (row.status === 'Completed') {
 
@@ -51,11 +51,22 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     const Preview = () => {
         preview(row.id)
     }
+    const [openMemberDetail, setOpenMemberDetail] = React.useState(false)
+    function handleMemberDetail() {
+        console.log(match.params.id)
+        history.push(`${history.location.pathname}?memberInfoID=${row.UserID}`);
+        setOpenMemberDetail(true)
+    }
+    const handleClose = () => {
+        history.push(`${history.location.pathname}`);
+        setOpenMemberDetail(false)
+
+    }
     if (role === 'Teacher') {
         if (view === 'Student') {
             return (
                 <>
-                    <TableCell padding="normal">
+                    <TableCell padding="normal" component={'div'}>
                         <Checkbox
                             color="primary"
                             onClick={(event) => handleClick(event, row.UserID)}
@@ -65,22 +76,25 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                             }}
                         />
                     </TableCell>
-                    <TableCell padding="none" align="left">
+                    <TableCell padding="none" align="left" component={'div'}>
                         <Avatar alt={row.Username} src={row.Avatar} />
                     </TableCell>
-                    <TableCell align="left">{row.UserID}</TableCell>
-                    <TableCell align="left">{row.Username}</TableCell>
-                    <TableCell align="left">{row.Firstname}</TableCell>
-                    <TableCell align="left">{row.Lastname}</TableCell>
-                    <TableCell align="left">{row.Email}</TableCell>
-                    <TableCell align="left"><Tooltip title="Detail">
-                        <div>
-                            <IconButton>
-                                <ArrowForwardIcon />
-                            </IconButton>
-                        </div>
+                    {/* <TableCell align="left">{row.UserID}</TableCell> */}
+                    <TableCell align="left" component={'div'}>{row.Username}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.Firstname}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.Lastname}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.Email}</TableCell>
+                    <TableCell align="left" component={'div'}>
+                        <Tooltip title="Detail" onClick={handleMemberDetail} >
+                            <div>
+                                <IconButton>
+                                    <ArrowForwardIcon />
+                                </IconButton>
+                            </div>
 
-                    </Tooltip></TableCell>
+                        </Tooltip>
+                    </TableCell>
+                    <MemberClassDialog data={row} open={openMemberDetail} close={handleClose} classID={match.params.id}/>
                 </>
 
             )
@@ -88,7 +102,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         else if (view === 'Result') {
             return (
                 <>
-                    <TableCell padding="normal">
+                    <TableCell padding="normal" component={'div'}> 
                         <Checkbox
                             color="primary"
                             onClick={(event) => handleClick(event, row.id)}
@@ -98,18 +112,18 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                         // }}
                         />
                     </TableCell>
-                    <TableCell padding="none" align="left">
+                    <TableCell padding="none" align="left" component={'div'}>
                         <Avatar alt={row.name} src={row.avatar} />
                     </TableCell>
-                    <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="left">{row.firstname}</TableCell>
-                    <TableCell align="left">{row.lastname}</TableCell>
-                    <TableCell align="left">{row.finishedTime}</TableCell>
-                    <TableCell align="left"><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
-                    <TableCell align="left">{row.correct}/{row.totalAnswers}</TableCell>
-                    {row.status === 'Accepted' ? <TableCell align="left">{row.grade}</TableCell>
-                        : <TableCell align="left"><Chip label="Pending" color="warning" /></TableCell>}
-                    <TableCell align="left">
+                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.firstname}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.lastname}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.finishedTime}</TableCell>
+                    <TableCell align="left" component={'div'}><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
+                    <TableCell align="left" component={'div'}>{row.correct}/{row.totalAnswers}</TableCell>
+                    {row.status === 'Accepted' ? <TableCell align="left" component={'div'}>{row.grade}</TableCell>
+                        : <TableCell align="left" component={'div'}><Chip label="Pending" color="warning" /></TableCell>}
+                    <TableCell align="left" component={'div'}>
                         <Tooltip title="Grade">
                             <div>
                                 <IconButton onClick={handleClickGrade} >
@@ -130,7 +144,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
             else if (today < timeBegin) status = 'Inactive'
             return (
                 <>
-                    <TableCell padding="normal">
+                    <TableCell padding="normal" component={'div'}>
                         <Checkbox
                             color="primary"
                             onClick={(event) => handleClick(event, row.ExamID)}
@@ -140,17 +154,17 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                             }}
                         />
                     </TableCell>
-                    <TableCell align="left">{row.ExamName}</TableCell>
-                    <TableCell align="left">{row.TotalQuestions}</TableCell>
-                    <TableCell align="left">{row.Duration}</TableCell>
-                    <TableCell align="left">{row.TimeBegin}</TableCell>
-                    <TableCell align="left">{row.TimeEnd}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.TotalQuestions}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.Duration}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.TimeBegin}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.TimeEnd}</TableCell>
 
 
-                    <TableCell align="left">
+                    <TableCell align="left" component={'div'}>
                         <Chip label={status} color={statusColor[status]} />
                     </TableCell>
-                    <TableCell align="left"><Tooltip title="Detail">
+                    <TableCell align="left" component={'div'}><Tooltip title="Detail">
                         <div>
                             <IconButton onClick={Preview}>
                                 <ArrowForwardIcon />
@@ -166,32 +180,32 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         if (view === 'Assignment') {
             return (
                 <>
-                    <TableCell align="left">{row.id}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
                     {/* <TableCell align="left">{row.classname}</TableCell> */}
-                    <TableCell align="left">{row.subject}</TableCell>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.duration}</TableCell>
-                    <TableCell align="left">{row.begin}</TableCell>
-                    <TableCell align="left">{row.end}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" component={'div'}>{row.subject}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.name}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.duration}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.begin}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.end}</TableCell>
+                    <TableCell align="left" component={'div'}>
                         <Chip label={row.status} color={statusColor[row.status]} />
                     </TableCell>
-                    <TableCell align="left"><Button color="secondary" onClick={handleSAClick}>{action[row.status]}</Button></TableCell>
+                    <TableCell align="left" component={'div'}><Button color="secondary" onClick={handleSAClick}>{action[row.status]}</Button></TableCell>
 
                 </>
             )
         } else if (view === 'Result') {
             return (
                 <>
-                    <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.finishedTime}</TableCell>
-                    <TableCell align="left"><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
-                    <TableCell align="left">{row.correct}</TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.name}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.finishedTime}</TableCell>
+                    <TableCell align="left" component={'div'}><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
+                    <TableCell align="left" component={'div'}>{row.correct}</TableCell>
+                    <TableCell align="left" component={'div'}>
                         {row.status === 'Accepted' ? row.grade : <Chip label="Pending" color="warning" />}
                     </TableCell>
-                    <TableCell align="left"><Tooltip title="Detail">
+                    <TableCell align="left" component={'div'}><Tooltip title="Detail">
                         <div>
                             <IconButton>
                                 <ArrowForwardIcon />

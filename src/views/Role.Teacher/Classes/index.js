@@ -23,26 +23,29 @@ function Classes({ children }) {
         isOpen: false,
         id: ''
     });
+    const [refresh, setRefresh] = React.useState(false)
     const handleEdit = (id) => {
         setDialog({ pageName: 'Classes', isOpen: true, id: id })
     }
     React.useEffect(() => {
         let mounted = true;
         let classService = ClassService.getInstance()
-        classService.getList()
+        classService.getListForTeacher()
             .then(items => {
                 if (mounted) {
-                    setData(items);
+                    if (items.status.Code === 200)
+                        setData(items.data);
                 }
             })
-        return () => { mounted = false };
-    }, [])
+            .catch((err) => { console.error(err) });
+        return () => { mounted = false};
+    }, [refresh])
     return (
         <WrapperContainer maxWidth="full">
             <CssBaseline />
-            <HeaderPage dialog={dialog} />
+            <HeaderPage dialog={dialog} refresh={() => setRefresh(!refresh)} />
             <FolderGridContainer container >
-                {data?<Folders data={data} view={"Classes"} edit={handleEdit}/>:<LoadingFolder view={'Classes'}/>}
+                {data ? <Folders data={data} view={"Classes"} edit={handleEdit} refresh={() => setRefresh(!refresh)} /> : <LoadingFolder view={'Classes'} />}
             </FolderGridContainer>
             {/* <ClassRoom/> */}
         </ WrapperContainer>

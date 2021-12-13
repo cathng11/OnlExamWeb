@@ -40,7 +40,7 @@ export default function ExamBox({ data, setCurrentProgress }) {
         'Essay': <Essay solution={data[activeStep].solution} />
     }
     return (
-        <Box sx={{ flexGrow: 1, fontSize: '1.25rem' }}>
+        <Box sx={{ flexGrow: 1, fontSize: '1.25rem',height: '70vh',display: 'flex',flexDirection: 'column',justifyContent: 'space-between',alignItems: 'flex-start'}}>
             <Paper
                 square
                 elevation={0}
@@ -48,14 +48,15 @@ export default function ExamBox({ data, setCurrentProgress }) {
                     display: 'flex',
                     alignItems: 'center',
                     // height: 50,
-                    pl: 2,
+                    p: 5,
+                    pb:0,
                     bgcolor: 'background.default',
 
                 }}
             >
                 <Typography variant="h6">Q{activeStep + 1}: {data[activeStep].question}</Typography>
             </Paper>
-            <Box sx={{ height: '60vh', width: '100%', pl: 5, pt: 2 }}>
+            <Box sx={{ maxHeight:'100%',height:'70%', width: '100%', pl: 5, pt: 2 }}>
                 {/* {data[activeStep].type} */}
                 {type[data[activeStep].type]}
             </Box>
@@ -64,9 +65,10 @@ export default function ExamBox({ data, setCurrentProgress }) {
                 steps={maxSteps}
                 position="static"
                 activeStep={activeStep}
+                sx={{display: 'flex',flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center',width:'100%'}}
                 nextButton={
-                    <>
-                        {activeStep === maxSteps - 1 ? <Button>Finish</Button> : <></>}
+                    <Box>
+                        {activeStep === maxSteps - 1 ? <Button variant="contained" color="error">Finish</Button> : <></>}
                         <Button
                             size="small"
                             onClick={handleNext}
@@ -79,7 +81,7 @@ export default function ExamBox({ data, setCurrentProgress }) {
                                 <KeyboardArrowRight />
                             )}
                         </Button>
-                    </>
+                    </Box>
                 }
                 backButton={
                     <Button size="small" onClick={handleBack} disabled={activeStep === 0}>

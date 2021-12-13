@@ -93,15 +93,12 @@ function ResultDialog() {
     )
 }
 export default function ModalDialog({ open, handleClose }) {
-    const Close = () => {
-        handleClose(false)
-    };
+    const [refresh, setRefresh] = React.useState(false)
     const [isSave, setIsSave] = React.useState(false)
     const [isEdit, setIsEdit] = React.useState({
         value: open.id !== '' ? true : false,
         id: open.id
     })
-    console.log(open)
     const handleSave = () => {
         setIsSave(true)
         // setIsEdit(s => { return { ...s, value: false } })
@@ -111,20 +108,34 @@ export default function ModalDialog({ open, handleClose }) {
             value: open.id !== '' ? true : false,
             id: open.id
         })
-    }, [open])
-    let pageDialog = {
-        'Library': <LibraryDialog isSave={isSave} isEdit={isEdit} inserted={() => setIsSave(false)} />,
-        'Assignments': <AssignmentsDialog />,
-        'Classes': <ClassDialog />,
-        'Result': <ResultDialog />,
-        'Students': <StudentDialog />
+    }, [open]);
+    const handleRefresh = () => {
+        setRefresh(!refresh)
+        setIsSave(false)
+        // setIsEdit({
+        //     value: false,
+        //     id: ''
+        // })
+        Close()
     }
+    const Close = () => {
+        setIsSave(false)
+        handleClose(false)
+    };
+    let pageDialog = {
+        'Library': <LibraryDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
+        'Assignments': <AssignmentsDialog />,
+        'Classes': <ClassDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
+        'Result': <ResultDialog />,
+        'Student': <StudentDialog isSave={isSave} isRefresh={handleRefresh}/>
+    }
+
     const titleCreate = {
         'Library': 'Create New Questions Folder',
         'Assignments': 'Create New Class',
         'Classes': 'Create New Class',
         'Result': 'Create New Class',
-        'Students': 'Add students'
+        'Student': 'Add New Students'
     }
     const titleEdit = {
         'Library': 'Edit Questions Folder ID - ' + open.id,

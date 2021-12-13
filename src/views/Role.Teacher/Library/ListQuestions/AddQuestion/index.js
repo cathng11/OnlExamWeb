@@ -172,7 +172,7 @@ export default function AddQuestion() {
 
                         </Box>
                         {/* <FormControl fullWidth={true}> */}
-                        <Box className="main-div" style={{
+                        {options.length > 0 ?<Box className="main-div" style={{
                             // margin: '20px 10px 10px',
                             marginTop: 5,
                             padding: '10px',
@@ -185,46 +185,46 @@ export default function AddQuestion() {
                         }}>
 
 
-                            <Box className="child-div" style={{
-                                padding: '5px', position: 'absolute', top: '-20px', left: '10px',
-                                background: '#fff',
-                            }}>
-                                <InputLabel id="demo-simple-select-label">Options</InputLabel>
-                            </Box>
-                            {options.map((option, index) => {
-                                return (
-                                    <Chip
-                                        key={index}
-                                        name={option}
-                                        label={option.Solution}
-                                        variant="outlined"
-                                        color={option.Correct === 1 ? 'primary' : 'success'}
-                                        onDelete={() => handleDelete(option)}
-                                        sx={{ m: 1 }}
-                                    />
-                                )
-                            })}
-                        </Box>
-                        {/* </FormControl> */}
-                        <Box sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-evenly',
-                            alignItems: 'center',
-                            background: 'white',
-                            p: 2,
+                        <Box className="child-div" style={{
+                            padding: '5px', position: 'absolute', top: '-20px', left: '10px',
+                            background: '#fff',
                         }}>
-                            <Button variant="contained" color="success" p={2}>
-                                Save
-                            </Button>
-                            <Button variant="contained" color="primary">
-                                Reset
-                            </Button>
+                            <InputLabel id="demo-simple-select-label">Options</InputLabel>
                         </Box>
+                        {options.map((option, index) => {
+                            return (
+                                <Chip
+                                    key={index}
+                                    name={option}
+                                    label={option.Solution}
+                                    variant="outlined"
+                                    color={option.Correct === 1 ? 'primary' : 'success'}
+                                    onDelete={() => handleDelete(option)}
+                                    sx={{ m: 1 }}
+                                />
+                            )
+                        })}
+                    </Box>:<></>}
+                    {/* </FormControl> */}
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center',
+                        background: 'white',
+                        p: 2,
+                    }}>
+                        <Button variant="contained" color="success" p={2}>
+                            Save
+                        </Button>
+                        <Button variant="contained" color="primary">
+                            Reset
+                        </Button>
                     </Box>
                 </Box>
-            </Paper>
-        </Grid>
+            </Box>
+        </Paper>
+        </Grid >
 
     )
 }

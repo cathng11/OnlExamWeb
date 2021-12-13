@@ -11,7 +11,6 @@ import { authentication } from './Authentication';
 function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
 	const match = useRouteMatch(basePath);
 	let _path = "";
-
 	return (
 		<Switch>
 			{routes.map((route) => {

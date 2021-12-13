@@ -14,7 +14,7 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
     height: 36,
     border: `2px solid ${theme.palette.background.paper}`,
 }));
-export default function LibraryDialog({ isSave, isEdit, inserted }) {
+export default function LibraryDialog({ isSave, isEdit, refresh }) {
     const [input, setInput] = useState({
         Avatar: '',
         LibraryFolderName: '',
@@ -36,11 +36,11 @@ export default function LibraryDialog({ isSave, isEdit, inserted }) {
                         if (items.status.Code === 200) {
 
                             setState({ alert: true, title: 'Inserted new folder!' })
-                            inserted();
+                            refresh();
                         }
                         else {
                             setState({ alert: true, title: 'Error. Try again!' })
-                            inserted();
+                            refresh();
                         }
 
                         // inputClone.current = input
@@ -77,11 +77,11 @@ export default function LibraryDialog({ isSave, isEdit, inserted }) {
                         console.log(items)
                         if (items.status.Code === 200) {
                             setState({ alert: true, title: `Updated folder ${isEdit.id}!` })
-                            inserted();
+                            refresh();
                         }
                         else {
                             setState({ alert: true, title: 'Error. Try again!' })
-                            inserted();
+                            refresh();
                         }
                     }
                 })

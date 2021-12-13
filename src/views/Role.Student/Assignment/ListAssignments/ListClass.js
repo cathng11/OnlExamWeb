@@ -11,31 +11,34 @@ import FolderIcon from '@mui/icons-material/Folder';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
 
-function ClassItem({ classname, subject, id }) {
+function ClassItem({ item,open }) {
+    const handleClick = ()=>{
+        open(item.ClassID)
+    }
     return (
         <ListItem
             secondaryAction={
-                <IconButton edge="end" aria-label="detail"  >
+                <IconButton edge="end" aria-label="detail" onClick={handleClick} >
                     <ArrowRightIcon />
                 </IconButton>
             }
         >
             <ListItemAvatar>
-                <Avatar><FolderIcon /></Avatar>
+                <Avatar sx={{background: '#3D4E81 ' }}>{item.ClassID}</Avatar>
             </ListItemAvatar>
             <ListItemText
-                primary={classname}
-                secondary={subject}
+                primary={item.ClassName}
+                secondary={`Teacher ${item.TeacherFullname}`}
             />
         </ListItem>
     )
 }
-export default function ListClass({ data }) {
+export default function ListClass({ data,open }) {
     return (
         <Container maxWidth="full">
             <List sx={{ width: '100%', p: 2 }}>
-                {data.map((cl, index) =>
-                    <ClassItem key={index} id={cl.id} classname={cl.classname} subject={cl.subject} />)}
+                {data.map((item, index) =>
+                    <ClassItem key={index} item={item} open={(data)=>open(data)}/>)}
             </List>
         </Container>
     )

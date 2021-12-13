@@ -46,22 +46,22 @@ export default function DoAssignment() {
         setProgress(progress);
     }
     return (
-        <Container maxWidth="full" sx={{ mt: 4, mb: 2 }}>
+        <Container maxWidth="full" sx={{ mt: 6, mb: 2 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={3} lg={3}>
-                    <Paper sx={{ p: 3 }}>
+                    <Paper sx={{ p: 3,boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
                         <StudentDetails info={info} data={data}/>
                     </Paper>
                 </Grid>
                 <Grid container item xs={12} md={8} lg={8} spacing={2}>
                     <Grid item xs={12}>
-                        <Paper>
+                        <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
                             <QuizProgress progress={progress}/>
                         </Paper>
 
                     </Grid>
                     <Grid item xs={12}>
-                        <Paper>
+                        <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
                             <ExamBox data={data} setCurrentProgress={setCurrentProgress}/>
                         </Paper>
                     </Grid>
@@ -72,7 +72,7 @@ export default function DoAssignment() {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }}>
                         <CountdownTimer unit={'seconds'} timevalue={60} activeStep={activeStep} />
                         <CountdownTimer unit={'minutes'} timevalue={5} activeStep={activeStep} />

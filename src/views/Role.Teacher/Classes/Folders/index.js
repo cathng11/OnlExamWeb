@@ -4,7 +4,7 @@ import {
 import * as React from 'react'
 import FolderItem from '../../../../components/Card/FolderItem'
 
-export default function Folders({ data, view, edit }) {
+export default function Folders({ data, view, edit, refresh }) {
     return (
         <Container maxWidth="full" sx={{ mt: 3 }}>
             <Grid
@@ -20,7 +20,8 @@ export default function Folders({ data, view, edit }) {
                             key={index}
                             data={value}
                             view={view}
-                            edit={edit} />
+                            edit={edit}
+                            refresh={() => refresh()} />
                     </Grid>
                 ))}
             </Grid>

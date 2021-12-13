@@ -14,22 +14,22 @@ const headCells = [
     {
         id: 'totalQuiz',
         label: 'Total Quiz',
-        disablePadding: false,
+        disablePadding: true,
     },
     {
         id: 'duration',
         label: 'Duration',
-        disablePadding: false,
+        disablePadding: true,
     },
     {
         id: 'timeBegin',
         label: 'Time Begin',
-        disablePadding: true,
+        disablePadding: false,
     },
     {
         id: 'timeEnd',
         label: 'Time End',
-        disablePadding: true,
+        disablePadding: false,
     },
     {
         id: 'status',
@@ -39,7 +39,7 @@ const headCells = [
     {
         id: 'action',
         label: 'Action',
-        disablePadding: true,
+        disablePadding: false,
     },
 
 ];
@@ -53,13 +53,17 @@ export default function ListAssignmentsInClass() {
     });
     React.useEffect(() => {
         let mounted = true;
+        let classID = match.params.id
         let assignmentService = AssignmentService.getInstance()
-        assignmentService.getList()
+        assignmentService.getListByClassID(classID)
             .then(items => {
                 if (mounted) {
-                    setData(items);
+                    console.log(items)
+                    if (items.status.Code === 200)
+                        setData(items.data);
                 }
             })
+            .catch((err) => { console.error(err) });
         return () => { mounted = false };
     }, [])
     if (data) {

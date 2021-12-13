@@ -17,6 +17,7 @@ function ItemMenu({ to, name, exact, icon }) {
     function handleLogout() {
         localStorage.clear("token");
         localStorage.clear("roles")
+        localStorage.clear("user")
         setNavigate(true);
     }
     if (navigate) {
@@ -47,37 +48,35 @@ function ItemMenu({ to, name, exact, icon }) {
         </Box>
     )
 }
-const menus = [
-    // {
-    //     name: 'Profile',
-    //     to: '/profile',
-    //     exact: false,
-    //     icon: <FaceIcon fontSize="small" />
-    // },
-    {
-        name: 'My Account',
-        to: '/account',
-        exact: false,
-        icon: <AccountBoxIcon fontSize="small" />
-    },
-    {
-        name: 'Settings',
-        to: '/settings',
-        exact: false,
-        icon: <Settings fontSize="small" />
-    },
-    {
-        name: 'Logout',
-        to: '',
-        exact: false,
-        icon: <Logout fontSize="small" />
-    },
-]
+
 export default function MenuBar({ anchorEl, open, setAnchor }) {
 
     const handleClose = () => {
         setAnchor(null)
     }
+    let ROLE=localStorage.getItem('roles')
+    let USER=JSON.parse(localStorage.getItem('user'))
+    let accountPath=ROLE==="STUDENT"?`/${USER.Username}/account`:'/account'
+    let menus = [
+        {
+            name: 'My Account',
+            to: accountPath,
+            exact: false,
+            icon: <AccountBoxIcon fontSize="small" />
+        },
+        {
+            name: 'Settings',
+            to: '/settings',
+            exact: false,
+            icon: <Settings fontSize="small" />
+        },
+        {
+            name: 'Logout',
+            to: '',
+            exact: false,
+            icon: <Logout fontSize="small" />
+        },
+    ]
     return (
         <Menu
             anchorEl={anchorEl}

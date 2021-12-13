@@ -224,11 +224,12 @@ function Dashboard(route) {
                             sx={{
                                 height: '50vh',
                                 pr: 1,
-                                background: 'white',
                             }}
                         >
                             <Item
                                 sx={{
+                                    mt:2,
+
                                     height: '100%',
                                     backgroundColor:'#F0F1F5',
                                     backdropFilter: 'blur(50px)',

@@ -28,7 +28,16 @@ const theme = createTheme({
       main: '#76b852',
       dark: '#0B4619',
       gradient: 'linear-gradient(to right, #dce35b, #45b649)'     
-    }
+    },
+    error:{
+      main:'#630000',
+      dark:'#3D0000',
+      light: '#911F27'
+    },
+    success:{
+      main:'#4E9F3D',
+      dark:'#1E5128',
+      light: '#D8E9A8'    }
   },
   // typography: { 
   //    useNextVariants: true

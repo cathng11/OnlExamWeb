@@ -19,9 +19,9 @@ export default function TableHeader(props) {
         onRequestSort(event, property);
     };
     return (
-        <TableHead>
-            <TableRow>
-                {role === 'Student' ? <></> : <TableCell padding="normal">
+        <TableHead component={'div'}>
+            <TableRow component={'div'}>
+                {role === 'Student' ? <></> : <TableCell padding="normal" component={'div'}>
                     <Checkbox
                         color="primary"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -34,6 +34,7 @@ export default function TableHeader(props) {
                 </TableCell>}
                 {headCells.map((headCell) => (
                     <TableCell
+                    component={'div'}
                         sx={{ fontSize: '1.25rem' }}
                         key={headCell.id}
                         align='left'

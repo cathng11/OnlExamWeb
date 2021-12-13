@@ -18,7 +18,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-export default function FolderItem({ data, edit, view,isDeleted }) {
+import ClassService from './../../services/class.service';
+export default function FolderItem({ data, edit, view, refresh }) {
     const history = useHistory()
     const [anchorEl, setAnchorEl] = React.useState(null)
     const open = Boolean(anchorEl)
@@ -39,7 +40,7 @@ export default function FolderItem({ data, edit, view,isDeleted }) {
             edit(data.LibraryFolderID)
         }
         if (view === 'Classes') {
-            edit(data.id)
+            edit(data.ClassID)
         }
 
     }
@@ -63,7 +64,7 @@ export default function FolderItem({ data, edit, view,isDeleted }) {
                     if (items.status.Code === 200) {
                         setState({ alert: true, title: `Deleted folder ${id}!` })
                         history.push('/library')
-                        isDeleted()
+                        refresh()
                     }
                     else {
                         setState({ alert: true, title: 'Error. Try again!' })
@@ -72,7 +73,20 @@ export default function FolderItem({ data, edit, view,isDeleted }) {
                 .catch(err => console.error(err))
         }
         if (view === 'Classes') {
-            edit(data.id)
+            let id = data.ClassID
+            let classService = ClassService.getInstance();
+            classService.deleteClass(id)
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        setState({ alert: true, title: `Deleted class ${id}!` })
+                        history.push('/classes')
+                        refresh()
+                    }
+                    else {
+                        setState({ alert: true, title: 'Error. Try again!' })
+                    }
+                })
+                .catch(err => console.error(err))
         }
         handleClose()
     }

@@ -186,7 +186,7 @@ const PrivateRoutesConfig = [
         ],
     },
     {
-        path: '/id_student/take-assignment',
+        path: '/take-assignment',
         exact: false,
         title: 'Take An Assignment',
         type: 'None',

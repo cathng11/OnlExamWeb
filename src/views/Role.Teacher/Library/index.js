@@ -41,15 +41,15 @@ export default function Library() {
                         setData(items.data);
                 }
             })
-        return () => { mounted = false; setRefresh(false) };
+        return () => { mounted = false};
     }, [refresh])
 
     return (
         <WrapperContainer maxWidth="full" >
             <CssBaseline />
-            <HeaderPage dialog={dialog} />
+            <HeaderPage dialog={dialog} refresh={() => setRefresh(!refresh)}/>
             <FolderGridContainer container>
-                {data ? <Folders edit={handleEdit} data={data} isDeleted={()=>setRefresh(true)} /> : <LoadingFolder view={'Library'} />}
+                {data ? <Folders edit={handleEdit} data={data} refresh={()=>setRefresh(!refresh)} /> : <LoadingFolder view={'Library'} />}
             </FolderGridContainer>
         </WrapperContainer>
     )

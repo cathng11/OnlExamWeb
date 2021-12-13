@@ -7,16 +7,18 @@ import React from 'react';
 function CircularProgressWithTimer(props) {
 
     return (
-        <Box sx={{ position: 'relative', display: 'inline-flex', p: 2 }}>
+        <Box sx={{ position: 'relative', display: 'inline-flex', p: 2,
+    }}>
             <CircularProgress
                 variant="determinate"
                 {...props}
                 thickness={3}
-                color={"inherit"}
+                color={props.unit==='seconds'?"error":"primary"}
                 size={100}
                 sx={{
-                    border: '0.5px solid gray',
-                    borderRadius: '50px'
+                    border: '0.5px solid #C9CCD5',
+                    borderRadius: '50px',
+                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;'
                 }}
             />
             <Box

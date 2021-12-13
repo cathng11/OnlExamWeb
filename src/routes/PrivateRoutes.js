@@ -26,7 +26,7 @@ export default function PrivateRoutes() {
 	}
 	let history = useHistory()
 	let allowedRoutes = [];
-	const { user } = useContext(UserContext);
+	const user = JSON.parse(localStorage.getItem("user"));
 	allowedRoutes = getAllowedRoutes(PrivateRoutesConfig);
 	React.useEffect(() => {
 		if (localStorage.getItem("token")) {
@@ -46,7 +46,7 @@ export default function PrivateRoutes() {
 					<DrawerHeader sx={{ background: 'white' }}></DrawerHeader>
 					<MapAllowedRoutes
 						routes={allowedRoutes}
-						basePath={localStorage.getItem("roles") === 'STUDENT' ? `/${JSON.parse(localStorage.getItem("token")).Username}` : ""}
+						basePath={localStorage.getItem("roles") === 'STUDENT' ? `/${JSON.parse(localStorage.getItem("user")).Username}` : ""}
 						isAddNotFound />
 				</Box>
 
