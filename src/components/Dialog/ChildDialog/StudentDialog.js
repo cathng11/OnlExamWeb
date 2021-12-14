@@ -1,8 +1,8 @@
-import { Box, Chip, TextField, Button, InputLabel } from '@mui/material';
+import { Box, Button, Chip, InputLabel, TextField } from '@mui/material';
 import * as React from 'react';
-import AlertBar from './../../Alert/AlertBar';
+import { matchPath, useHistory } from "react-router-dom";
 import ClassService from './../../../services/class.service';
-import { useHistory, matchPath } from "react-router-dom";
+import AlertBar from './../../Alert/AlertBar';
 
 export default function StudentDialog({ isSave, isRefresh }) {
     const [members, setMembers] = React.useState([])
@@ -39,7 +39,6 @@ export default function StudentDialog({ isSave, isRefresh }) {
             let classService = ClassService.getInstance()
             classService.checkEmailMember(classID, { Email: member })
                 .then(items => {
-                    console.log(items)
                     if (items.status.Code === 200) {
                         if (!list.includes(member)) {
                             list.push(member)
@@ -55,13 +54,9 @@ export default function StudentDialog({ isSave, isRefresh }) {
                 })
                 .catch(err => console.error(err))
         }
-
-
-        console.log(members)
     }
     React.useEffect(() => {
         let mounted = true;
-        console.log(isSave)
 
         if (isSave) {
             let insert = { Email: members }
@@ -69,7 +64,6 @@ export default function StudentDialog({ isSave, isRefresh }) {
             classService.insertMembersInClass(classID, insert)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             setState({ alert: true, title: `Added all members in class ${classID}!` })
                             isRefresh();
@@ -83,7 +77,7 @@ export default function StudentDialog({ isSave, isRefresh }) {
                 .catch(err => console.error(err))
         }
         return () => { mounted = false };
-
+        //eslint-disable-next-line
     }, [refresh,isSave])
     return (
         <Box>

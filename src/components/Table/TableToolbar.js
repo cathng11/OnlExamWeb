@@ -70,7 +70,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
             let classID = match.params.id
             classService.deleteMembersInClass(classID, { UserID: selected })
                 .then(items => {
-                    console.log(items)
                     if (items.status.Code === 200) {
                         refresh()
                         setState({ alert: true, title: `Deleted members ${selected} from this class` })

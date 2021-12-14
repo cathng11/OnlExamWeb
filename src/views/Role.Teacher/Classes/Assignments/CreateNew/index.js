@@ -2,12 +2,12 @@ import React from 'react'
 import { Grid, Container, Typography, Box } from '@mui/material'
 import Logo from '../../../../../assets/images/boy_computer.png'
 import Steppers from './Steppers'
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 
 export default function CreateNew() {
-    let location= useLocation();
-    let query = new URLSearchParams(location.search)
-    console.log(query.get("inClass"))
+    // let location= useLocation();
+    // let query = new URLSearchParams(location.search)
+    // console.log(query.get("inClass"))
     return (
         <Container maxWidth="full" sx={{ mt: 5, mb: 2, ml: 4, mr: 4 }}>
             <Grid container spacing={1} rowSpacing={{ xs: 25, md: 5, lg: 0 }}>

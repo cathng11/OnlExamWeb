@@ -1,13 +1,11 @@
-import React from 'react'
 import {
-    Table,
+    Box, Table,
     TableBody,
-    TableContainer,
-    Box
-} from '@mui/material'
+    TableContainer
+} from '@mui/material';
+import React from 'react';
 import HeadTable from './HeadTable';
 import RowTable from './RowTable';
-import TableToolbar from '../../../../../components/Table/TableToolbar';
 import ToolbarTable from './ToolbarTable';
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -24,7 +22,7 @@ function getComparator(order, orderBy) {
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
-export default function MainTable({ rows, headCells }) {
+export default function MainTable({ rows, headCells,refresh }) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
@@ -36,7 +34,7 @@ export default function MainTable({ rows, headCells }) {
     };
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.id);
+            const newSelecteds = rows.map((n) => n.QuestionID);
             setSelected(newSelecteds);
             return;
         }
@@ -63,7 +61,7 @@ export default function MainTable({ rows, headCells }) {
     }
     return (
         <Box sx={{ width: '100%' }}>
-            <ToolbarTable numSelected={selected.length} selected={selected}/>
+            <ToolbarTable numSelected={selected.length} selected={selected} refresh={() => refresh()}/>
             <TableContainer
                 sx={{ maxHeight: '65vh' }}
             >

@@ -1,15 +1,11 @@
-import React from 'react'
-import {
-    Container,
-    List,
-    ListItem,
-    ListItemText,
-    ListItemAvatar,
-    Avatar
-} from '@mui/material'
-import FolderIcon from '@mui/icons-material/Folder';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import {
+    Avatar, Container,
+    List,
+    ListItem, ListItemAvatar, ListItemText
+} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import React from 'react';
 
 function ClassItem({ item,open }) {
     const handleClick = ()=>{

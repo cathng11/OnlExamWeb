@@ -71,6 +71,15 @@ export default class LibraryService {
         let url = `libraries/${id}`;
         let method = "DELETE";
         return await this.request(url, method).then(res => res.json())
-
+    }
+    async insertQuestion(LibraryID, data) {
+        let url = `questions/lib/${LibraryID}`;
+        let method = "PUT";
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async deleteQuestions( data) {
+        let url = `questions`;
+        let method = "DELETE";
+        return await this.request(url, method, data).then(res => res.json())
     }
 }

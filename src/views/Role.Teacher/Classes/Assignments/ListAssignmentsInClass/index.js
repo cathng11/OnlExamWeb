@@ -58,13 +58,12 @@ export default function ListAssignmentsInClass() {
         assignmentService.getListByClassID(classID)
             .then(items => {
                 if (mounted) {
-                    console.log(items)
                     if (items.status.Code === 200)
                         setData(items.data);
                 }
             })
             .catch((err) => { console.error(err) });
-        return () => { mounted = false };
+        return () => { mounted = false };//eslint-disable-next-line
     }, [])
     if (data) {
         return (

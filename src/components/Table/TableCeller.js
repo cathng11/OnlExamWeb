@@ -53,7 +53,6 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     }
     const [openMemberDetail, setOpenMemberDetail] = React.useState(false)
     function handleMemberDetail() {
-        console.log(match.params.id)
         history.push(`${history.location.pathname}?memberInfoID=${row.UserID}`);
         setOpenMemberDetail(true)
     }

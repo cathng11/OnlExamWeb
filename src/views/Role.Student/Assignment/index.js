@@ -32,7 +32,6 @@ export default function Assignment() {
         classService.getListForStudent()
             .then(items => {
                 if (mounted) {
-                    console.log(items)
                     if (items.status.Code === 200)
                         setListClass(items.data);
                 }

@@ -12,17 +12,7 @@ import React, { memo, useState } from 'react'
 import Calendar from 'react-calendar'
 import '../../styles/Calendar.css'
 
-function generate(element) {
-    return [0, 1, 2, 4, 5].map((value) =>
-        React.cloneElement(element, {
-            key: value,
-        }),
-    )
-}
 
-const Demo = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-}))
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),

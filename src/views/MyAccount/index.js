@@ -1,19 +1,11 @@
-import React, { useRef, useState } from 'react'
 import {
-    Paper,
-    TextField,
-    Typography,
-    Button,
-    Box,
-    Container,
-    styled,
-    Backdrop,
-    CircularProgress
-} from '@mui/material'
-import HelperText from './../../components/HelperText/HelperText';
+    Backdrop, Box, Button, CircularProgress, Container, Paper, styled, TextField,
+    Typography
+} from '@mui/material';
+import React, { useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import AlertBar from './../../components/Alert/AlertBar';
 import ProfileService from './../../services/profile.service';
-import { Redirect } from 'react-router-dom';
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
     height: '75vh',
@@ -55,7 +47,7 @@ export default function MyAccount() {
         else if (_newPass.length < 8) {
             setState(s => { return { ...s, alert: true, title: 'Password must be 8 characters long!' } });
         }
-        else if (_confirm != _newPass) {
+        else if (_confirm !== _newPass) {
             setState(s => { return { ...s, alert: true, title: 'Confirm password is not matched!' } });
         }
         else {
@@ -63,7 +55,6 @@ export default function MyAccount() {
             let profileService = ProfileService.getInstance();
             profileService.updatePassword({ OldPassword: _old, NewPassword: _newPass })
                 .then(items => {
-                    console.log(items)
                     if (items.status.Code === 200) {
                         setState(s => { return { alert: true, title: 'Changed password', loading: false } });
                         setTimeout(() => {

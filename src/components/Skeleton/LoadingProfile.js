@@ -29,18 +29,7 @@ const MainPaper = styled(Paper)(({ theme }) => ({
     padding: '20px',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
 }));
-const FooterPaper = styled(Paper)(({ theme }) => ({
-    height: '15vh',
-    width: '100%',
-    borderTop: '1px solid #eef2f3',
-    borderRadius: '0px 0px 20px 20px',
-    background: 'white',
-    bottom: '0px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
-}));
+
 export default function LoadingProfile() {
     return (
         <div>
@@ -63,7 +52,7 @@ export default function LoadingProfile() {
                                 <Skeleton variant="rectangular" width={"100%"} height={"40%"} />
                             </BriefPaper>
                         </Grid>
-                        <Grid item xs={12} lg={8} >
+                        <Grid item xs={12} md={8} lg={8} >
                             <MainPaper>
                                 <Stack spacing={2}>
                                     <Skeleton variant="text" width={"100%"} height={40} />

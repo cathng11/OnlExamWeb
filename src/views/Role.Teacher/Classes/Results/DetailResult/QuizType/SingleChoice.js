@@ -20,7 +20,6 @@ export default function SingleChoice({ solution }) {
                             value={val.options} 
                             control={<Radio />} 
                             label={val.options}
-                            onChange={()=>console.log(val.options)}
                         />);
                     else return (<FormControlLabel
                         key={index}

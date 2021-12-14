@@ -1,40 +1,51 @@
-import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 // import FileDownloadIcon from '@mui/icons-material/FileDownload';
 // import FileUploadIcon from '@mui/icons-material/FileUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import {
     alpha,
-    Button, IconButton, Toolbar, Tooltip, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { matchPath, useHistory } from "react-router-dom";
-import SearchBtn from './../../../../../components/Button/SearchBtn';
+import { useHistory } from "react-router-dom";
 import AlertBar from './../../../../../components/Alert/AlertBar';
+import SearchBtn from './../../../../../components/Button/SearchBtn';
+import LibraryService from './../../../../../services/library.service';
 
 
-export default function ToolbarTable(props) {
+export default function ToolbarTable({ numSelected, selected, refresh }) {
     let history = useHistory();
     const [openDialog, setOpenDialog] = React.useState(false)
     const [state, setState] = React.useState({
         alert: false,
         title: ''
     })
-    const { numSelected, selected } = props;
+    // const match = matchPath(history.location.pathname, {
+    //     path: `/library/folder/:nameFolder/:idFolder`,
+    //     exact: true,
+    //     strict: false
+    // });
 
-    function handleAdd() {
-        history.push(`${history.location.pathname}`);
-    }
     function handleEdit() {
         history.push(`${history.location.pathname}?editID=${selected}`);
     }
     function handleDelete() {
-        console.log(selected);
+        history.push(`${history.location.pathname}`);
         setOpenDialog(true)
     }
+
     function handleAcceptDel() {
-        setState({ alert: true, title: `Deleted questions ${selected}!` })
+        let libraryService = LibraryService.getInstance()
+        libraryService.deleteQuestions({ QuestionID: selected })
+            .then(items => {
+                if (items.status.Code === 200) {
+                    setState({ alert: true, title: `Deleted questions ${selected}!` })
+                    refresh();
+                } else {
+                    setState({ alert: true, title: items.message })
+                }
+            }).catch(err => console.error(err))
         handleClose()
     }
     function handleClose() {
@@ -131,7 +142,7 @@ export default function ToolbarTable(props) {
                             <FileDownloadIcon />
                         </IconButton>
                     </Tooltip> */}
-                        <Button color="inherit" startIcon={<AddIcon />} onClick={handleAdd}>ADD</Button>
+                        {/* <Button color="inherit" startIcon={<AddIcon />} onClick={handleAdd}>ADD</Button> */}
                         {/* <Button color="inherit" startIcon={<FileUploadIcon />}>IMPORT</Button>
                     <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
                     </>

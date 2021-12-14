@@ -1,4 +1,3 @@
-import CONSTANTS from './../constants/index';
 const headers = {
     'Content-Type': 'application/json',
     // 'Authorization': 'Bearer ' + CONSTANTS.TOKEN_TEACHER

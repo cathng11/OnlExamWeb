@@ -33,7 +33,6 @@ export default class ProfileService {
         if (data) {
             options.body = JSON.stringify({ ...data })
         }
-        console.log(options)
         return fetch(_url, options)
     }
     async get() {

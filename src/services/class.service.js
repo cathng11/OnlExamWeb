@@ -30,7 +30,6 @@ export default class ClassService {
         if (data) {
             options.body = JSON.stringify({ ...data })
         }
-        console.log(JSON.stringify({ ...data }))
         return fetch(_url, options)
     }
     async getListForTeacher() {
@@ -73,16 +72,9 @@ export default class ClassService {
         let method = "PUT";
         return await this.request(url, method).then(res => res.json())
     }
-    async deleteMembersInClass(id) {
-        let url = `classes/member/${id}`;
-        let method = "DELETE";
-        return await this.request(url, method).then(res => res.json())
-    }
     async checkEmailMember(classID, email) {
         let url = `classes/member/${classID}/check`;
         let method = "POST";
-        let data = email
-        console.log("data",data)
         return await this.request(url, method, email).then(res => res.json())
     }
     async insertMembersInClass(classID, listEmail) {

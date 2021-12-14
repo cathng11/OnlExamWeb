@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
 import {
   BrowserRouter as Router
 } from "react-router-dom";
+import UserContext from './context/UserContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Routes from './routes';
-import UserContext from './context/UserContext';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {

@@ -12,12 +12,13 @@ export default function MyProfile() {
         profileService.get()
             .then(items => {
                 if (mounted) {
-                    if (items.data)
-                        // console.log(items)
+                    if (items.status.Code===200)
                         setData(items.data[0]);
-                    else console.log(items)
+                    else {
+
+                    }
                 }   
-            })
+            }).catch(err => {console.error(err)})
         return () => mounted = false;
     }, [])
     if (data) {

@@ -6,19 +6,18 @@ import {
     CardActions, Divider, IconButton,
     Menu, MenuItem
 } from '@mui/material';
-import React from 'react';
-import { useHistory } from "react-router-dom";
-import CardAreaClass from './CardAreaClass';
-import CardAreaLibrary from './CardAreaLibrary';
-import LibraryService from './../../services/library.service';
-import { HistoryRounded } from '@mui/icons-material';
-import AlertBar from '../Alert/AlertBar';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import React from 'react';
+import { useHistory } from "react-router-dom";
+import AlertBar from '../Alert/AlertBar';
 import ClassService from './../../services/class.service';
+import LibraryService from './../../services/library.service';
+import CardAreaClass from './CardAreaClass';
+import CardAreaLibrary from './CardAreaLibrary';
 export default function FolderItem({ data, edit, view, refresh }) {
     const history = useHistory()
     const [anchorEl, setAnchorEl] = React.useState(null)

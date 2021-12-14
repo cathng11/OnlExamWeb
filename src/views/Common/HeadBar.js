@@ -1,3 +1,4 @@
+import SkateboardingIcon from '@mui/icons-material/Skateboarding';
 import {
   AppBar, Avatar, Box, Button, Divider, Grid, IconButton, styled, Toolbar, Tooltip, Typography
 } from '@mui/material';
@@ -5,13 +6,8 @@ import * as React from 'react';
 import {
   Link, Route, withRouter
 } from "react-router-dom";
-import logo from '../../assets/images/logo.png';
 import '../../styles/LinkEffect.css';
 import MenuBar from '../Menu/MenuBar';
-import UserContext from './../../context/UserContext';
-import SkateboardingIcon from '@mui/icons-material/Skateboarding';
-import CONSTANTS from './../../constants/index';
-import ProfileService from '../../services/profile.service';
 
 
 const MenuLink = ({ title, path, activeOnlyWhenExact, username }) => {
@@ -107,24 +103,7 @@ function HeadBar({ allowedRoutes }) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  let TOKEN = localStorage.getItem(CONSTANTS.USER_TOKEN)
-  // React.useEffect(() => {
-  //   let mounted = true;
-  //   let profileService = ProfileService.getInstance();
 
-  //   console.log(TOKEN)
-  //   if (localStorage.getItem(CONSTANTS.USER_TOKEN))
-  //   console.log('hi')
-  //     profileService.get()
-  //       .then(items => {
-  //         if (mounted) {
-  //           if (items.data)
-  //           localStorage.setItem('user', items.data[0]);
-  //           else console.log(items)
-  //         }
-  //       })
-  //   return () => mounted = false;
-  // }, [])
   return (
     <CustomAppBar position="fixed" >
       <CustomToolbar>
@@ -132,11 +111,6 @@ function HeadBar({ allowedRoutes }) {
           <Grid item xs={2} md={2} lg={2}>
             <LogoBox>
               <Box >
-                {/* <img
-                  src={logo}
-                  style={{ width: '50px', height: '50px' }}
-                  alt="Day la anh"
-                /> */}
                 <SkateboardingIcon />
               </Box>
               <Typography variant="h4" component="div" sx={{ flexGrow: 0.1 }} color="#FFFADE  ">

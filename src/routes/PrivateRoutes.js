@@ -1,11 +1,10 @@
 import { Box, styled } from '@mui/material';
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment } from 'react';
 import { Redirect, useHistory } from "react-router-dom";
 import { PrivateRoutesConfig } from '../config';
 import '../styles/LinkEffect.css';
 import { getAllowedRoutes, isLoggedIn } from '../utils';
 import HeadBar from '../views/Common/HeadBar';
-import UserContext from './../context/UserContext';
 import MapAllowedRoutes from './MapAllowedRoutes';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -16,14 +15,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function PrivateRoutes() {
-	const [anchorEl, setAnchorEl] = React.useState(null)
-	const open = Boolean(anchorEl)
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget)
-	}
-	const handleClose = () => {
-		setAnchorEl(null)
-	}
 	let history = useHistory()
 	let allowedRoutes = [];
 	const user = JSON.parse(localStorage.getItem("user"));
@@ -32,9 +23,7 @@ export default function PrivateRoutes() {
 		if (localStorage.getItem("token")) {
 			if (localStorage.getItem("roles") === 'STUDENT')
 				history.push(`/${user.Username}`)
-
-		}
-
+		}// eslint-disable-next-line
 	}, [])
 	if (isLoggedIn()) allowedRoutes = getAllowedRoutes(PrivateRoutesConfig);
 	else return <Redirect to="/login" />;

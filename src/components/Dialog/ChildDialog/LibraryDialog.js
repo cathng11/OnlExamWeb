@@ -26,13 +26,11 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
     })
     useEffect(() => {
         let mounted = true;
-        console.log(isSave)
         let libraryService = LibraryService.getInstance();
         if (!isEdit.value && isSave) {
             libraryService.insert(input)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
 
                             setState({ alert: true, title: 'Inserted new folder!' })
@@ -54,7 +52,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
             libraryService.getByID(isEdit.id)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             let item = items.data[0]
                             setInput({
@@ -74,7 +71,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
             libraryService.update(isEdit.id,input)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             setState({ alert: true, title: `Updated folder ${isEdit.id}!` })
                             refresh();
@@ -87,7 +83,7 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                 })
                 .catch(err => console.error(err))
         }
-        return () => mounted = false;
+        return () => mounted = false;//eslint-disable-next-line
     }, [isSave])
     const handleChange = (e) => {
         const name = e.target.name;

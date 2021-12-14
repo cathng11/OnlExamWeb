@@ -36,7 +36,6 @@ export default function Library() {
         libraryService.getList()
             .then(items => {
                 if (mounted) {
-                    console.log(items)
                     if (items.status.Code === 200)
                         setData(items.data);
                 }

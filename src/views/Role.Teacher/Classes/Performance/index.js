@@ -1,6 +1,5 @@
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
-import { matchPath, useHistory } from "react-router-dom";
 import UsersService from './../../../../services/users.service';
 function BoxItem({ data }) {
     return (
@@ -39,13 +38,8 @@ function BoxItem({ data }) {
     )
 }
 export default function Performance() {
-    let history = useHistory();
     const [numStu,setNumStu]=React.useState(0)
-    const match = matchPath(history.location.pathname, {
-        path: `/classes/:id`,
-        exact: true,
-        strict: false
-    });
+
     React.useEffect(() => {
         let mounted = true;
         let usersService = UsersService.getInstance()

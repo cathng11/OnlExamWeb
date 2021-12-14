@@ -1,6 +1,6 @@
 import GoogleIcon from '@mui/icons-material/Google';
 import { Backdrop, CircularProgress } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from "react-google-login";
 import { useHistory } from 'react-router-dom';
 import '../../styles/Login.css';
@@ -47,13 +47,13 @@ function Login() {
             setState(s => { return { loading: false, alert: true, title: user.message.message } })
             user.setMessage(null)
         }
-        if (user.message && user.message.status.Code === 200) {
+        if (history.location.pathname==='/register' && user.message && user.message.status.Code === 200) {
             setState(s => { return { loading: false, alert: true, title: "Signup Successfully" } })
             user.setMessage(null)
-            openLogin()
+            openLogin() 
             history.push('/login')
-        }
-    }, [mobileRes, TOKEN, user, state]);
+        }// eslint-disable-next-line
+    }, [mobileRes, TOKEN, user, state,history]);
 
     const handleClose = () => {
         setState(s => { return { ...s, loading: false } });
@@ -66,13 +66,11 @@ function Login() {
             password: loginForm.password,
             isLogin: true
         });
-
     }
     const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);//eslint-disable-line
 
     const handleSignUp = e => {
         e.preventDefault();
-        console.log(signupForm)
         let { username, email, password, conf } = signupForm
         if (!username || !email || !password || !conf) {
             setState(s => { return { ...s, alert: true, title: 'Input fields is required!' } });
@@ -109,7 +107,6 @@ function Login() {
     const handleChangeSignup = (e) => {
         let name = e.target.name;
         let value = e.target.value;
-        let info = signupForm;
         setSignupForm(s => { return { ...s, [name]: value } },)
     }
 
@@ -130,7 +127,6 @@ function Login() {
     };
     function responseGoogleError(response) {
         setState(s => { return { ...s, alert: true, title: response } })
-        console.log(response);
     };
     function openLogin(e) {
         if (e) e.preventDefault();

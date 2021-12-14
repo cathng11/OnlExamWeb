@@ -95,7 +95,6 @@ const headCells = [
 ];
 export default function ListResultInClass() {
     let history = useHistory();
-    const [loading, setLoading] = React.useState(false)
     const [value, setValue] = React.useState(0);
     const [assignment, setAssignment] = React.useState(null)
     const handleChange = (event, newValue) => {
@@ -123,7 +122,7 @@ export default function ListResultInClass() {
                 }
             })
             .catch((err) => { console.error(err) });
-        return () => { mounted = false };
+        return () => { mounted = false };//eslint-disable-next-line
     }, [])
     if (assignment) {
         return (

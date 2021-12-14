@@ -15,7 +15,6 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
             classService.insertClass({ ClassName: className })
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             setState({ alert: true, title: 'Inserted new class!' })
                             refresh();
@@ -30,11 +29,9 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
         }
 
         if (isEdit.value) {
-            console.log(isEdit)
             classService.getClassByID(isEdit.id)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             let item = items.data
                             setClassName(item.ClassName)
@@ -48,11 +45,9 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
         }
         if (isSave && isEdit.value) {
             let update = { ClassName: className }
-            console.log('update')
             classService.updateClass(isEdit.id, update)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             setState({ alert: true, title: `Updated class ${isEdit.id}!` })
                             refresh();
@@ -66,7 +61,7 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
                 })
                 .catch(err => console.error(err))
         }
-        return () => mounted = false;
+        return () => mounted = false;//eslint-disable-next-line
     }, [isSave])
     const handleChange = (e) => {
         setClassName(e.target.value)

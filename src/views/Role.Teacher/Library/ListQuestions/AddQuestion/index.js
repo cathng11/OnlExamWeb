@@ -5,11 +5,20 @@ import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, matchPath } from "react-router-dom";
 import LibraryService from '../../../../../services/library.service';
+import AlertBar from './../../../../../components/Alert/AlertBar';
 
-export default function AddQuestion() {
-    const [input, setInput] = React.useState(null);
+export default function AddQuestion({ isRefresh }) {
+    const [input, setInput] = React.useState({
+        Question: '',
+        Type: '',
+        Level: ''
+    });
+    const [state, setState] = React.useState({
+        alert: false,
+        title: ''
+    })
     const [correct, setCorrect] = React.useState(false)
     const [solution, setSolution] = React.useState('')
     const [options, setOptions] = React.useState([]);
@@ -17,9 +26,18 @@ export default function AddQuestion() {
     let history = useHistory();
     let location = useLocation();
     let query = new URLSearchParams(location.search)
+    const match = matchPath(history.location.pathname, {
+        path: `/library/folder/:nameFolder/:idFolder`,
+        exact: false,
+        strict: false
+    });
+    let questionID = query.get("editID") ? query.get("editID") : -1
 
-    const handleChange = (event) => {
-        setInput(event.target.value);
+    const folderID = match.params.idFolder
+    const handleChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        setInput((s) => { return { ...s, [name]: value } });
     };
     const handleDelete = (option) => {
         let list = options
@@ -31,24 +49,47 @@ export default function AddQuestion() {
     };
     const handleAdd = () => {
         let list = options
-        list.push({
-            Solution: solution,
-            Correct: correct ? 1 : 0
-        })
-        setOptions(list)
-        setRefresh(!refresh)
-        console.log(options)
+        let clone = options
+        let _sol = solution
+        let _cor = correct ? 1 : 0
+        let item = {
+            Solution: _sol,
+            Correct: _cor
+        }
+
+        if (!_sol) {
+            setState({ alert: true, title: `Option field is required` })
+            return;
+        }
+        if (!input.Type) {
+            setState({ alert: true, title: `Type field must be filled before adding solution` })
+        }
+        else {
+            const found = clone.some(i => i.Solution === _sol);
+            if (!found) {
+                list.push(item)
+                setOptions(list)
+                const numCorrect = list.filter(i => i.Correct === 1).length;
+                if (numCorrect > 1) {
+                    setInput(s => { return { ...s, Type: 'Multiple Choices' } })
+                }
+                else if (numCorrect === 1 && list > 2) {
+                    setInput(s => { return { ...s, Type: 'Single Choice' } })
+                }
+                setRefresh(!refresh)
+            } else {
+                setState({ alert: true, title: `This solution is existed in Options` })
+            }
+        }
+        setSolution('')
     }
     React.useEffect(() => {
         let mounted = true;
-        let id = query.get("editID")
-        if (id) {
-            console.log("ID", id)
+        if (questionID > 1) {
             let libraryService = LibraryService.getInstance()
-            libraryService.getQuestionsByID(id)
+            libraryService.getQuestionsByID(questionID)
                 .then(items => {
                     if (mounted) {
-                        console.log(items)
                         if (items.status.Code === 200) {
                             let item = items.data
                             let list = []
@@ -58,7 +99,7 @@ export default function AddQuestion() {
                                 Level: item.Level
                             })
                             item.Solution.map((i) => {
-                                list.push({
+                                return list.push({
                                     SolutionID: i.SolutionID,
                                     Solution: i.Solution,
                                     Correct: i.Correct
@@ -68,13 +109,89 @@ export default function AddQuestion() {
                         }
 
                     }
-                })
+                }).catch(err => console.error(err))
         }
         return () => { mounted = false };
 
-    }, [refresh])
+    }, [refresh, folderID, questionID])
+    const handleReset = () => {
+        setInput({
+            Question: '',
+            Type: '',
+            Level: ''
+        })
+        setSolution('')
+        setCorrect(false)
+        setOptions([])
+        history.push(`${history.location.pathname}`);
+
+    }
+    const checkInput = () => {
+        let type = input.Type;
+        let question = input.Question
+        let level = input.Level
+        if (!question || !type || !level || !options) {
+            setState({ alert: true, title: `Input fields is required` })
+        }
+        else if (type !== 'Essay' && type !== 'Short Answer') {
+            const found = options.filter(i => i.Correct === 1).length;
+
+            if (options.length < 2) {
+                setState({ alert: true, title: `At least 2 solutions for this question type` })
+                return true;
+            }
+            else if (found < 1) {
+                setState({ alert: true, title: `Invalid options` })
+                return true;
+            }
+            else if (type === 'True/False' && options.length === 2) {
+                const t = options.some(i => i.Solution === 'True');
+                const f = options.some(i => i.Solution === 'False');
+                if (!t || !f) {
+                    setState({ alert: true, title: `True/False Solution is not valid` })
+                    return true;
+                }
+                return false;
+            }
+            else if (type === 'Multiple Choices' && options.filter(i => i.Correct === 1).length < 2) {
+                setState({ alert: true, title: `At least 2 correct answer for this question type` })
+                return true;
+
+            }
+            return false;
+        }
+        return false;
+    }
+    const handleSave = () => {
+
+        if (!checkInput()) {
+            let libraryService = LibraryService.getInstance();
+            libraryService.insertQuestion(folderID, {
+                Question: input.Question,
+                Type: input.Type,
+                Level: input.Level,
+                Solution: options
+            })
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        setState({ alert: true, title: 'Added new question to folder' })
+                        handleReset()
+                        isRefresh()
+                    }
+                    else {
+                        setState({ alert: true, title: items.message })
+                    }
+                })
+                .catch(err => console.error(err))
+        }
+    }
     return (
         <Grid item xs={12} md={12} lg={4} sx={{ background: 'white' }}>
+            <AlertBar
+                title={state.title}
+                openAlert={state.alert}
+                closeAlert={() => setState(s => { return { ...s, alert: false } })}
+            />
             <Paper sx={{
                 background: 'white',
                 // height: { xs: '100vh', md: '70vh', lg: '70vh' },
@@ -109,7 +226,7 @@ export default function AddQuestion() {
                             margin="normal"
                             size="small"
                             name="Question"
-                            value={input ? input.Question : ''}
+                            value={input.Question}
                             onChange={handleChange}
                         />
 
@@ -118,7 +235,7 @@ export default function AddQuestion() {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={input ? input.Type : ''}
+                                value={input.Type}
                                 label="Type"
                                 name="Type"
                                 onChange={handleChange}
@@ -135,7 +252,8 @@ export default function AddQuestion() {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={input ? input.Level : ''}
+                                value={input.Level}
+                                name="Level"
                                 label="Level"
                                 onChange={handleChange}
                             >
@@ -154,7 +272,7 @@ export default function AddQuestion() {
                             <TextField
                                 id="outlined-textarea"
                                 // label="Question Title"
-                                placeholder="Option 1"
+                                placeholder="Solution"
                                 multiline
                                 fullWidth={true}
                                 value={solution}
@@ -172,7 +290,7 @@ export default function AddQuestion() {
 
                         </Box>
                         {/* <FormControl fullWidth={true}> */}
-                        {options.length > 0 ?<Box className="main-div" style={{
+                        {options.length > 0 ? <Box className="main-div" style={{
                             // margin: '20px 10px 10px',
                             marginTop: 5,
                             padding: '10px',
@@ -185,45 +303,45 @@ export default function AddQuestion() {
                         }}>
 
 
-                        <Box className="child-div" style={{
-                            padding: '5px', position: 'absolute', top: '-20px', left: '10px',
-                            background: '#fff',
+                            <Box className="child-div" style={{
+                                padding: '5px', position: 'absolute', top: '-20px', left: '10px',
+                                background: '#fff',
+                            }}>
+                                <InputLabel id="demo-simple-select-label">Options</InputLabel>
+                            </Box>
+                            {options.map((option, index) => {
+                                return (
+                                    <Chip
+                                        key={index}
+                                        name={option}
+                                        label={option.Solution}
+                                        variant="outlined"
+                                        color={option.Correct === 1 ? 'primary' : 'success'}
+                                        onDelete={() => handleDelete(option)}
+                                        sx={{ m: 1 }}
+                                    />
+                                )
+                            })}
+                        </Box> : <></>}
+                        {/* </FormControl> */}
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-evenly',
+                            alignItems: 'center',
+                            background: 'white',
+                            p: 2,
                         }}>
-                            <InputLabel id="demo-simple-select-label">Options</InputLabel>
+                            <Button variant="contained" color="success" p={2} onClick={handleSave}>
+                                Save
+                            </Button>
+                            <Button variant="contained" color="primary" onClick={handleReset}>
+                                Reset
+                            </Button>
                         </Box>
-                        {options.map((option, index) => {
-                            return (
-                                <Chip
-                                    key={index}
-                                    name={option}
-                                    label={option.Solution}
-                                    variant="outlined"
-                                    color={option.Correct === 1 ? 'primary' : 'success'}
-                                    onDelete={() => handleDelete(option)}
-                                    sx={{ m: 1 }}
-                                />
-                            )
-                        })}
-                    </Box>:<></>}
-                    {/* </FormControl> */}
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        background: 'white',
-                        p: 2,
-                    }}>
-                        <Button variant="contained" color="success" p={2}>
-                            Save
-                        </Button>
-                        <Button variant="contained" color="primary">
-                            Reset
-                        </Button>
                     </Box>
                 </Box>
-            </Box>
-        </Paper>
+            </Paper>
         </Grid >
 
     )

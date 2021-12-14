@@ -1,10 +1,9 @@
-import { set } from 'date-fns';
 import { useContext, useEffect, useState } from 'react';
 import AuthService from '../services/auth.service';
 import UserContext from './../context/UserContext';
 import useToken from './useToken';
 export default function useUserInfo() {
-    const { user, setUser } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     const callToken = useToken();
     const [userInfo, setUserInfo] = useState({
         username: '',
@@ -21,8 +20,7 @@ export default function useUserInfo() {
             let authService = AuthService.getInstance();
             const result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login');
             setUser(result.data)
-
-            if (result.status) {
+            if (result.status.Code !== 200) {
                 setMessage(result)
             }
             else {
@@ -36,10 +34,9 @@ export default function useUserInfo() {
         }
         async function signup() {
             let authService = AuthService.getInstance();
-            let result=null
-            try{
+            let result = null
+            try {
                 result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
-                console.log(result);
                 setUserInfo({
                     username: '',
                     password: '',
@@ -48,11 +45,11 @@ export default function useUserInfo() {
                     imageURL: '',
                     isLogin: null,
                 })
-            }catch{
-                result={
-                    status:{
-                        Status:'Error',
-                        Code:601
+            } catch {
+                result = {
+                    status: {
+                        Status: 'Error',
+                        Code: 601
                     },
                     message: 'Can not register. Try again!'
                 }
@@ -61,7 +58,7 @@ export default function useUserInfo() {
 
         }
         if (userInfo.isLogin) login();
-        else if (userInfo.isLogin === false) signup()
+        else if (userInfo.isLogin === false) signup() //eslint-disable-next-line
     }, [userInfo])
     function saveUserInfo(data) {
         setUserInfo(pre => pre = data);

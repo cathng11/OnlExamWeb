@@ -1,8 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { Box, Chip, Stack, styled, TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Badge from '@mui/material/Badge';
+import { Box, styled, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
