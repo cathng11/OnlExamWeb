@@ -51,6 +51,7 @@ export default function ListAssignmentsInClass() {
         exact: true,
         strict: false
     });
+    const [refresh, setRefresh] = React.useState(false)
     React.useEffect(() => {
         let mounted = true;
         let classID = match.params.id
@@ -64,11 +65,16 @@ export default function ListAssignmentsInClass() {
             })
             .catch((err) => { console.error(err) });
         return () => { mounted = false };//eslint-disable-next-line
-    }, [])
+    }, [refresh])
     if (data) {
         return (
             <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
-                <CustomTable rows={data} headCells={headCells} view={'Assignment'} role={'Teacher'} />
+                <CustomTable
+                    rows={data}
+                    headCells={headCells}
+                    view={'Assignment'}
+                    role={'Teacher'}
+                    refresh={() => setRefresh(!refresh)} />
             </Container>
         )
     }

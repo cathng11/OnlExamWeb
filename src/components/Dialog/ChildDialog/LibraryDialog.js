@@ -40,9 +40,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                             setState({ alert: true, title: 'Error. Try again!' })
                             refresh();
                         }
-
-                        // inputClone.current = input
-                        // setUpdated()
                     }
                 })
                 .catch(err => console.error(err))

@@ -37,4 +37,24 @@ export default class AssignmentService {
         let method = "GET";
         return await this.request(url, method).then(res => res.json())
     }
+    async getDetailAssignment(id) {
+        let url = `exams/${id}`;
+        let method = "GET";
+        return await this.request(url, method).then(res => res.json())
+    }
+    async createAssignment(data) {
+        let url = `exams`;
+        let method = "PUT";
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async deleteAssignment(id, data) {
+        let url = `exams/${id}`;
+        let method = "DELETE";
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async updateAssignment(id, data) {
+        let url = `exams/${id}`;
+        let method = "POST";
+        return await this.request(url, method, data).then(res => res.json())
+    }
 }

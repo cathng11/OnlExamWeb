@@ -2,7 +2,6 @@ import {
     Box, Paper, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow
 } from '@mui/material';
 import React from 'react';
-import PreviewDialog from './../Dialog/PreviewDialog';
 import TableCeller from './TableCeller';
 import TableHeader from './TableHeader';
 import TableToolbar from './TableToolbar';
@@ -84,20 +83,7 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-    const [open, setOpen] = React.useState({
-        isOpen: false,
-        id: ''
-    });
-    // const [value, setValue] = React.useState('')
-    function handlePreview() {
-        setOpen({ isOpen: true, id: '' });
-    }
-    const handleClose = (value) => {
-        setOpen({ isOpen: value, id: '' });
-    };
-    // const handleEdit = (id) => {
-    //     setOpen({ isOpen: true, id: id })
-    // }
+
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{
@@ -162,7 +148,7 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                                 role={role}
                                                 // selectedRow={selected}
                                                 setSelectedRow={setSelectedRow}
-                                                preview={handlePreview} />
+                                            />
 
                                         </TableRow>
                                     );
@@ -174,7 +160,7 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                         height: 53 * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6} component="div"/>
+                                    <TableCell colSpan={6} component="div" />
                                 </TableRow>
                             )}
                         </TableBody>
@@ -190,7 +176,6 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <PreviewDialog open={open} handleClose={handleClose} />
         </Box>
     );
 }

@@ -7,8 +7,9 @@ import React from 'react';
 import { matchPath } from 'react-router';
 import { useHistory } from "react-router-dom";
 import MemberClassDialog from '../Dialog/MemberClassDialog';
+import PreviewDialog from './../Dialog/PreviewDialog';
 
-export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected, preview }) {
+export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected }) {
     // const { view, role, row, setSelectedRow, labelId, isItemSelected } = props;
     // const [selected, setSelected] = React.useState(selectedRow);
     const statusColor = {
@@ -30,9 +31,9 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         setSelectedRow(event, id);
     };
     let history = useHistory();
-    const pageview = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment','Student':'students' }
+    const page = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment','Student':'students' }
     const match = matchPath(history.location.pathname, {
-        path: `/classes/:id/${pageview[view]}`,
+        path: `/classes/:id/${page[view]}`,
         exact: true,
         strict: false
     });
@@ -48,8 +49,11 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         }
 
     }
-    const Preview = () => {
-        preview(row.id)
+    const [openPreviewAssignment, setOpenPreviewAssignment] = React.useState(false)
+
+    const handlePreview = () => {
+        history.push(`${history.location.pathname}?previewExamID=${row.ExamID}`);
+        setOpenPreviewAssignment(true)
     }
     const [openMemberDetail, setOpenMemberDetail] = React.useState(false)
     function handleMemberDetail() {
@@ -59,6 +63,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     const handleClose = () => {
         history.push(`${history.location.pathname}`);
         setOpenMemberDetail(false)
+        setOpenPreviewAssignment(false)
 
     }
     if (role === 'Teacher') {
@@ -165,12 +170,12 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                     </TableCell>
                     <TableCell align="left" component={'div'}><Tooltip title="Detail">
                         <div>
-                            <IconButton onClick={Preview}>
+                            <IconButton onClick={handlePreview}>
                                 <ArrowForwardIcon />
                             </IconButton>
                         </div>
                     </Tooltip></TableCell>
-
+                    <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
                 </>
             )
         }

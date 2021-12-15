@@ -42,7 +42,7 @@ export default function MyAccount() {
         let _newPass = newPass.current.value;
         let _confirm = confirm.current.value;
         if (!_old || !_newPass || !_confirm) {
-            setState(s => { return { ...s, alert: true, title: 'Input fields is required!' } });
+            setState(s => { return { ...s, alert: true, title: 'Input fields are required!' } });
         }
         else if (_newPass.length < 8) {
             setState(s => { return { ...s, alert: true, title: 'Password must be 8 characters long!' } });

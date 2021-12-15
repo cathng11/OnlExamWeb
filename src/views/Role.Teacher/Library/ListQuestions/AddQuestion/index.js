@@ -86,6 +86,7 @@ export default function AddQuestion({ isRefresh }) {
     React.useEffect(() => {
         let mounted = true;
         if (questionID > 1) {
+            console.log(questionID)
             let libraryService = LibraryService.getInstance()
             libraryService.getQuestionsByID(questionID)
                 .then(items => {
@@ -113,7 +114,7 @@ export default function AddQuestion({ isRefresh }) {
         }
         return () => { mounted = false };
 
-    }, [refresh, folderID, questionID])
+    }, [questionID])
     const handleReset = () => {
         setInput({
             Question: '',
@@ -131,7 +132,7 @@ export default function AddQuestion({ isRefresh }) {
         let question = input.Question
         let level = input.Level
         if (!question || !type || !level || !options) {
-            setState({ alert: true, title: `Input fields is required` })
+            setState({ alert: true, title: `Input fields are required` })
         }
         else if (type !== 'Essay' && type !== 'Short Answer') {
             const found = options.filter(i => i.Correct === 1).length;
@@ -166,23 +167,47 @@ export default function AddQuestion({ isRefresh }) {
 
         if (!checkInput()) {
             let libraryService = LibraryService.getInstance();
-            libraryService.insertQuestion(folderID, {
-                Question: input.Question,
-                Type: input.Type,
-                Level: input.Level,
-                Solution: options
-            })
-                .then(items => {
-                    if (items.status.Code === 200) {
-                        setState({ alert: true, title: 'Added new question to folder' })
-                        handleReset()
-                        isRefresh()
-                    }
-                    else {
-                        setState({ alert: true, title: items.message })
-                    }
+            if(questionID)
+            {
+                libraryService.updateQuestion(questionID, {
+                    Question: input.Question,
+                    Type: input.Type,
+                    Level: input.Level,
+                    Solution: options
                 })
-                .catch(err => console.error(err))
+                    .then(items => {
+                        console.log(items)
+                        if (items.status.Code === 200) {
+                            setState({ alert: true, title: `Updated question ${questionID}` })
+                            handleReset()
+                            isRefresh()
+                        }
+                        else {
+                            setState({ alert: true, title: items.message })
+                        }
+                    })
+                    .catch(err => console.error(err))
+            }
+            else{
+                libraryService.insertQuestion(folderID, {
+                    Question: input.Question,
+                    Type: input.Type,
+                    Level: input.Level,
+                    Solution: options
+                })
+                    .then(items => {
+                        if (items.status.Code === 200) {
+                            setState({ alert: true, title: 'Added new question to folder' })
+                            handleReset()
+                            isRefresh()
+                        }
+                        else {
+                            setState({ alert: true, title: items.message })
+                        }
+                    })
+                    .catch(err => console.error(err))
+            }
+
         }
     }
     return (

@@ -2,20 +2,87 @@ import React from 'react'
 import { Grid, Container, Typography, Box } from '@mui/material'
 import Logo from '../../../../../assets/images/boy_computer.png'
 import Steppers from './Steppers'
-// import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
+import ClassService from './../../../../../services/class.service';
+import LibraryService from './../../../../../services/library.service';
+import LoadingNewAssignment from './../../../../../components/Skeleton/LoadingNewAssignment';
+import AlertBar from './../../../../../components/Alert/AlertBar';
+import AssignmentContext from './../../../../../context/AssignmentContext';
 
 export default function CreateNew() {
-    // let location= useLocation();
-    // let query = new URLSearchParams(location.search)
-    // console.log(query.get("inClass"))
+    const [assign, setAssign] = React.useState({
+        ClassID: [],
+        LibraryFolderID:'',
+        ExamName: '',
+        TimeBegin: '',
+        TimeEnd: '',
+        Duration: 0,
+        Questions: [],
+        MaxEssay: 0,
+        Type:[]
+    })
+    const value = React.useMemo(() => ({ assign, setAssign }), [assign, setAssign]);
+
+    const [classes, setClasses] = React.useState(null)
+    const [library, setLibrary] = React.useState(null)
+    const [state, setState] = React.useState({
+        alert: false,
+        title: ''
+    })
+    let location = useLocation();
+    let history = useHistory();
+    let query = new URLSearchParams(location.search)
+    let classID = query.get("inClass")
+    const handleError = () => {
+        setState({ alert: true, title: 'Error. Try again!' })
+        history.goBack()
+    }
+    React.useEffect(() => {
+        let mounted = true;
+
+        let classService = ClassService.getInstance()
+        classService.getListForTeacher()
+            .then(items => {
+                if (mounted) {
+                    if (items.status.Code === 200)
+                        setClasses(items.data);
+                    else {
+                        handleError()
+                    }
+                }
+            })
+            .catch((err) => { console.error(err) });
+        let libraryService = LibraryService.getInstance()
+        libraryService.getList()
+            .then(items => {
+                if (mounted) {
+                    if (items.status.Code === 200)
+                        setLibrary(items.data);
+                    else {
+                        handleError()
+
+                    }
+                }
+            })
+            .catch((err) => { console.error(err) });
+        return () => { mounted = false };// eslint-disable-next-line
+    }, [])
     return (
         <Container maxWidth="full" sx={{ mt: 5, mb: 2, ml: 4, mr: 4 }}>
             <Grid container spacing={1} rowSpacing={{ xs: 25, md: 5, lg: 0 }}>
                 <Grid item xs={12} md={12} lg={7} >
                     <Box sx={{
-                        height: '70vh'
+                        height: '80vh'
                     }}>
-                        <Steppers />
+                        {classes && library ?
+                            <AssignmentContext.Provider value={value}>
+                                <Steppers
+                                    currentClass={classID}
+                                    classes={classes}
+                                    library={library}
+                                />
+                            </AssignmentContext.Provider>
+                            : <LoadingNewAssignment />}
                     </Box>
                 </Grid>
                 <Grid container item xs={12} md={12} lg={5} rowSpacing={2}>
@@ -39,6 +106,11 @@ export default function CreateNew() {
                     </Grid>
                 </Grid>
             </Grid>
+            <AlertBar
+                title={state.title}
+                openAlert={state.alert}
+                closeAlert={() => setState(s => { return { ...s, alert: false } })}
+            />
         </Container>
     )
 }

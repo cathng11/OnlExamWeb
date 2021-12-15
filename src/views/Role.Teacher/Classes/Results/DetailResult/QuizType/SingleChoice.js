@@ -5,7 +5,7 @@ import {
     FormControlLabel,
     Radio,
 } from '@mui/material'
-export default function SingleChoice({ solution }) {
+export default function SingleChoice({ Solution }) {
     return (
         <FormControl component="fieldset">
             <RadioGroup
@@ -13,18 +13,18 @@ export default function SingleChoice({ solution }) {
                 // defaultValue="female"
                 name="radio-buttons-group"
             >
-                {solution.map((val, index) => {
-                    if (val.answer === -1)
+                {Solution.map((val, index) => {
+                    if (val.Correct === -1)
                         return (<FormControlLabel
                             key={index}
-                            value={val.options} 
+                            value={val.Solution} 
                             control={<Radio />} 
-                            label={val.options}
+                            label={val.Solution}
                         />);
                     else return (<FormControlLabel
                         key={index}
-                        value={val.options} control={<Radio />} label={val.options}
-                        checked={val.answer === 0 || val.answer === -1 ? false : true}
+                        value={val.Solution} control={<Radio />} label={val.Solution}
+                        checked={val.Correct}
                     />)
                     }
                 )}

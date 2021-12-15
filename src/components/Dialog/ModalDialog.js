@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import AssignmentDialog from './ChildDialog/AssignmentDialog';
 import ClassDialog from './ChildDialog/ClassDialog';
 import LibraryDialog from './ChildDialog/LibraryDialog';
 import StudentDialog from './ChildDialog/StudentDialog';
@@ -52,29 +53,6 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-function AssignmentsDialog() {
-    return (
-        <Box>
-            <TextField
-                id="name-text"
-                label="Name Folder"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-            />
-            <TextField
-                id="name-text"
-                label="Name Folder"
-                variant="filled"
-                fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
-            />
-        </Box>
-    )
-}
-
 function ResultDialog() {
     return (
         <Box>
@@ -116,12 +94,11 @@ export default function ModalDialog({ open, handleClose }) {
         Close()
     }
     const Close = () => {
-        setIsSave(false)
         handleClose(false)
     };
     let pageDialog = {
         'Library': <LibraryDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
-        'Assignments': <AssignmentsDialog />,
+        'Assignments': <AssignmentDialog isSave={isSave} refresh={handleRefresh}/>,
         'Classes': <ClassDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
         'Result': <ResultDialog />,
         'Student': <StudentDialog isSave={isSave} isRefresh={handleRefresh}/>
@@ -129,7 +106,7 @@ export default function ModalDialog({ open, handleClose }) {
 
     const titleCreate = {
         'Library': 'Create New Questions Folder',
-        'Assignments': 'Create New Class',
+        'Assignments': 'Edit Information Assignment',
         'Classes': 'Create New Class',
         'Result': 'Create New Class',
         'Student': 'Add New Students'

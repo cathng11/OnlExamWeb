@@ -8,8 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import data from '../../data/Data';
-import CandidateExamPaper from '../../views/Role.Teacher/Classes/Results/DetailResult/CandidateExamPaper';
+import PreviewAssignment from './../Paper/PreviewAssignment';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -49,7 +48,7 @@ BootstrapDialogTitle.propTypes = {
     onClose: PropTypes.func.isRequired,
 };
 
-export default function PreviewDialog({ open, handleClose }) {
+export default function PreviewDialog({ open, handleClose, data }) {
     const Close = () => {
         handleClose(false)
     };
@@ -59,7 +58,7 @@ export default function PreviewDialog({ open, handleClose }) {
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
-                open={open.isOpen}
+                open={open}
             >
 
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={Close}>
@@ -77,7 +76,7 @@ export default function PreviewDialog({ open, handleClose }) {
                         noValidate
                         autoComplete="off"
                     >
-                        <CandidateExamPaper data={data}/>
+                        <PreviewAssignment dataCreate={data} />
                     </Box>
 
                 </DialogContent>

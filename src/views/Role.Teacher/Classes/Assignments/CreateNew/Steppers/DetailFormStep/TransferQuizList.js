@@ -11,7 +11,8 @@ import {
     ListItemText,
     ListItemIcon,
 } from '@mui/material'
-import data from '../../../../../../../data/Data'
+import AssignmentContext from './../../../../../../../context/AssignmentContext';
+
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1)
 }
@@ -23,12 +24,18 @@ function intersection(a, b) {
 function union(a, b) {
     return [...a, ...not(b, a)]
 }
-const data1 = data.filter((value, index) => index < 10)
-const data2 = data.filter((value, index) => index >= 10)
-export default function TransferQuizList() {
+
+export default function TransferQuizList({ questions, randomQuestions }) {
+    const { setAssign } = React.useContext(AssignmentContext);
+
+    const [data, setData] = React.useState({
+        data1: questions,
+        data2: randomQuestions.data,
+    })
+    const [state, setState] = React.useState(false)
     const [checked, setChecked] = React.useState([])
-    const [left, setLeft] = React.useState(data1)
-    const [right, setRight] = React.useState(data2)
+    const [left, setLeft] = React.useState(data.data1)
+    const [right, setRight] = React.useState(data.data2)
 
     const leftChecked = intersection(checked, left)
     const rightChecked = intersection(checked, right)
@@ -44,6 +51,7 @@ export default function TransferQuizList() {
         }
 
         setChecked(newChecked)
+        setState(true)
     }
 
     const numberOfChecked = (items) => intersection(checked, items).length
@@ -54,21 +62,39 @@ export default function TransferQuizList() {
         } else {
             setChecked(union(checked, items))
         }
+        setState(true)
+
     }
     const handleCheckedRight = () => {
         setRight(right.concat(leftChecked))
         setLeft(not(left, leftChecked))
         setChecked(not(checked, leftChecked))
+        setState(true)
     }
 
     const handleCheckedLeft = () => {
         setLeft(left.concat(rightChecked))
         setRight(not(right, rightChecked))
         setChecked(not(checked, rightChecked))
-    }
+        setState(true)
 
+    }
+    React.useEffect(() => {
+        if (state.false) {
+            let quizSet = new Set(randomQuestions.data)
+            let quiz = questions.filter(i => {
+                return !quizSet.has(i)
+            })
+            setData({ data1: quiz, data2: randomQuestions.data })
+            setLeft(quiz)
+            setRight(randomQuestions.data)
+        }
+
+        // let listID = right.filter(i => i.QuestionID)
+        setAssign(s => { return { ...s, Questions: right } })// eslint-disable-next-line
+    }, [right, questions, randomQuestions])
     const customList = (title, items) => (
-        <Card sx={{ border: 0,boxShadow:0 }}>
+        <Card sx={{ border: 0, boxShadow: 0, background: '#D6E6F2', }}>
             <CardHeader
                 sx={{ px: 2, py: 1 }}
                 avatar={
@@ -94,9 +120,10 @@ export default function TransferQuizList() {
             <List
                 sx={{
                     // width: 200,
-                    height: 250,
-                    bgcolor: 'background.paper',
+                    height: '30vh',
+                    background: '#D6E6F2',
                     overflow: 'auto',
+                    // border:'0.5px solid gray'
                 }}
                 dense
                 component="div"
@@ -104,10 +131,9 @@ export default function TransferQuizList() {
             >
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`
-
                     return (
                         <ListItem
-                            key={value.id}
+                            key={value.QuestionID}
                             role="listitem"
                             button
                             onClick={handleToggle(value)}
@@ -122,7 +148,7 @@ export default function TransferQuizList() {
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={value.question} />
+                            <ListItemText id={labelId} primary={value.Question} />
                         </ListItem>
                     )
                 })}
@@ -136,7 +162,9 @@ export default function TransferQuizList() {
             // spacing={2}
             justifyContent="center"
             alignItems="center"
-            sx={{ width: '100%' }}
+            sx={{
+                width: '100%', height: '100%', overflow: 'auto',
+            }}
         >
             <Grid item xs={5}>
                 {customList('Choices', left)}

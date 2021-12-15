@@ -1,86 +1,155 @@
-import React from 'react'
-import BriefInfo from './DetailFormStep/BriefInfo'
-import RandQuizOptions from './DetailFormStep/RandQuizOptions'
-import ExtraOptions from './DetailFormStep/ExtraOptions'
 import {
-    Box,
-    Stepper,
-    Step,
-    Typography,
-    Button,
-    StepLabel,
-    Paper,
-} from '@mui/material'
+    Box, Button, Dialog, DialogActions, DialogContent,
+    DialogContentText, DialogTitle, Paper, Step, StepLabel, Stepper
+} from '@mui/material';
+import React from 'react';
+import { useHistory } from "react-router-dom";
+import AlertBar from './../../../../../../components/Alert/AlertBar';
+import AssignmentContext from './../../../../../../context/AssignmentContext';
+import AssignmentService from './../../../../../../services/assignment.service';
+import BriefInfo from './DetailFormStep/BriefInfo';
+import ExtraOptions from './DetailFormStep/ExtraOptions';
+import RandQuizOptions from './DetailFormStep/RandQuizOptions';
 
-const steps = ['Fill Brief Information', 'Random Quiz', 'Extra Options']
-function ActiveStep({ activeStep }) {
+const steps = ['Fill Brief Information', 'Create Exam Questions', 'Finish Step']
+
+function ActiveStep({ activeStep, currentClass, classes, library }) {
+    const info = { currentClass, classes, library }
     if (activeStep === 0) {
-        return <BriefInfo />
+        return <BriefInfo info={info} />
     } else if (activeStep === 1) {
         return <RandQuizOptions />
     } else if (activeStep === 2) {
         return <ExtraOptions />
     }
 }
-export default function Steppers() {
+export default function Steppers({ currentClass, classes, library }) {
+    const { assign, setAssign } = React.useContext(AssignmentContext);
+    const [state, setState] = React.useState({
+        alert: false,
+        title: ''
+    })
+    const [openDialog, setOpenDialog] = React.useState({
+        state: false,
+        title: '',
+        action: ''
+    })
+    let history = useHistory();
+
     const [activeStep, setActiveStep] = React.useState(0)
-    const [skipped, setSkipped] = React.useState(new Set())
-
-    const isStepOptional = (step) => {
-        return step === 1
-    }
-
-    const isStepSkipped = (step) => {
-        return skipped.has(step)
-    }
 
     const handleNext = () => {
-        let newSkipped = skipped
-        if (isStepSkipped(activeStep)) {
-            newSkipped = new Set(newSkipped.values())
-            newSkipped.delete(activeStep)
+        if (activeStep === 0) {
+            if (!assign.LibraryFolderID || !assign.ExamName || assign.Duration === 0) {
+                setState({ alert: true, title: 'Input fields are required' })
+            }
+            else {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1)
+            }
         }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1)
-        setSkipped(newSkipped)
+        if (activeStep === 1) {
+            if (assign.Type && assign.Type.length > 2 && assign.Type.includes('Essay') && assign.MaxEssay === 0) {
+                setState({ alert: true, title: 'Maximum mark for the essay fields is required' })
+            }
+            else if (!assign.Questions) {
+                setState({ alert: true, title: 'Questions field is required' })
+            }
+            else {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1)
+            }
+        }
+        if (activeStep === 2) {
+            if (!assign.TimeBegin || !assign.TimeEnd) {
+                setState({ alert: true, title: 'Input fields are required' })
+            }
+            else if (assign.TimeEnd <= assign.TimeBegin) {
+                setState({ alert: true, title: 'Invalid range time' })
+            }
+            else {
+                setOpenDialog({ state: true, title: "Are you sure to create this assignment ?", action: 'create' })
+            }
+        }
     }
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1)
-    }
+        setOpenDialog({ state: true, title: "Are you sure to reset process and go back ?", action: 'back' })
 
-    const handleSkip = () => {
-        if (!isStepOptional(activeStep)) {
-            // You probably want to guard against something like this,
-            // it should never occur unless someone's actively trying to break something.
-            throw new Error("You can't skip a step that isn't optional.")
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1)
-        setSkipped((prevSkipped) => {
-            const newSkipped = new Set(prevSkipped.values())
-            newSkipped.add(activeStep)
-            return newSkipped
-        })
     }
 
     const handleReset = () => {
         setActiveStep(0)
     }
+    const handleAccept = () => {
+        if (openDialog.action === 'back') {
+            handleReset()
+            setAssign(null)
+            handleCloseDialog()
+        }
+        else if (openDialog.action === 'create') {
+            handleCloseDialog()
+            let questionsID = assign.Questions.map(i => { return i.QuestionID })
+            let classID = assign.ClassID.map(i => { return i.ClassID }).concat(parseInt(currentClass))
+            let assignment = {
+                ClassID: classID,
+                ExamName: assign.ExamName,
+                TimeBegin: assign.TimeBegin,
+                TimeEnd: assign.TimeEnd,
+                Duration: parseInt(assign.Duration),
+                QuestionID: questionsID,
+                MaxEssay: assign.MaxEssay,
+            }
+            let assignmentService = AssignmentService.getInstance()
+            assignmentService.createAssignment(assignment)
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        setState({ alert: true, title: 'Created this assignment' })
+                        history.replace(`/classes/${currentClass}/assignments`)
+                    }
+                    else {
+                        setState({ alert: true, title: 'Error. Try again' })
+                        history.goBack()
+                    }
+
+                })
+                .catch((err) => { console.error(err) });
+        }
+
+    }
+    const handleCloseDialog = () => {
+        setOpenDialog(s => { return { ...s, state: false } })
+    }
     return (
-        <Box sx={{ width: '100%',height:'100%' }}>
+        <Box sx={{ width: '100%', height: '100%' }}>
+            <AlertBar
+                title={state.title}
+                openAlert={state.alert}
+                closeAlert={() => setState(s => { return { ...s, alert: false } })}
+            />
+            <Dialog
+                open={openDialog.state}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"DolphinExam: "}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {openDialog.title}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleAccept} autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps = {}
                     const labelProps = {}
-                    if (isStepOptional(index)) {
-                        labelProps.optional = (
-                            <Typography variant="caption">Optional</Typography>
-                        )
-                    }
-                    if (isStepSkipped(index)) {
-                        stepProps.completed = false
-                    }
                     return (
                         <Step key={label} {...stepProps}>
                             <StepLabel {...labelProps}>{label}</StepLabel>
@@ -88,45 +157,27 @@ export default function Steppers() {
                     )
                 })}
             </Stepper>
-            {activeStep === steps.length ? (
-                <React.Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                        All steps completed - you&apos;re finished
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                        <Box sx={{ flex: '1 1 auto' }} />
-                        <Button onClick={handleReset}>Reset</Button>
-                    </Box>
-                </React.Fragment>
-            ) : (
-                <Box>
-                    <Paper sx={{ mt: 1}}>
-                        <ActiveStep activeStep={activeStep} />
+            <Box>
+                <Paper sx={{ mt: 1 }}>
+                    <ActiveStep activeStep={activeStep} currentClass={currentClass} classes={classes} library={library} />
 
-                    </Paper>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2}}>
-                        <Button
-                            color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
-                            sx={{ mr: 1 }}
-                        >
-                            Back
-                        </Button>
-                        <Box sx={{ flex: '1 1 auto' }} />
-                        {isStepOptional(activeStep) && (
-                            <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                Skip
-                            </Button>
-                        )}
+                </Paper>
+                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                    <Button
+                        color="inherit"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        sx={{ mr: 1 }}
+                    >
+                        Back
+                    </Button>
+                    <Box sx={{ flex: '1 1 auto' }} />
 
-                        <Button onClick={handleNext}>
-                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                        </Button>
-                    </Box>
+                    <Button onClick={handleNext}>
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
                 </Box>
-
-            )}
+            </Box>
         </Box>
     )
 }

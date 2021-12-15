@@ -73,7 +73,7 @@ function Login() {
         e.preventDefault();
         let { username, email, password, conf } = signupForm
         if (!username || !email || !password || !conf) {
-            setState(s => { return { ...s, alert: true, title: 'Input fields is required!' } });
+            setState(s => { return { ...s, alert: true, title: 'Input fields are required!' } });
         }
         else if (username.length < 5) {
             setState(s => { return { ...s, alert: true, title: 'Username must be 5 characters long!' } });

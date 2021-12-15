@@ -1,99 +1,119 @@
-import React from 'react'
 import {
-  FormControl,
-  Typography,
-  Box,
-  InputAdornment,
-  TextField,
-  Select,
-  InputLabel,
-  MenuItem,
-  FormHelperText,
-} from '@mui/material'
-import HelperText from './../../../../../../../components/HelperText/HelperText';
+  Autocomplete, Box, FormControl, InputAdornment, InputLabel,
+  MenuItem, Paper, Select, TextField, Typography
+} from '@mui/material';
+import React from 'react';
+import AssignmentContext from './../../../../../../../context/AssignmentContext';
 
-export default function BriefInfo() {
+export default function BriefInfo({ info }) {
+  const { setAssign } = React.useContext(AssignmentContext);
+
+  const listLibraryFolders = info.library;
+  const [libraryFolder, setLibraryFolder] = React.useState('')// eslint-disable-next-line
+  const className = info.classes.filter((item) => {
+    if (item.ClassID === parseInt(info.currentClass)) {
+      return item.ClassName
+    }
+  })
+  const currentClass = React.useState({
+    ClassID: info.currentClass,
+    ClassName: className[0].ClassName
+  })
+  const classes = info.classes.filter((item) => {
+    return item.ClassID !== parseInt(info.currentClass)
+  })
+  const [input, setInput] = React.useState({
+    ExamName: '',
+    Duration: 0
+  })
+  const handleMultipleClasses = (e, value) => {
+    setAssign(s => { return { ...s, ClassID: value } })
+  }
+  const handleLibrary = (e) => {
+    setLibraryFolder(e.target.value)
+    setAssign(s => { return { ...s, LibraryFolderID: e.target.value } })
+  }
+  const handleChange = (e) => {
+    let name = e.target.name
+    let value = e.target.value
+    setInput(s => { return { ...s, [name]: value } })
+    setAssign(s => { return { ...s, [name]: value } })
+  }
   return (
     <React.Fragment>
-      <Box
+      <Paper
         component="div"
         sx={{
-          // maxWidth: "55%",
           display: 'flex',
-          height: '100%',
+          height: '70vh',
           flexDirection: 'column',
-          // justifyContent: 'center',
-          // alignItems: 'center',
-          background: 'white',
-          p: 2,
+          background: '#D6E6F2',
+          p: 5,
+          overflow: 'auto',
           boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
           borderRadius: '10px'
         }}
       >
-        <Typography color="text.primary" variant="h5" sx={{ pb: 3 }} component={'div'}>
+        <Typography color="text.primary" variant="h5" component={'div'}>
           Brief Information
         </Typography>
-        <FormControl sx={{ pb: 3 }} size="small">
-          <InputLabel id="className-label">Class name</InputLabel>
-          <Select
-            labelId="className-label"
-            id="className-select"
-            // value={age}
-            label="Classname"
-
-            // onChange={handleChange}
-          >
-            <MenuItem value={0}>Multiple Choices</MenuItem>
-            <MenuItem value={1}>True/False</MenuItem>
-            <MenuItem value={1}>Short Answer</MenuItem>
-            <MenuItem value={3}>Essay</MenuItem>
-          </Select>
-          <FormHelperText>
-            {<HelperText txt={'*Required'} isError={false} />}
-          </FormHelperText>
-        </FormControl>
-
-        <FormControl sx={{ pb: 3 }} size="small">
-          <InputLabel id="subject-label">Subject</InputLabel>
-          <Select
-            labelId="subject-label"
-            id="subject-select"
-            // value={age}
-            label="Subject"
-            // onChange={handleChange}
-          >
-            <MenuItem value={0}>Multiple Choices</MenuItem>
-            <MenuItem value={1}>True/False</MenuItem>
-            <MenuItem value={1}>Short Answer</MenuItem>
-            <MenuItem value={3}>Essay</MenuItem>
-          </Select>
-          <FormHelperText>
-            {<HelperText txt={'*Required'} isError={false} />}
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ pb: 3 }} size="small">
-          <InputLabel id="subject-label">Question Folder</InputLabel>
-          <Select
-            labelId="subject-label"
-            id="subject-select"
-            // value={age}
-            label="Question Folder"
-            // onChange={handleChange}
-          >
-            <MenuItem value={0}>Multiple Choices</MenuItem>
-            <MenuItem value={1}>True/False</MenuItem>
-            <MenuItem value={1}>Short Answer</MenuItem>
-            <MenuItem value={3}>Essay</MenuItem>
-          </Select>
-          <FormHelperText>{<HelperText txt={'*Required'} isError={false} />}</FormHelperText>
-        </FormControl>
         <TextField
-          id="name-text"
+          id="class-id"
+          label="Class ID"
+          fullWidth={true}
+          margin="normal"
+          size="small"
+          disabled={true}
+          focus={'true'}
+          value={currentClass.ClassID}
+        />
+        <TextField
+          id="class-name"
+          label="Class Name"
+          fullWidth={true}
+          margin="normal"
+          size="small"
+          disabled={true}
+          focus={'true'}
+          notched={"true"}
+          value={currentClass.ClassName}
+        />
+        <TextField
+          id="assignment-name"
           label="Assignment Name"
           fullWidth={true}
-          sx={{ pb: 3 }}
+          margin="normal"
           size="small"
-          helperText={<HelperText txt={'*Required'} isError={false} />}
+          name="ExamName"
+          value={input.ExamName}
+          onChange={handleChange}
+        />
+        <FormControl margin="normal" size="small">
+          <InputLabel id="question-folder">Question Folder</InputLabel>
+          <Select
+            labelId="question-folder"
+            id="question-folder"
+            value={libraryFolder}
+            label="Question Folder"
+            onChange={handleLibrary}
+          >
+            {listLibraryFolders.map((folder, index) => {
+              return (<MenuItem key={index} value={folder.LibraryFolderID}>{folder.LibraryFolderName}</MenuItem>)
+            })}
+
+          </Select>
+        </FormControl>
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={classes}
+          getOptionLabel={(option) => option.ClassName}
+          filterSelectedOptions
+          size="small"
+          onChange={handleMultipleClasses}
+          renderInput={(params) => (
+            <TextField {...params} label="Classes" placeholder="Create this assignment to other classes" margin="normal" />
+          )}
         />
         <Box
           component={'div'}
@@ -108,14 +128,21 @@ export default function BriefInfo() {
           <TextField
             label="Duration"
             id="duration-text"
-            sx={{ pb: 3, pr: 5, width: '30%' }}
+            margin="normal"
             size="small"
+            name="Duration"
+            sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
+            type='number'
+            value={input.Duration}
+            onChange={handleChange}
             InputProps={{
               endAdornment: <InputAdornment position="end">m</InputAdornment>,
+              inputProps: {
+                max: 100, min: 5
+              }
             }}
-            helperText={<HelperText txt={'*Required'} isError={false} />}
           />
-          <TextField
+          {/* <TextField
             label="Limit/quiz"
             id="duration-text"
             sx={{ pb: 3, width: '30%' }}
@@ -124,9 +151,9 @@ export default function BriefInfo() {
               endAdornment: <InputAdornment position="end">s</InputAdornment>,
             }}
             helperText={<HelperText txt={' '} isError={false} />}
-          />
+          /> */}
         </Box>
-      </Box>
+      </Paper>
     </React.Fragment>
   )
 }

@@ -1,105 +1,90 @@
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import DesktopDateTimePicker from '@mui/lab/DesktopDateTimePicker'
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import {
-    Box, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField,
+    Box, Button, Paper, TextField,
     Typography
 } from '@mui/material'
 import React from 'react'
 import PreviewDialog from '../../../../../../../components/Dialog/PreviewDialog'
+import AssignmentContext from './../../../../../../../context/AssignmentContext';
 
 export default function ExtraOptions() {
-    const [open, setOpen] = React.useState({
-        isOpen: false,
-        id: ''
+    const { assign, setAssign } = React.useContext(AssignmentContext);
+    const [openPreviewAssignment, setOpenPreviewAssignment] = React.useState(false)
+
+    const [date, setDate] = React.useState({
+        TimeBegin: new Date(),
+        TimeEnd: new Date(),
     });
-    const [value,setValue]=React.useState('')
-    function handlePreview() {
-        setOpen({ isOpen: true, id: '' });
+    const handleChangeTimeBegin = (e) => {
+        let value = e.toLocaleString().replace(',', '')
+        setDate(s => { return { ...s, TimeBegin: value } })
+        setAssign(s => { return { ...s, TimeBegin: value } })
     }
-    const handleClose = (value) => {
-        setOpen({ isOpen: value, id: '' });
-    };
-    // const handleEdit = (id) => {
-    //     setOpen({ isOpen: true, id: id })
-    // }
+    const handleChangeTimeEnd = (e) => {
+        let value = e.toLocaleString().replace(',', '')
+        setDate(s => { return { ...s, TimeEnd: value } })
+        setAssign(s => { return { ...s, TimeEnd: value } })
+
+    }
+    const handlePreview = () => {
+        setOpenPreviewAssignment(true)
+    }
     return (
-        <Box
+        <Paper
             component="div"
             sx={{
                 display: 'flex',
-                height: '100%',
+                height: '70vh',
                 flexDirection: 'column',
-                // justifyContent: 'center',
-                // alignItems: 'center',
-                background: 'white',
+                background: '#D6E6F2',
                 p: 5,
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
-                borderRadius:'10px'
+                borderRadius: '10px'
             }}
         >
-
-
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} >
                 <Box
                     component={'div'}
                     sx={{
                         width: '100%',
                         display: 'flex',
-                        flexDirection: 'row',
-                        // justifyContent: 'center',
-                        alignItems: 'center',
-                        pb: 3
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
                     }}
                 >
-                    <Typography variant="body1" sx={{ pr: 3 }}>
+                    <Typography variant="body1">
                         Active from:
                     </Typography>
-                    <DesktopDateTimePicker
-                        value={value}
-                        onChange={(newValue) => {
-                            setValue(newValue);
-                        }}
+                    <DateTimePicker
+                        renderInput={(params) => <TextField {...params} margin="normal" size="small" fullWidth={true}
+                            name="TimeBegin"
+                        />}
+                        value={date.TimeBegin}
+                        onChange={handleChangeTimeBegin}
+                        ampm={false}
+                        name="TimeBegin"
+                        format="yyyy-MM-dd HH:mm:ss"
 
-                        renderInput={(params) => <TextField {...params} />}
                     />
-                    <Typography variant="body1" sx={{ pr: 3, pl: 3 }}>
+                    <Typography variant="body1" >
                         to
                     </Typography>
-                    <DesktopDateTimePicker
-                        value={value}
-                        onChange={(newValue) => {
-                            setValue(newValue);
-                        }}
-
-                        renderInput={(params) => <TextField {...params} />}
+                    <DateTimePicker
+                        renderInput={(params) => <TextField {...params} margin="normal" size="small" fullWidth={true} />}
+                        value={date.TimeEnd}
+                        ampm={false}
+                        format="yyyy-MM-dd HH:mm:ss"
+                        name="TimeEnd"
+                        onChange={handleChangeTimeEnd}
                     />
                 </Box>
             </LocalizationProvider>
-            <FormControl sx={{ pb: 3 }} size="small">
-                <InputLabel id="subject-label">Status</InputLabel>
-                <Select
-                    labelId="subject-label"
-                    id="subject-select"
-                    value={10}
-                    label="Status"
-                // onChange={handleChange}
-                >
-                    <MenuItem value={10}>Public</MenuItem>
-                    <MenuItem value={11}>Hidden</MenuItem>
-                </Select>
-                <FormHelperText>*Required</FormHelperText>
-            </FormControl>
-            <TextField
-                label="Note for Candidates"
-                id="duration-text"
-                sx={{ pb: 3 }}
-                size="small"
-                multiline
-                rows={4}
-            />
-            <Button color="secondary" onClick={handlePreview}>PREVIEW</Button>
-            <PreviewDialog open={open} handleClose={handleClose}/>
-        </Box>
+
+            <Button color="primary" sx={{ m: 5 }} onClick={handlePreview}>PREVIEW</Button>
+            <PreviewDialog open={openPreviewAssignment} handleClose={() => setOpenPreviewAssignment(false)} data={assign} />
+        </Paper>
     )
 }

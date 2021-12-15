@@ -5,22 +5,22 @@ import {
     Checkbox,
     FormGroup,
 } from '@mui/material'
-export default function MultipleChoice({ solution }) {
-    const answer = solution;
+export default function MultipleChoice({ Solution }) {
+    const answer = Solution;
     return (
         <FormControl component="fieldset" variant="standard">
             <FormGroup>
                 {answer.map((val, index) => {
-                    if (val.answer === -1)
+                    if (val.Correct === -1)
                         return (
                             <FormControlLabel
                                 key={index}
                                 control={
                                     <Checkbox
                                         // onChange={} 
-                                        name={val.options} />
+                                        name={val.Solution} />
                                 }
-                                label={val.options}
+                                label={val.Solution}
                             />
                         );
                     else return (
@@ -28,10 +28,10 @@ export default function MultipleChoice({ solution }) {
                             key={index}
                             control={
                                 <Checkbox
-                                    checked={val.answer === 0? false : true}
-                                    name={val.options} />
+                                    checked={val.Correct}
+                                    name={val.Solution} />
                             }
-                            label={val.options}
+                            label={val.Solution}
                         />
                     )
                 }

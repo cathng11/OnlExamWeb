@@ -73,7 +73,7 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
                 label="Class Name"
                 variant="filled"
                 fullWidth={true}
-                sx={{ pb: 3 }}
+                margin="normal"
                 value={className}
                 onChange={handleChange}
                 size="small"

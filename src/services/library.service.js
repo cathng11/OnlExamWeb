@@ -31,6 +31,7 @@ export default class LibraryService {
         if (data) {
             options.body = JSON.stringify({ ...data })
         }
+        console.log(options)
         return fetch(_url, options)
     }
     async getList() {
@@ -77,9 +78,14 @@ export default class LibraryService {
         let method = "PUT";
         return await this.request(url, method, data).then(res => res.json())
     }
-    async deleteQuestions( data) {
+    async deleteQuestions(data) {
         let url = `questions`;
         let method = "DELETE";
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async updateQuestion(id, data) {
+        let url = `questions/${id}`;
+        let method = "POST";
         return await this.request(url, method, data).then(res => res.json())
     }
 }

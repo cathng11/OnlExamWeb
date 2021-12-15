@@ -14,6 +14,7 @@ import SearchBtn from '../../components/Button/SearchBtn';
 import ModalDialog from './../Dialog/ModalDialog';
 import AlertBar from './../Alert/AlertBar';
 import ClassService from './../../services/class.service';
+import AssignmentService from './../../services/assignment.service';
 
 
 
@@ -49,7 +50,8 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
     }
     function handleClickEdit() {
         if (view === 'Assignment') {
-            history.push(`/assignment/${selected}/edit`);
+            history.push(`${history.location.pathname}?edit=${selected}`);
+            setOpenModal({ pageName: 'Assignments', isOpen: true, id: '' });
         }
         else if (view === 'Student') {
             setState({ alert: true, title: `Not allowed to edit!` })
@@ -63,7 +65,19 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
     }
     function handleAcceptDel() {
         if (view === 'Assignment') {
-            // history.push(`/assignment/${selected}/edit`);
+            let assignmentService = AssignmentService.getInstance()
+            assignmentService.deleteAssignment(selected, { ClassID: match.params.id })
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        setState({ alert: true, title: `Deleted assignment ${selected} from this class` })
+                        refresh()
+                        console.log(items)
+                    }
+                    else {
+                        setState({ alert: true, title: items.message })
+                    }
+                })
+                .catch(err => console.error(err))
         }
         else if (view === 'Student') {
             let classService = ClassService.getInstance()
@@ -88,7 +102,7 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
     const handleClose = (value) => {
         history.push(`${history.location.pathname}`);
         refresh();
-        setOpenModal({ pageName: 'Student', isOpen: value, id: '' });
+        setOpenModal(s => { return { ...s, isOpen: false } });
     };
     function handleCloseDialog() {
         setOpenDialog(false)
@@ -179,7 +193,7 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete?
+                        Are you sure to delete?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
