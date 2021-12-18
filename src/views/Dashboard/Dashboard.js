@@ -253,7 +253,7 @@ function Dashboard(route) {
 
                                 }}
                             >
-                                <Calendar onChange={onChange} value={value} className="react-calendar" />
+                                <Calendar onChange={onChange} value={value.toString()} className="react-calendar" />
                             </Item>
                         </Grid>
                         <Grid

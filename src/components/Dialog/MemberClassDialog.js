@@ -36,7 +36,7 @@ export default function MemberClassDialog({ open, data, close, classID }) {
         },
         {
             title: "Birthday",
-            text: data.DateOfBirth,
+            text: data.DateOfBirth.toString(),
         },
         {
             title: "Address",

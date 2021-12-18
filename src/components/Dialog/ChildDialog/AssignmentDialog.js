@@ -25,11 +25,11 @@ export default function AssignmentDialog({ isSave, refresh }) {
         setInput(s => { return { ...s, [name]: value } })
     }
     const handleChangeTimeBegin = (e) => {
-        let value = e.toLocaleString().replace(',', '')
+        let value = e.toLocaleString().replace(',', '').toString()
         setInput(s => { return { ...s, TimeBegin: value } })
     }
     const handleChangeTimeEnd = (e) => {
-        let value = e.toLocaleString().replace(',', '')
+        let value = e.toLocaleString().replace(',', '').toString()
         setInput(s => { return { ...s, TimeEnd: value } })
     }
     const showErrorMessage = () => {
@@ -50,8 +50,8 @@ export default function AssignmentDialog({ isSave, refresh }) {
                             setInput({
                                 ExamName: item.ExamName,
                                 Duration: item.Duration,
-                                TimeBegin: item.TimeBegin,
-                                TimeEnd: item.TimeEnd,
+                                TimeBegin: item.TimeBegin.toString(),
+                                TimeEnd: item.TimeEnd.toString(),
                             })
                         }
                         else {

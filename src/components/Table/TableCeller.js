@@ -172,8 +172,8 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         }
         else if (view === 'Assignment') {
             let status = handleStatus(row.TimeBegin, row.TimeEnd)
-            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '')
-            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '')
+            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()
+            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()
             return (
                 <>
                     <TableCell padding="normal" component={'div'}>
@@ -213,8 +213,8 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     if (role === 'Student') {
         if (view === 'Assignment') {
             let status = handleStatus(row.TimeBegin, row.TimeEnd)
-            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '')
-            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '')
+            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()
+            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()
             return (
                 <>
                     <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>

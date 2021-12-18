@@ -29,11 +29,11 @@ export default function ResultDialog({ open, data, close }) {
         },
         {
             title: "Time Begin",
-            text: data.TimeBegin,
+            text: data.TimeBegin.toString(),
         },
         {
             title: "Time End",
-            text: data.TimeEnd,
+            text: data.TimeEnd.toString(),
         },
         {
             title: "Limit Time",
@@ -45,11 +45,11 @@ export default function ResultDialog({ open, data, close }) {
         },
         {
             title: "Time Submit",
-            text: data.TimeSubmit,
+            text: data.TimeSubmit.toString(),
         },
         {
             title: "Finished Time",
-            text: data.DoingTime,
+            text: data.DoingTime.toString(),
         },
         {
             title: "Mark",
