@@ -107,7 +107,7 @@ function Login() {
         setSignupForm(s => { return { ...s, [name]: value } },)
     }
 
-    const responseGoogleSuccess = async (response, isLogin) => {
+    const responseGoogleSuccess = (response, isLogin) => {
         const userInfo = {
             name: response.profileObj.name,
             email: response.profileObj.email,
