@@ -1,12 +1,8 @@
-import 'core-js/es/map';
-import 'core-js/es/set';
-import 'raf/polyfill';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import 'babel-polyfill';
 import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
-import {
-  BrowserRouter as Router
-} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserContext from './context/UserContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
