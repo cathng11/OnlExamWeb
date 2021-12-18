@@ -47,12 +47,12 @@ function Login() {
             setState(s => { return { loading: false, alert: true, title: user.message.message } })
             user.setMessage(null)
         }
-        if (history.location.pathname==='/register' && user.message && user.message.status.Code === 200) {
+        if (history.location.pathname === '/register' && user.message && user.message.status.Code === 200) {
             setState(s => { return { loading: false, alert: true, title: "Signup Successfully" } })
             user.setMessage(null)
             history.replace('/login')
         }
-    }, [mobileRes, TOKEN, user, state,history]);
+    }, [mobileRes, TOKEN, user, state, history]);
 
 
     const handleLogin = e => {
@@ -183,10 +183,42 @@ function Login() {
                             />
                         </div>
                         <span>or use your email for registration</span>
-                        <input type="text" placeholder="Username" id="username-su" name="username" onChange={handleChangeSignup} required autoComplete="new-password" />
-                        <input type="text" placeholder="Email" id="email-su" name="email" required onChange={handleChangeSignup} autoComplete="new-password" />
-                        <input type="password" placeholder="Password" id="password-su" name="password" required onChange={handleChangeSignup} autoComplete="new-password" />
-                        <input type="password" placeholder="Confirm Password" id="conf-su" name="conf" required onChange={handleChangeSignup} autoComplete="new-password" />
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            id="username-su"
+                            name="username"
+                            onChange={handleChangeSignup}
+                            required
+                            autoComplete="new-password"
+                            value={signupForm.username} />
+                        <input
+                            type="text"
+                            placeholder="Email"
+                            id="email-su"
+                            name="email"
+                            required
+                            value={signupForm.email}
+                            onChange={handleChangeSignup}
+                            autoComplete="new-password" />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            id="password-su"
+                            name="password"
+                            required
+                            value={signupForm.password}
+                            onChange={handleChangeSignup}
+                            autoComplete="new-password" />
+                        <input
+                            type="password"
+                            placeholder="Confirm Password"
+                            id="conf-su"
+                            name="conf"
+                            required
+                            value={signupForm.conf}
+                            onChange={handleChangeSignup}
+                            autoComplete="new-password" />
                         <button onClick={handleSignUp}>Sign Up</button>
                         <button className="ghost-m" id="signIn" onClick={openLogin} >Sign In</button>
 
@@ -215,8 +247,22 @@ function Login() {
                         </div>
                         <span>or use your account</span>
 
-                        <input type="email" placeholder="Email" id="username" name="username" onChange={handleChangeLogin} required />
-                        <input type="password" placeholder="Password" id="password" name="password" onChange={handleChangeLogin} required />
+                        <input
+                            type="email"
+                            placeholder="Username"
+                            id="username"
+                            name="username"
+                            value={loginForm.username}
+                            onChange={handleChangeLogin}
+                            required />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            id="password"
+                            name="password"
+                            value={loginForm.password}
+                            onChange={handleChangeLogin}
+                            required />
                         <a href="/#">Forgot your password?</a>
                         <button onClick={handleLogin}>Sign In</button>
                         <button className="ghost-m" id="signUp" onClick={openSignUp} >Sign Up</button>
