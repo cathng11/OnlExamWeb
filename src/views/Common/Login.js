@@ -15,14 +15,14 @@ function Login() {
     const user = useUserInfo();
 
     const [loginForm, setLoginForm] = useState({
-        username: null,
-        password: null,
+        username: '',
+        password: '',
     })
     const [signupForm, setSignupForm] = useState({
-        username: null,
-        email: null,
-        password: null,
-        conf: null
+        username: '',
+        email: '',
+        password: '',
+        conf: ''
     })
     const [rightPanelActive, setRightPanelActive] = useState("");
     const [mobileRes, setMobileRes] = useState({ login: "m-container", signup: "display-none" });
@@ -52,7 +52,7 @@ function Login() {
             user.setMessage(null)
             openLogin() 
             history.push('/login')
-        }// eslint-disable-next-line
+        }
     }, [mobileRes, TOKEN, user, state,history]);
 
 
