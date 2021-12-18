@@ -345,7 +345,7 @@ export default function AddQuestion({ isRefresh }) {
                                 return (
                                     <Chip
                                         key={index}
-                                        name={option}
+                                        name={option.Solution}
                                         label={option.Solution}
                                         variant="outlined"
                                         color={option.Correct === true ? 'primary' : 'success'}

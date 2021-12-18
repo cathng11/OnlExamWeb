@@ -41,7 +41,7 @@ export default function Performance() {
         {
             image: 'https://cdn3d.iconscout.com/3d/premium/thumb/designer-desk-3981703-3289619.png',
             title: 'Your Students',
-            number: 2
+            number: '2'
         },
         {
             image: 'https://i.pinimg.com/474x/75/fc/c8/75fcc8b4bf1f4f9fbba39345925faa6e.jpg',

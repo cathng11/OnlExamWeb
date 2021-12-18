@@ -35,7 +35,7 @@ export default function PrivateRoutes() {
 					<DrawerHeader sx={{ background: 'white' }}></DrawerHeader>
 					<MapAllowedRoutes
 						routes={allowedRoutes}
-						basePath={localStorage.getItem("roles") === 'STUDENT' ? `/${JSON.parse(localStorage.getItem("user")).Username}` : ""}
+						basePath={localStorage.getItem("roles") === 'STUDENT' ? `/${JSON.parse(localStorage.getItem("user")).Username.toString()}` : ""}
 						isAddNotFound />
 				</Box>
 

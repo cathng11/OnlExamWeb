@@ -98,7 +98,7 @@ export default function BriefInfo({ info }) {
             onChange={handleLibrary}
           >
             {listLibraryFolders.map((folder, index) => {
-              return (<MenuItem key={index} value={folder.LibraryFolderID}>{folder.LibraryFolderName}</MenuItem>)
+              return (<MenuItem key={index} value={folder.LibraryFolderID}>{folder.LibraryFolderName.toString()}</MenuItem>)
             })}
 
           </Select>
