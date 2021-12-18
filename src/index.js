@@ -1,37 +1,78 @@
-import React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
-import SearchBtn from './components/Helper/SearchBtn';
+import {
+  BrowserRouter as Router
+} from "react-router-dom";
+import UserContext from './context/UserContext';
 import './index.css';
-// import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import Dashboard from './Dashboard';
-import Appbar from './views/Appbar';
-// import Appbar from './Appbar';
-// import Library from './Library';
-// import Folders from './Folders';
-// import Assignment from './Assignment';
-// import CreateAssginment from './CreateAssginment';
-// import CreateAssgin from './CreateAssgin';
-// import BriefInfo from './BriefInfo';
-// import RandQuizOptions from './RandQuizOptions';
-// import Profile from './Profile';
-// import TransferQuizList from './TransferQuizList';
+import Routes from './routes';
+import DoAssignmentContext from './context/DoAssignmentContext';
+import QuestionContext from './context/QuestionContext';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#A2DBFA',
+      main: '#3D4E81',
+      dark: '#6E7FF3',
+      gradient: 'linear-gradient(-225deg, #3D4E81 0%, #5753C9 48%, #6E7FF3 100%)'
+    },
+    secondary: {
+      light: '#a8ff78',
+      main: '#A2DBFA',
+      dark: '#0B4619',
+      gradient: 'linear-gradient(60deg, #29323c 0%, #485563 100%);'
+    },
+    info: {
+      light: '#a8ff78',
+      main: '#76b852',
+      dark: '#0B4619',
+      gradient: 'linear-gradient(60deg, #29323c 0%, #485563 100%);'
+    },
+    error: {
+      main: '#630000',
+      dark: '#3D0000',
+      light: '#911F27'
+    },
+    success: {
+      main: '#4E9F3D',
+      dark: '#1E5128',
+      light: '#D8E9A8'
+    }
+  },
+  // typography: { 
+  //    useNextVariants: true
+  // }
+});
+function App() {
+  const [user, setUser] = useState(null);
+  // window.location.reload(false);
+  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const [assignment, setAssignment] = React.useState(null)
+  const [question, setQuestion] = React.useState([])
+
+  const valueAssignment = React.useMemo(() => ({ assignment, setAssignment }), [assignment, setAssignment]);
+  const valueQuestion = React.useMemo(() => ({ question, setQuestion }), [question, setQuestion]);
+  return (
+    <UserContext.Provider value={value}>
+      <DoAssignmentContext.Provider value={valueAssignment} >
+        <QuestionContext.Provider value={valueQuestion}>
+          <Router>
+            <Routes />
+          </Router>
+        </QuestionContext.Provider>
+      </DoAssignmentContext.Provider>
+    </UserContext.Provider>
+  )
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <Appbar/>
-    {/* <SearchBtn/> */}
-    {/* <App /> */}
-    {/* <Appbar/> */}
-    {/* <Dashboard/> */}
-    {/* <Library/> */}
-    {/* <Profile/> */}
-    {/* <BriefInfo/> */}
-    {/* <RandQuizOptions/> */}
-    {/* <TransferQuizList/> */}
-    {/* <Folders/> */}
-    {/* <Assignment/> */}
-    {/* <CreateAssgin/> */}
-    {/* <CreateAssginment/> */}
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider >
   </React.StrictMode>,
   document.getElementById('root')
 );
