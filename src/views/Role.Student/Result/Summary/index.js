@@ -2,7 +2,6 @@ import { Grid, Paper, styled, Typography } from '@mui/material'
 import React from 'react'
 const SummaryPaper = styled(Paper)(({ theme }) => ({
     height: '15vh',
-    // paddingTop: '15px',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
     display: 'flex',
     flexDirection: 'column',

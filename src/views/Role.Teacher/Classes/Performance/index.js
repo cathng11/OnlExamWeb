@@ -1,6 +1,5 @@
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
-import UsersService from './../../../../services/users.service';
 function BoxItem({ data }) {
     return (
         <Paper 
@@ -38,24 +37,11 @@ function BoxItem({ data }) {
     )
 }
 export default function Performance() {
-    const [numStu,setNumStu]=React.useState(0)
-
-    React.useEffect(() => {
-        let mounted = true;
-        let usersService = UsersService.getInstance()
-        usersService.getListInClass()
-            .then(items => {
-                if (mounted) {
-                    setNumStu(items.length);
-                }
-            })
-        return () => { mounted = false };
-    }, [])
     const data = [
         {
             image: 'https://cdn3d.iconscout.com/3d/premium/thumb/designer-desk-3981703-3289619.png',
             title: 'Your Students',
-            number: numStu
+            number: 2
         },
         {
             image: 'https://i.pinimg.com/474x/75/fc/c8/75fcc8b4bf1f4f9fbba39345925faa6e.jpg',

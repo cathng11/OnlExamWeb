@@ -51,7 +51,6 @@ export default function Result() {
         let resultService = ResultService.getInstance()
         resultService.getListForStudent()
             .then(items => {
-                console.log(items)
                 if (mounted) {
                     if (items.status.Code === 200) {
                         setData(items.data);
@@ -77,7 +76,6 @@ export default function Result() {
                                 sx={{
                                     height: '15vh',
                                     p: 5,
-                                    // boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
                                 }}>
                                 <Typography variant="h4" sx={{ color: '#000C40', fontWeight: 'bold' }} align='justify'>
                                     <BorderColorIcon fontSize="large" /> My Assignment Results

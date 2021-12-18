@@ -36,7 +36,6 @@ function ItemMenu({ to, name, exact, icon }) {
                         clientId={CONSTANTS.CLIENT_ID}
                         render={renderProps => (
                             <Link to={to} exact={_exact} onClick={renderProps.onClick} disabled={renderProps.disabled}>{name}</Link>
-                            // <button onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout</button>
                         )}
                         buttonText={"Logout"}
                         onLogoutSuccess={handleLogout}

@@ -28,7 +28,6 @@ function Question({ data, index }) {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-            // sx={{width: '100%',background: 'red'}}
             >
                 <Grid item xs={11}>
                     <Typography variant="subtitle1" sx={{ textAlign: 'left' }}>

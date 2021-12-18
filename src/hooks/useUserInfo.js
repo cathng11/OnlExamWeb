@@ -1,9 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AuthService from '../services/auth.service';
-import UserContext from './../context/UserContext';
 import useToken from './useToken';
 export default function useUserInfo() {
-    const { setUser } = useContext(UserContext);
     const callToken = useToken();
     const [userInfo, setUserInfo] = useState({
         username: '',
@@ -19,7 +17,6 @@ export default function useUserInfo() {
         async function login() {
             let authService = AuthService.getInstance();
             const result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login');
-            setUser(result.data)
             if (result.status.Code !== 200) {
                 setMessage(result)
             }

@@ -136,7 +136,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                 variant="outlined"
                 fullWidth={true}
                 margin="normal"
-                // size="small"
                 name="Avatar"
                 sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={input.Avatar}
@@ -148,7 +147,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                 variant="outlined"
                 fullWidth={true}
                 margin="normal"
-                // size="small"
                 name="LibraryFolderName"
                 sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={input.LibraryFolderName}
@@ -160,7 +158,6 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                 variant="outlined"
                 fullWidth={true}
                 margin="normal"
-                // size="small"
                 multiline={true}
                 rows={5}
                 name="Description"

@@ -11,11 +11,7 @@ const headCells = [
         label: 'Avatar',
         disablePadding: true,
     },
-    // {
-    //     id: 'ID',
-    //     label: 'UserID',
-    //     disablePadding: false,
-    // },
+
     {
         id: 'Username',
         label: 'Username',

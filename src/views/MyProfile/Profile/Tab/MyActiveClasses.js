@@ -24,7 +24,6 @@ function ClassItem({ data }) {
                 <Avatar {...StringAvatar(data.subject)} />
             </ListItemAvatar>
             <ListItemButton
-            // disablePadding
             >
                 <ListItemText primary={data.class}
                     secondary={data.subject} />

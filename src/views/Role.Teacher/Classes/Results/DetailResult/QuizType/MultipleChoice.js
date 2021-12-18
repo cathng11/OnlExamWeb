@@ -52,7 +52,6 @@ export default function MultipleChoice({ Solution, index, Answer }) {
                                 key={i}
                                 control={
                                     <Checkbox
-                                        // checked={val.Correct}
                                         name={val.Solution}
                                     />
                                 }

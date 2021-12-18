@@ -12,15 +12,12 @@ const useUnload = fn => {
 
     }, [fn]);
     const options=()=>{
-        // let user = JSON.parse(localStorage.getItem("user"))
         let _assignment = assignment
         delete _assignment.Questions
         let finalData = { ..._assignment, Questions: question }
-        console.log(finalData)
         let assignmentService = AssignmentService.getInstance()
         assignmentService.submitAssignment(finalData)
             .then(items => {
-                console.log(items)
             })
             .catch((err) => {
                 console.error(err)

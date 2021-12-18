@@ -121,7 +121,6 @@ export default function BriefInfo({ info }) {
             width: '100%',
             display: 'flex',
             flexDirection: 'row',
-            // justifyContent: 'center',
             alignItems: 'center',
           }}
         >
@@ -142,16 +141,6 @@ export default function BriefInfo({ info }) {
               }
             }}
           />
-          {/* <TextField
-            label="Limit/quiz"
-            id="duration-text"
-            sx={{ pb: 3, width: '30%' }}
-            size="small"
-            InputProps={{
-              endAdornment: <InputAdornment position="end">s</InputAdornment>,
-            }}
-            helperText={<HelperText txt={' '} isError={false} />}
-          /> */}
         </Box>
       </Paper>
     </React.Fragment>

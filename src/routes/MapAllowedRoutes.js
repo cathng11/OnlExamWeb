@@ -28,7 +28,6 @@ function MapAllowedRoutes({ routes, basePath, isAddNotFound }) {
 					<Route
 						{...rest}
 						key={path}
-						// path={`${basePath}${path}`}
 						path={_path}
 					>
 

@@ -1,6 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -31,7 +30,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
         alert: false,
         title: ''
     })
-    // let { id_class } = useParams();
     const [openModal, setOpenModal] = React.useState({
         pageName: 'Student', isOpen: false, id: ''
     });
@@ -45,7 +43,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
             setOpenModal({ pageName: 'Student', isOpen: true, id: '' });
         }
         else if (view === 'Result') {
-            // history.push(`/${data.id_class}/grade`);
         }
     }
     function handleClickEdit() {
@@ -57,7 +54,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
             setState({ alert: true, title: `Not allowed to edit!` })
         }
         else if (view === 'Result') {
-            // history.push(`/${data.id}/grade`);
         }
     }
     function handleDelete() {
@@ -94,7 +90,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                 .catch(err => console.error(err))
         }
         else if (view === 'Result') {
-            // history.push(`/${data.id}/grade`);
         }
         handleCloseDialog()
     }
@@ -159,26 +154,11 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
 
             ) : (
                 <>
-                    {/* <Tooltip title="Add">
-                        <IconButton>
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Import">
-                        <IconButton>
-                            <FileUploadIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Export">
-                        <IconButton>
-                            <FileDownloadIcon />
-                        </IconButton>
-                    </Tooltip> */}
+                   
                     {view === 'Result' ? <></> :
                         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickAdd} sx={{ p: 3 }}>ADD</Button>
                     }
                     {view === 'Student' ? <Button color="primary" startIcon={<FileUploadIcon />} onClick={handleImportStudents} >IMPORT</Button> : <></>}
-                    {/* <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
                 </>
             )}
             <ModalDialog open={openModal} handleClose={handleClose} />

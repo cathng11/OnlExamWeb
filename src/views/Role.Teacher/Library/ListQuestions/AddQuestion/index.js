@@ -228,14 +228,12 @@ export default function AddQuestion({ isRefresh }) {
             </Backdrop>
             <Paper sx={{
                 background: 'white',
-                // height: { xs: '100vh', md: '70vh', lg: '70vh' },
                 borderRadius: '20px',
                 p: 4,
                 overflow: 'auto',
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
             }}>
                 <Box
-                    // component="div" 
                     sx={{
                         display: 'flex',
                         height: '100%',
@@ -304,11 +302,9 @@ export default function AddQuestion({ isRefresh }) {
                             display: 'flex',
                             flexDirection: 'row',
                             justifyContent: "flex-end",
-                            // alignItems:"flex-start"
                         }}>
                             <TextField
                                 id="outlined-textarea"
-                                // label="Question Title"
                                 placeholder="Solution"
                                 multiline
                                 fullWidth={true}
@@ -327,9 +323,7 @@ export default function AddQuestion({ isRefresh }) {
                                 />} label="Correct" />
 
                         </Box>
-                        {/* <FormControl fullWidth={true}> */}
                         {options.length > 0 ? <Box className="main-div" style={{
-                            // margin: '20px 10px 10px',
                             marginTop: 5,
                             padding: '10px',
                             position: 'relative',
@@ -361,7 +355,6 @@ export default function AddQuestion({ isRefresh }) {
                                 )
                             })}
                         </Box> : <></>}
-                        {/* </FormControl> */}
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'row',

@@ -7,7 +7,6 @@ export default function Folders({ edit, data, refresh }) {
     return (
         <Grid
             container
-            // spacing={1}
             direction="row"
             justify="space-between"
             alignItems="center"

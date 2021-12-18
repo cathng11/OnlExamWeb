@@ -114,7 +114,6 @@ export default function FolderItem({ data, edit, view, refresh }) {
             }} onClick={handleDetail}>
                 {view === 'Library' ? <CardAreaLibrary data={data} /> : <CardAreaClass data={data} />}
             </CardActionArea>
-            {/* <Divider /> */}
             <CardActions
                 sx={{
                     height: '5vh',

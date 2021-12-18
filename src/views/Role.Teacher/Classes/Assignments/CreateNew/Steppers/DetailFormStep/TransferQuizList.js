@@ -90,7 +90,6 @@ export default function TransferQuizList({ questions, randomQuestions }) {
             setRight(randomQuestions.data)
         }
 
-        // let listID = right.filter(i => i.QuestionID)
         setAssign(s => { return { ...s, Questions: right } })// eslint-disable-next-line
     }, [right, questions, randomQuestions])
     const customList = (title, items) => (
@@ -119,11 +118,9 @@ export default function TransferQuizList({ questions, randomQuestions }) {
             <Divider />
             <List
                 sx={{
-                    // width: 200,
                     height: '30vh',
                     background: '#D6E6F2',
                     overflow: 'auto',
-                    // border:'0.5px solid gray'
                 }}
                 dense
                 component="div"
@@ -159,7 +156,6 @@ export default function TransferQuizList({ questions, randomQuestions }) {
     return (
         <Grid
             container
-            // spacing={2}
             justifyContent="center"
             alignItems="center"
             sx={{
