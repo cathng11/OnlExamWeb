@@ -42,4 +42,9 @@ export default class ResultService {
         let method = "GET";
         return await this.request(url, method).then(res => res.json())
     }
+    async getListResult(data) {
+        let url = `results/teacher`;
+        let method = "GET";
+        return await this.request(url, method,data).then(res => res.json())
+    }
 }
