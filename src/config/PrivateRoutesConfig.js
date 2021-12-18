@@ -141,17 +141,17 @@ const PrivateRoutesConfig = [
             Roles.TEACHER,
         ],
     },
-    {
-        path: '/assignment/:id_assignment/edit',
-        exact: false,
-        title: 'Edit Assignment',
-        type: 'None',
-        component: () => <CreateNewAssignment />,
-        permission: [
-            Roles.ADMIN,
-            Roles.TEACHER,
-        ],
-    },
+    // {
+    //     path: '/assignment/:id_assignment/edit',
+    //     exact: false,
+    //     title: 'Edit Assignment',
+    //     type: 'None',
+    //     component: () => <CreateNewAssignment />,
+    //     permission: [
+    //         Roles.ADMIN,
+    //         Roles.TEACHER,
+    //     ],
+    // },
     {
         path: '/grade-assignment',
         exact: false,

@@ -9,7 +9,7 @@ export default function CardAreaClass({ data }) {
             <CardHeader
                 height="150"
                 sx={{
-                    // background: '#CDD0CB',
+                    background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
                     // height: '100px' 
                 }}
                 title={data.ClassName}

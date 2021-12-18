@@ -11,7 +11,7 @@ import {
 import React, { memo, useState } from 'react'
 import Calendar from 'react-calendar'
 import '../../styles/Calendar.css'
-
+import logo from '../../assets/images/cool-background.png'
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -45,7 +45,7 @@ const UpcomingSchedule = () => {
                         {value.date}
                     </TimelineOppositeContent>
                     <TimelineSeparator >
-                        <TimelineDot sx={{ background: '#3D4E81'}} />
+                        <TimelineDot sx={{ background: '#380036' }} />
                         {index !== data.length - 1 ? <TimelineConnector sx={{ background: '#3D4E81' }} /> : <></>}
                     </TimelineSeparator>
                     <TimelineContent>{value.name}</TimelineContent>
@@ -77,9 +77,9 @@ function Dashboard(route) {
     return (
         <Container sx={{ mt: 5, mb: 2 }} maxWidth="full">
             <CssBaseline />
-            <Grid container rowSpacing={4} direction="row">
-                <Grid item lg={1}></Grid>
-                <Grid container item lg={10}>
+            <Grid container rowSpacing={4} direction="row" >
+                {/* <Grid item lg={1}></Grid> */}
+                <Grid container item lg={12} sx={{ p: { xs: 3, md: 5, lg: 10 }, pb: { xs: 0, md: 0, lg: 0 } }}>
                     <Grid container item xs={12} rowSpacing={4} columnSpacing={12}>
                         <Grid
                             container
@@ -124,20 +124,20 @@ function Dashboard(route) {
                                     }}
                                 >
                                     <ToggleButtonGroup
-                                        color="primary"
                                         fullWidth={true}
                                         size={'small'}
                                         sx={{
-                                            background: '#ECF674 '
+                                            background: '#041C32',
+                                            color: '#FFFFFF'
                                         }}
                                     >
-                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0 }} value={0}>
+                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0, color: '#FFFFFF' }} value={0}>
                                             Week 10
                                         </ToggleButton>
-                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0 }} value={1}>
+                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0, color: '#FFFFFF' }} value={1}>
                                             1st Sem.
                                         </ToggleButton>
-                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0 }} value={2}>
+                                        <ToggleButton sx={{ textTransform: 'capitalize', p: 0, color: '#FFFFFF' }} value={2}>
                                             2020-21
                                         </ToggleButton>
                                     </ToggleButtonGroup>
@@ -166,7 +166,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background:'linear-gradient(to left, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            background: '#dbe7fc',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
@@ -180,7 +180,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background:'linear-gradient(to bottom, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            background: '#dbe7fc',
                                             // boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;',
                                             // background: 'linear-gradient(to bottom, #799f0c 0%,#799f0c 20%,#ffffff 20%,#ffffff 100%)',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
@@ -196,7 +196,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background:'linear-gradient(to right, #7085B6 0%, #87A7D9 50%, #DEF3F8 100%);',
+                                            background: '#dbe7fc',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
@@ -218,10 +218,10 @@ function Dashboard(route) {
                         >
                             <Item
                                 sx={{
-                                    mt:2,
+                                    mt: 2,
 
                                     height: '100%',
-                                    backgroundColor:'#F0F1F5',
+                                    backgroundColor: '#F0F1F5',
                                     backdropFilter: 'blur(50px)',
                                     backgroundImage: `url(${user.Avatar})`,
                                     backgroundRepeat: 'no-repeat',
@@ -240,7 +240,7 @@ function Dashboard(route) {
                         xs={12}
                         rowSpacing={{ xs: 0, md: 0, lg: 0 }}
                         columnSpacing={12}
-                        
+
                     >
                         <Grid
                             item
@@ -250,7 +250,7 @@ function Dashboard(route) {
                             sx={{
                                 backgroundColor: 'white',
                                 pt: 3,
-                                
+
                             }}
                         >
                             <Typography
@@ -263,13 +263,13 @@ function Dashboard(route) {
                             </Typography>
                             <Item
                                 sx={{
-                                    background: '#041C32',
+                                    // background: '#041C32',
                                     backdropFilter: 'blur(50px) ',
                                     boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)',
-                                    // backgroundImage: `url(${logo})`,
-                                    // backgroundRepeat: 'no-repeat',
-                                    // backgroundSize: 'cover',
-                                    // backgroundPosition: 'center',
+                                    backgroundImage: `url(${logo})`,
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
                                     height: 200,
                                     color: 'white',
 
@@ -331,7 +331,7 @@ function Dashboard(route) {
                                 sx={{
                                     width: '100%',
                                     height: '100%',
-                                    
+
                                     backgroundImage: `url(https://static.turbosquid.com/Preview/001270/138/81/_D.jpg)`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundSize: 'contain',
@@ -416,7 +416,7 @@ function Dashboard(route) {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item lg={1} sx={{ background: 'white' }}></Grid>
+                {/* <Grid item lg={1} sx={{ background: 'white' }}></Grid> */}
             </Grid>
         </Container >
     )

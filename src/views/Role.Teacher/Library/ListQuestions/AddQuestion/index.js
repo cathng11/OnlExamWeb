@@ -1,11 +1,10 @@
-import { Button, FormControl, Paper, Grid, Typography, FormControlLabel, Checkbox, Chip } from '@mui/material'
-import React from 'react'
-import { Box } from '@mui/system';
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
+import { Backdrop, Box, Button, Checkbox, Chip, CircularProgress, FormControl, FormControlLabel, Grid, Paper, Typography } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { useHistory, useLocation, matchPath } from "react-router-dom";
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import React from 'react';
+import { matchPath, useHistory, useLocation } from "react-router-dom";
 import LibraryService from '../../../../../services/library.service';
 import AlertBar from './../../../../../components/Alert/AlertBar';
 
@@ -16,6 +15,7 @@ export default function AddQuestion({ isRefresh }) {
         Level: ''
     });
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -50,11 +50,10 @@ export default function AddQuestion({ isRefresh }) {
     const handleAdd = () => {
         let list = options
         let clone = options
-        let _sol = solution
-        let _cor = correct ? 1 : 0
+        let _sol=solution
         let item = {
             Solution: _sol,
-            Correct: _cor
+            Correct: correct
         }
 
         if (!_sol) {
@@ -69,7 +68,7 @@ export default function AddQuestion({ isRefresh }) {
             if (!found) {
                 list.push(item)
                 setOptions(list)
-                const numCorrect = list.filter(i => i.Correct === 1).length;
+                const numCorrect = list.filter(i => i.Correct === true).length;
                 if (numCorrect > 1) {
                     setInput(s => { return { ...s, Type: 'Multiple Choices' } })
                 }
@@ -86,7 +85,6 @@ export default function AddQuestion({ isRefresh }) {
     React.useEffect(() => {
         let mounted = true;
         if (questionID > 1) {
-            console.log(questionID)
             let libraryService = LibraryService.getInstance()
             libraryService.getQuestionsByID(questionID)
                 .then(items => {
@@ -135,7 +133,7 @@ export default function AddQuestion({ isRefresh }) {
             setState({ alert: true, title: `Input fields are required` })
         }
         else if (type !== 'Essay' && type !== 'Short Answer') {
-            const found = options.filter(i => i.Correct === 1).length;
+            const found = options.filter(i => i.Correct === true).length;
 
             if (options.length < 2) {
                 setState({ alert: true, title: `At least 2 solutions for this question type` })
@@ -154,7 +152,7 @@ export default function AddQuestion({ isRefresh }) {
                 }
                 return false;
             }
-            else if (type === 'Multiple Choices' && options.filter(i => i.Correct === 1).length < 2) {
+            else if (type === 'Multiple Choices' && options.filter(i => i.Correct === true).length < 2) {
                 setState({ alert: true, title: `At least 2 correct answer for this question type` })
                 return true;
 
@@ -167,8 +165,8 @@ export default function AddQuestion({ isRefresh }) {
 
         if (!checkInput()) {
             let libraryService = LibraryService.getInstance();
-            if(questionID)
-            {
+            setState(s => { return { ...s, loading: true } })
+            if (questionID > 0) {
                 libraryService.updateQuestion(questionID, {
                     Question: input.Question,
                     Type: input.Type,
@@ -176,19 +174,21 @@ export default function AddQuestion({ isRefresh }) {
                     Solution: options
                 })
                     .then(items => {
-                        console.log(items)
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: `Updated question ${questionID}` })
+                            setState({ loading: false, alert: true, title: `Updated question ${questionID}` })
                             handleReset()
                             isRefresh()
                         }
                         else {
-                            setState({ alert: true, title: items.message })
+                            setState({ loading: false, alert: true, title: items.message })
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                    })
             }
-            else{
+            else {
                 libraryService.insertQuestion(folderID, {
                     Question: input.Question,
                     Type: input.Type,
@@ -197,15 +197,18 @@ export default function AddQuestion({ isRefresh }) {
                 })
                     .then(items => {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: 'Added new question to folder' })
+                            setState({ loading: false, alert: true, title: 'Added new question to folder' })
                             handleReset()
                             isRefresh()
                         }
                         else {
-                            setState({ alert: true, title: items.message })
+                            setState({ loading: false, alert: true, title: items.message })
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                    })
             }
 
         }
@@ -217,10 +220,16 @@ export default function AddQuestion({ isRefresh }) {
                 openAlert={state.alert}
                 closeAlert={() => setState(s => { return { ...s, alert: false } })}
             />
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={state.loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Paper sx={{
                 background: 'white',
                 // height: { xs: '100vh', md: '70vh', lg: '70vh' },
-                borderRadius: '10px',
+                borderRadius: '20px',
                 p: 4,
                 overflow: 'auto',
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
@@ -236,7 +245,7 @@ export default function AddQuestion({ isRefresh }) {
                         background: 'white',
 
                     }}>
-                    <Typography color="text.primary" variant="h5">
+                    <Typography color="primary" variant="h5">
                         {query.get("editID") ? `Edit question ${query.get("editID")}` : 'Create new question'}
                     </Typography>
                     <Box
@@ -251,6 +260,7 @@ export default function AddQuestion({ isRefresh }) {
                             margin="normal"
                             size="small"
                             name="Question"
+                            sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                             value={input.Question}
                             onChange={handleChange}
                         />
@@ -263,6 +273,7 @@ export default function AddQuestion({ isRefresh }) {
                                 value={input.Type}
                                 label="Type"
                                 name="Type"
+                                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                                 onChange={handleChange}
                             >
                                 <MenuItem value={'Single Choice'}>Single Choice</MenuItem>
@@ -280,6 +291,7 @@ export default function AddQuestion({ isRefresh }) {
                                 value={input.Level}
                                 name="Level"
                                 label="Level"
+                                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                                 onChange={handleChange}
                             >
                                 <MenuItem value={'Easy'}>Easy</MenuItem>
@@ -302,6 +314,7 @@ export default function AddQuestion({ isRefresh }) {
                                 fullWidth={true}
                                 value={solution}
                                 margin="normal"
+                                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                                 onChange={(e) => setSolution(e.target.value)}
                                 size="small"
                             />
@@ -341,7 +354,7 @@ export default function AddQuestion({ isRefresh }) {
                                         name={option}
                                         label={option.Solution}
                                         variant="outlined"
-                                        color={option.Correct === 1 ? 'primary' : 'success'}
+                                        color={option.Correct === true ? 'primary' : 'success'}
                                         onDelete={() => handleDelete(option)}
                                         sx={{ m: 1 }}
                                     />
@@ -357,10 +370,10 @@ export default function AddQuestion({ isRefresh }) {
                             background: 'white',
                             p: 2,
                         }}>
-                            <Button variant="contained" color="success" p={2} onClick={handleSave}>
+                            <Button variant="outlined" color="primary" p={2} onClick={handleSave}>
                                 Save
                             </Button>
-                            <Button variant="contained" color="primary" onClick={handleReset}>
+                            <Button variant="contained" color="error" onClick={handleReset}>
                                 Reset
                             </Button>
                         </Box>

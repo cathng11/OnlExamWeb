@@ -8,11 +8,11 @@ export default function CardAreaLibrary({data}) {
         <div>
             <CardMedia
                 component="img"
-                height="140"
+                height="150vh"
                 image={data.Avatar}
                 alt="my_img"
             />
-            <CardContent sx={{ width: '100%' }}>
+            <CardContent sx={{ width: '100%',height: '35vh' }}>
                 <Box
                     sx={{
                         display: 'flex',
@@ -29,10 +29,10 @@ export default function CardAreaLibrary({data}) {
                     {data.LibraryFolderName}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Created on: {data.CreatedDate}
+                    Created on: {data.CreatedDate.substring(0,9)}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Last updated: {data.UpdatedDate}
+                    Last updated: {data.UpdatedDate.substring(0,9)}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     Total questions: {data.TotalQuestions}

@@ -27,7 +27,7 @@ LinearProgressWithLabel.propTypes = {
 export default function QuizProgress({ progress }) {
     return (
         <Box sx={{ width: '100%', p: 2 }}>
-            <LinearProgressWithLabel variant="determinate" value={progress} color="inherit" />
+            <LinearProgressWithLabel variant="determinate" value={progress} color="primary" />
         </Box>
     )
 }

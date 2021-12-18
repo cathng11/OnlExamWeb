@@ -4,7 +4,7 @@ import {
     Typography
 } from '@mui/material';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import LoadingPreviewAssignment from '../Skeleton/LoadingPreviewAssignment';
 import AssignmentService from './../../services/assignment.service';
 import Essay from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/Essay';
@@ -12,14 +12,15 @@ import MultipleChoice from './../../views/Role.Teacher/Classes/Results/DetailRes
 import SingleChoice from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/SingleChoice';
 import TrueFalse from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/TrueFalse';
 import AlertBar from './../Alert/AlertBar';
+import ResultService from './../../services/result.service';
 
 function Question({ data, index }) {
     const type = {
-        'Single Choices': <SingleChoice Solution={data.Solution} />,
-        'Multiple Choices': <MultipleChoice Solution={data.Solution} />,
-        'True/False': <TrueFalse Solution={data.Solution} />,
+        'Single Choice': <SingleChoice Solution={data.Solution} Answer={data.Answer} index={null} />,
+        'Multiple Choices': <MultipleChoice Solution={data.Solution} Answer={data.Answer} index={null} />,
+        'True/False': <TrueFalse Solution={data.Solution} Answer={data.Answer} index={null} />,
         // 'Short Answer': <ShortAnswer Solution={data.Solution}/>,
-        'Essay': <Essay Solution={data.Solution} />
+        'Essay': <Essay Solution={data.Solution} Answer={data.Answer} index={null} />
     }
 
     return (
@@ -55,37 +56,61 @@ function Question({ data, index }) {
         </Grid>
     )
 }
-export default function PreviewAssignment({ dataCreate }) {
+export default function PreviewAssignment({ dataCreate, close }) {
     const [data, setData] = React.useState(null)
     const [state, setState] = React.useState({
         alert: false,
         title: ''
     })
     let location = useLocation();
+    let history = useHistory();
     let query = new URLSearchParams(location.search)
+    let role = localStorage.getItem('roles')
+
     let examID = query.get("previewExamID")
+
     React.useEffect(() => {
         let mounted = true;
-        if(dataCreate){
+        if (dataCreate) {
             setData(dataCreate)
         }
         if (examID) {
-            let assignmentService = AssignmentService.getInstance()
-            assignmentService.getDetailAssignment(examID)
-                .then(items => {
-                    if (mounted) {
+            if (role === 'TEACHER') {
+                let assignmentService = AssignmentService.getInstance()
+                assignmentService.getDetailAssignment(examID)
+                    .then(items => {
+                        if (mounted) {
+                            if (items.status.Code === 200) {
+                                setData(items.data)
+                            }
+                            else {
+                                setState({ alert: true, title: 'Error. Try again!' })
+                            }
+                        }
+                    })
+                    .catch(err => console.error(err))
+            }
+            else if (role === 'STUDENT') {
+                let resultService = ResultService.getInstance()
+                resultService.reviewDoneAssignmentForStudent(examID)
+                    .then(items => {
                         if (items.status.Code === 200) {
                             setData(items.data)
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
+                            setState({ alert: true, title: 'Cannot review because you did not turn in this assignment' })
+                            history.goBack()
+                            setTimeout(() => {
+                                close();
+                              }, 3000);
+                            
                         }
-                    }
-                })
-                .catch(err => console.error(err))
+                    })
+                    .catch(err => console.error(err))
+            }
         }
-        return () => { mounted = false };
-    }, [examID,dataCreate])
+        return () => { mounted = false };//eslint-disable-next-line
+    }, [examID, dataCreate])
     return (
         <Box>
             {data ?
@@ -98,10 +123,10 @@ export default function PreviewAssignment({ dataCreate }) {
                             Exam Name: {data.ExamName}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time Begin: {data.TimeBegin.toString()}
+                            Time Begin: {data.TimeBegin.replace('T', ' ').replace('.000Z', '')}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time End: {data.TimeEnd.toString()}
+                            Time End: {data.TimeEnd.replace('T', ' ').replace('.000Z', '')}
                         </Typography>
                         <Typography variant="subtitle1">
                             Duration: {data.Duration}

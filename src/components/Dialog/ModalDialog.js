@@ -12,6 +12,7 @@ import AssignmentDialog from './ChildDialog/AssignmentDialog';
 import ClassDialog from './ChildDialog/ClassDialog';
 import LibraryDialog from './ChildDialog/LibraryDialog';
 import StudentDialog from './ChildDialog/StudentDialog';
+import ImportStudentsDialog from './ChildDialog/ImportStudentsDialog';
 
 
 
@@ -87,10 +88,6 @@ export default function ModalDialog({ open, handleClose }) {
     const handleRefresh = () => {
         setRefresh(!refresh)
         setIsSave(false)
-        // setIsEdit({
-        //     value: false,
-        //     id: ''
-        // })
         Close()
     }
     const Close = () => {
@@ -101,15 +98,19 @@ export default function ModalDialog({ open, handleClose }) {
         'Assignments': <AssignmentDialog isSave={isSave} refresh={handleRefresh}/>,
         'Classes': <ClassDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
         'Result': <ResultDialog />,
-        'Student': <StudentDialog isSave={isSave} isRefresh={handleRefresh}/>
+        'Student': <StudentDialog isSave={isSave} refresh={handleRefresh}/>,
+        'ImportStudents': <ImportStudentsDialog isSave={isSave} refresh={handleRefresh}/>
+
     }
 
     const titleCreate = {
         'Library': 'Create New Questions Folder',
         'Assignments': 'Edit Information Assignment',
         'Classes': 'Create New Class',
-        'Result': 'Create New Class',
-        'Student': 'Add New Students'
+        'Result': 'Result Assignment',
+        'Student': 'Add New Students',
+        'ImportStudents': 'Import Multiple Students',
+
     }
     const titleEdit = {
         'Library': 'Edit Questions Folder ID - ' + open.id,

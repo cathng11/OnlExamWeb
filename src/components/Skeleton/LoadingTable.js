@@ -20,13 +20,13 @@ function generate(element) {
 }
 export default function LoadingTable() {
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', borderRadius: '20px', }}>
             <Paper sx={{
                 width: '100%',
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
-                borderRadius: '10px',
+                borderRadius: '20px',
             }}>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} sx={{ borderRadius: '20px', }}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>

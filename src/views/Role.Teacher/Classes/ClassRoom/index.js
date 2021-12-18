@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useHistory, useParams } from "react-router-dom";
 import MapAllowedRoutes from '../../../../routes/MapAllowedRoutes';
 import { getAllowedRoutes } from '../../../../utils/index';
+import logo from '../../../../assets/images/cool-background.png'
 const StyledTabs = styled((props) => (
     <Tabs
       {...props}
@@ -60,7 +61,11 @@ export default function ClassRoom({ children }) {
             }
         }}>
             <Grid container >
-                <Grid item sx={{ background: '#041C32', borderBottom: '1px solid gray', width: '100%' }} >
+                <Grid item sx={{ background: '#041C32', borderBottom: '1px solid gray', width: '100%',
+            backgroundImage: `url(${logo})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center', }} >
                     <Container>
                         <Box >
                             <Grid container sx={{ p: 2, pt: 4 }} columnSpacing={2}>

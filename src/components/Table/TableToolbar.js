@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 // import FileDownloadIcon from '@mui/icons-material/FileDownload';
-// import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import {
     alpha,
@@ -71,7 +71,6 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                     if (items.status.Code === 200) {
                         setState({ alert: true, title: `Deleted assignment ${selected} from this class` })
                         refresh()
-                        console.log(items)
                     }
                     else {
                         setState({ alert: true, title: items.message })
@@ -104,6 +103,10 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
         refresh();
         setOpenModal(s => { return { ...s, isOpen: false } });
     };
+    const handleImportStudents = () => {
+        setOpenModal({ pageName: 'ImportStudents', isOpen: true, id: '' });
+
+    }
     function handleCloseDialog() {
         setOpenDialog(false)
     }
@@ -171,9 +174,11 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                             <FileDownloadIcon />
                         </IconButton>
                     </Tooltip> */}
-                    {view === 'Result' ? <></> : <Button color="inherit" startIcon={<AddIcon />} onClick={handleClickAdd}>ADD</Button>}
-                    {/* <Button color="inherit" startIcon={<FileUploadIcon />}>IMPORT</Button>
-                    <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
+                    {view === 'Result' ? <></> :
+                        <Button color="primary" startIcon={<AddIcon />} onClick={handleClickAdd} sx={{ p: 3 }}>ADD</Button>
+                    }
+                    {view === 'Student' ? <Button color="primary" startIcon={<FileUploadIcon />} onClick={handleImportStudents} >IMPORT</Button> : <></>}
+                    {/* <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
                 </>
             )}
             <ModalDialog open={openModal} handleClose={handleClose} />

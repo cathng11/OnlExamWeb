@@ -4,50 +4,56 @@ import {
     Avatar, Button, Checkbox, Chip, IconButton, TableCell, Tooltip
 } from '@mui/material';
 import React from 'react';
-import { matchPath } from 'react-router';
-import { useHistory } from "react-router-dom";
+import { matchPath, useHistory, useLocation } from 'react-router';
 import MemberClassDialog from '../Dialog/MemberClassDialog';
+import AlertBar from './../Alert/AlertBar';
 import PreviewDialog from './../Dialog/PreviewDialog';
+import ResultDialog from './../Dialog/ResultDialog';
 
 export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected }) {
     // const { view, role, row, setSelectedRow, labelId, isItemSelected } = props;
     // const [selected, setSelected] = React.useState(selectedRow);
-    const statusColor = {
-        "Hidden": "secondary",
-        "Completed": "primary",
-        "Active": "success",
-        "Inactive": "error",
-        "Pending": "warning",
-        "Accepted": "success",
-        "Not Accept": "error",
-    }
-    const action = {
-        "Hidden": "",
-        "Completed": "View",
-        "Active": "Take",
-        "Inactive": "Take"
-    }
-    const handleClick = (event, id) => {
-        setSelectedRow(event, id);
-    };
+    let location = useLocation();
     let history = useHistory();
-    const page = { 'Result': 'result', 'Classes': 'classes', 'Assignment': 'assignment','Student':'students' }
+    const page = {
+        'Result': 'result',
+        'Classes': 'classes',
+        'Assignment': 'assignment',
+        'Student': 'students'
+    }
     const match = matchPath(history.location.pathname, {
         path: `/classes/:id/${page[view]}`,
         exact: true,
         strict: false
     });
+    const [state, setState] = React.useState({
+        alert: false,
+        title: ''
+    })
+    const statusColor = {
+        "Hidden": "secondary",
+        "Completed": "primary",
+        "Active": "success",
+        "Inactive": "error",
+        "Pending": "#EBE645",
+        "Accepted": "success",
+        "Not Accept": "error",
+        "true": "success",
+        "false": "error"
+    }
+    const action = {
+        "Hidden": "",
+        "Completed": "View",
+        "Active": "Take",
+        "Inactive": "Not Allow"
+    }
+    const handleClick = (event, id) => {
+        setSelectedRow(event, id);
+    };
+
+
     function handleClickGrade() {
         history.push(`/grade-assignment?inClass=${match.params.id}&id=${row.id}`);
-    }
-    function handleSAClick() {
-        if (row.status === 'Active') {
-            history.push(`/student1/take-assignment?id=${row.id}`);
-        }
-        else if (row.status === 'Completed') {
-
-        }
-
     }
     const [openPreviewAssignment, setOpenPreviewAssignment] = React.useState(false)
 
@@ -64,7 +70,39 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         history.push(`${history.location.pathname}`);
         setOpenMemberDetail(false)
         setOpenPreviewAssignment(false)
+        setOpenResultDialog(false)
+    }
 
+    const handleStudentActionClick = (status) => {
+        let query = new URLSearchParams(location.search)
+        let classID = query.get("inClass")
+        if (status === 'Active') {
+            history.push(`/student1/take-assignment?inClass=${classID}&examID=${row.ExamID}`);
+
+        } else if (status === 'Completed') {
+            history.push(`${history.location.pathname}?previewExamID=${row.ExamID}`);
+            setOpenPreviewAssignment(true)
+            console.log('Completed')
+        }
+        else if (status === 'Inactive') {
+            setState({ alert: true, title: 'It is not valid time to take!' })
+        }
+    }
+    const [openResultDialog, setOpenResultDialog] = React.useState(false)
+
+    const handleStudentDetailResult = () => {
+        history.push(`${history.location.pathname}?inClass=${row.ClassID}&examID=${row.ExamID}`);
+        setOpenResultDialog(true)
+    }
+    function handleStatus(TimeBegin, TimeEnd) {
+        let timeBegin = new Date(TimeBegin)
+        let timeEnd = new Date(TimeEnd)
+        let today = new Date()
+        let status = '';
+        if (timeEnd < today) status = 'Completed'
+        else if (timeEnd > today) status = 'Active'
+        else if (today < timeBegin) status = 'Inactive'
+        return status
     }
     if (role === 'Teacher') {
         if (view === 'Student') {
@@ -83,7 +121,6 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                     <TableCell padding="none" align="left" component={'div'}>
                         <Avatar alt={row.Username} src={row.Avatar} />
                     </TableCell>
-                    {/* <TableCell align="left">{row.UserID}</TableCell> */}
                     <TableCell align="left" component={'div'}>{row.Username}</TableCell>
                     <TableCell align="left" component={'div'}>{row.Firstname}</TableCell>
                     <TableCell align="left" component={'div'}>{row.Lastname}</TableCell>
@@ -95,10 +132,9 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                                     <ArrowForwardIcon />
                                 </IconButton>
                             </div>
-
                         </Tooltip>
                     </TableCell>
-                    <MemberClassDialog data={row} open={openMemberDetail} close={handleClose} classID={match.params.id}/>
+                    <MemberClassDialog data={row} open={openMemberDetail} close={handleClose} classID={match.params.id} />
                 </>
 
             )
@@ -106,14 +142,11 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         else if (view === 'Result') {
             return (
                 <>
-                    <TableCell padding="normal" component={'div'}> 
+                    <TableCell padding="normal" component={'div'}>
                         <Checkbox
                             color="primary"
                             onClick={(event) => handleClick(event, row.id)}
                             checked={isItemSelected}
-                        // inputProps={{
-                        //     'aria-labelledby': labelId,
-                        // }}
                         />
                     </TableCell>
                     <TableCell padding="none" align="left" component={'div'}>
@@ -134,18 +167,15 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                                     <EditIcon />
                                 </IconButton>
                             </div>
-                        </Tooltip></TableCell>
+                        </Tooltip>
+                    </TableCell>
                 </>
             )
         }
         else if (view === 'Assignment') {
-            let timeBegin = new Date(row.TimeBegin)
-            let timeEnd = new Date(row.TimeEnd)
-            let today = new Date()
-            let status = '';
-            if (timeEnd < today) status = 'Completed'
-            else if (timeEnd > today) status = 'Active'
-            else if (today < timeBegin) status = 'Inactive'
+            let status = handleStatus(row.TimeBegin, row.TimeEnd)
+            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '')
+            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '')
             return (
                 <>
                     <TableCell padding="normal" component={'div'}>
@@ -161,20 +191,22 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                     <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
                     <TableCell align="center" component={'div'}>{row.TotalQuestions}</TableCell>
                     <TableCell align="center" component={'div'}>{row.Duration}</TableCell>
-                    <TableCell align="center" component={'div'}>{row.TimeBegin}</TableCell>
-                    <TableCell align="center" component={'div'}>{row.TimeEnd}</TableCell>
+                    <TableCell align="left" component={'div'}>{begin}</TableCell>
+                    <TableCell align="left" component={'div'}>{end}</TableCell>
 
 
                     <TableCell align="left" component={'div'}>
                         <Chip label={status} color={statusColor[status]} />
                     </TableCell>
-                    <TableCell align="left" component={'div'}><Tooltip title="Detail">
-                        <div>
-                            <IconButton onClick={handlePreview}>
-                                <ArrowForwardIcon />
-                            </IconButton>
-                        </div>
-                    </Tooltip></TableCell>
+                    <TableCell align="left" component={'div'}>
+                        <Tooltip title="Detail">
+                            <div>
+                                <IconButton onClick={handlePreview}>
+                                    <ArrowForwardIcon />
+                                </IconButton>
+                            </div>
+                        </Tooltip>
+                    </TableCell>
                     <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
                 </>
             )
@@ -182,42 +214,61 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     }
     if (role === 'Student') {
         if (view === 'Assignment') {
+            let status = handleStatus(row.TimeBegin, row.TimeEnd)
+            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '')
+            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '')
             return (
                 <>
-                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
-                    {/* <TableCell align="left">{row.classname}</TableCell> */}
-                    <TableCell align="left" component={'div'}>{row.subject}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.name}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.duration}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.begin}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.end}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.TotalQuestions}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.Duration}</TableCell>
+                    <TableCell align="left" component={'div'}>{begin}</TableCell>
+                    <TableCell align="left" component={'div'}>{end}</TableCell>
                     <TableCell align="left" component={'div'}>
-                        <Chip label={row.status} color={statusColor[row.status]} />
+                        <Chip label={status} color={statusColor[status]} />
                     </TableCell>
-                    <TableCell align="left" component={'div'}><Button color="secondary" onClick={handleSAClick}>{action[row.status]}</Button></TableCell>
+                    <TableCell align="left" component={'div'}>
+                        <Button
+                            color="error"
+                            sx={{ fontWeight: 'bold' }}
+                            onClick={() => handleStudentActionClick(status)}
+                        >
+                            {action[status]}
+                        </Button>
+                    </TableCell>
+                    <AlertBar
+                        title={state.title}
+                        openAlert={state.alert}
+                        closeAlert={() => setState(s => { return { ...s, alert: false } })}
+                    />
+                                        <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
 
                 </>
             )
         } else if (view === 'Result') {
             return (
                 <>
-                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.name}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.finishedTime}</TableCell>
-                    <TableCell align="left" component={'div'}><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
-                    <TableCell align="left" component={'div'}>{row.correct}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.ClassName}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.TeacherFullname}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.DoingTime}</TableCell>
                     <TableCell align="left" component={'div'}>
-                        {row.status === 'Accepted' ? row.grade : <Chip label="Pending" color="warning" />}
+                        <Chip label={row.Accept ? "Accepted" : "Not Accept"} color={statusColor[row.Accept]} />
                     </TableCell>
-                    <TableCell align="left" component={'div'}><Tooltip title="Detail">
-                        <div>
-                            <IconButton>
-                                <ArrowForwardIcon />
-                            </IconButton>
-                        </div>
+                    <TableCell align="left" component={'div'}>
+                        {row.Accept === true ? row.Mark : <Chip label="Pending" sx={{ background: '#EBE645' }} />}
+                    </TableCell>
+                    <TableCell align="left" component={'div'}>
+                        <Tooltip title="Detail">
+                            <div>
+                                <IconButton onClick={handleStudentDetailResult}>
+                                    <ArrowForwardIcon />
+                                </IconButton>
+                            </div>
 
-                    </Tooltip></TableCell>
-
+                        </Tooltip>
+                    </TableCell>
+                    <ResultDialog open={openResultDialog} close={handleClose} data={row} />
                 </>
             )
         }

@@ -76,7 +76,7 @@ export default function PreviewDialog({ open, handleClose, data }) {
                         noValidate
                         autoComplete="off"
                     >
-                        <PreviewAssignment dataCreate={data} />
+                        <PreviewAssignment dataCreate={data} close={Close} />
                     </Box>
 
                 </DialogContent>

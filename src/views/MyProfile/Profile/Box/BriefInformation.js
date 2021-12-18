@@ -1,32 +1,26 @@
-import React from 'react'
-import {
-    Box,
-    Typography,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    IconButton ,
-    styled
-} from '@mui/material'
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import {
+    Box, Grid, IconButton,
+    styled, Typography
+} from '@mui/material';
+import React from 'react';
 const Input = styled('input')({
     display: 'none',
-  });
+});
 function DetailItem({ data }) {
     return (
-        <ListItem
-            key={data.content}
-            secondaryAction={
-                <ListItemText primary={data.value} />
-            }
-            disablePadding
-        >
-            <ListItemButton sx={{ color: '#3D4E81' }}>
-
-                <ListItemText primary={data.content} />
-            </ListItemButton>
-        </ListItem>
+        <Grid container item xs={12} spacing={5}>
+            <Grid item xs={12} md={12} lg={4}>
+                <Typography variant="body1" >
+                    {data.content}
+                </Typography>
+            </Grid>
+            <Grid item xs={12} md={12} lg={8}>
+                <Typography variant="body1" color="primary" align="right">
+                    {data.value}
+                </Typography>
+            </Grid>
+        </Grid>
     )
 }
 export default function BriefInformation({ data }) {
@@ -62,7 +56,7 @@ export default function BriefInformation({ data }) {
             />
             <label htmlFor="icon-button-file">
                 <Input accept="image/*" id="icon-button-file" type="file" />
-                <IconButton sx={{color:'#3D4E81'}} aria-label="upload picture" component="span">
+                <IconButton sx={{ color: '#3D4E81' }} aria-label="upload picture" component="span">
                     <PhotoCamera />
                 </IconButton>
             </label>
@@ -72,10 +66,10 @@ export default function BriefInformation({ data }) {
             <Typography variant='body1'>
                 {data.RoleName}
             </Typography>
-            <Box sx={{ width: '100%', pl: 5, pr: 5 }}>
-                <List>
+            <Box sx={{ width: '100%', pl: 5, pr: 5,pt:3 }}>
+                <Grid container spacing={2}>
                     {_data.map((val) => <DetailItem data={val} key={val.content} />)}
-                </List>
+                </Grid>
             </Box>
         </React.Fragment>
     )

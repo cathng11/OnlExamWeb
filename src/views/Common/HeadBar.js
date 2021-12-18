@@ -1,6 +1,7 @@
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import SkateboardingIcon from '@mui/icons-material/Skateboarding';
 import {
-  AppBar, Avatar, Box, Button, Divider, Grid, IconButton, styled, Toolbar, Tooltip, Typography
+  AppBar, Avatar, Box, Button, Grid, IconButton, styled, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import * as React from 'react';
 import {
@@ -9,12 +10,11 @@ import {
 import '../../styles/LinkEffect.css';
 import MenuBar from '../Menu/MenuBar';
 
-
 const MenuLink = ({ title, path, activeOnlyWhenExact, username }) => {
   return (
     <Route
       path={path} exact={activeOnlyWhenExact} children={({ match }) => {
-        var color = match ? '#3D4E81' : 'black';
+        var color = match ? '#3D4E81' : '#380036';
         var weight = match ? 'bold' : 'normal';
         return (
           <Button
@@ -61,8 +61,10 @@ const CustomAppBar = styled(AppBar)(({ theme }) => ({
   padding: 0,
   background: 'white',
   color: 'black',
-  borderBottom: '1px solid #eef2f3',
-  boxShadow: 'none',
+  // borderBottom: '1px solid #D1D1D1',
+  // boxShadow:'none'
+  backdropFilter: 'blur(150px)',
+  boxShadow: 'rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;',
 }));
 const CaptionGridContainer = styled(Grid)(({ theme }) => ({
   background: '#1C1C1C',
@@ -73,15 +75,16 @@ const CaptionGridContainer = styled(Grid)(({ theme }) => ({
   justifyContent: 'flex-start'
 }));
 const LogoBox = styled(Box)(({ theme }) => ({
-  background: theme.palette.primary.gradient,
+  background: 'linear-gradient( 178.1deg,  rgba(60,55,106,1) 8.5%, rgba(23,20,69,1) 82.4% );',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%',
 }));
+
 const MenuBox = styled(Box)(({ theme }) => ({
-  background: theme.palette.primary.gradient,
+  background: '#242052',
   display: 'flex',
   alignItems: 'center',
   textAlign: 'center',
@@ -113,27 +116,32 @@ function HeadBar({ allowedRoutes }) {
               <Box >
                 <SkateboardingIcon />
               </Box>
-              <Typography variant="h4" component="div" sx={{ flexGrow: 0.1 }} color="#FFFADE  ">
-                DolphinE
+              <Typography variant="h4" component="div" sx={{
+                flexGrow: 0.1,
+                fontFamily: 'Lemon, cursive'
+              }} color="#EAEDF2" >
+                Dolphin
               </Typography>
             </LogoBox>
 
           </Grid>
           <Grid container item xs={10} md={10} lg={10} direction="row">
             <CaptionGridContainer container item xs={12}>
-              <Grid item lg={2}>
+              <Grid item xs={2}>
                 <CaptionTypo title="09032491405" />
               </Grid>
-              <Divider orientation="vertical" light />
-              <Grid item lg={2}>
+              <Grid item xs={3}>
                 <CaptionTypo title="no-reply@dolphinexam.com" />
               </Grid>
-              <Divider orientation="vertical" light />
-              <Grid item lg={3}>
+              <Grid item xs={7}>
                 <CaptionTypo title="193 Nguyen Luong Bang, Da Nang city, Viet Nam" />
               </Grid>
             </CaptionGridContainer>
-            <Grid container item xs={12} md={12} lg={12} sx={{ background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' }}>
+            <Grid container item xs={12} md={12} lg={12}
+            // background-color: #1d2951;
+            // background-image: linear-gradient(315deg, #1d2951 0%, #dbe7fc 74%);
+            
+            >
               <Grid item lg={10} sx={{ p: 2 }}>
                 <div
                   style={{ display: 'flex', flexDirection: 'row' }}
@@ -152,20 +160,33 @@ function HeadBar({ allowedRoutes }) {
                   }
                 </div>
               </Grid>
-              <Grid item xs={2} md={2} lg={2} sx={{ p: 2, background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' }}>
+              <Grid item xs={2} md={2} lg={2}
+                sx={{
+                  p: 2,
+                  // background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' 
+                }}
+              >
                 <MenuBox onClick={handleClick} >
                   <Typography
                     variant="p"
                     component="div"
-                    sx={{ flexGrow: 0.1, ml: 4 }}
+                    sx={{
+                      flexGrow: 0.1,
+                      ml: 4,
+                      fontWeight: 'bold',
+                      // color:'#1d2951'
+                    }}
                     fontSize="small"
-                    color="black "
+                    color="white"
                   >
                     {user ? user.Username : ''}
                   </Typography>
                   <Tooltip title="Account settings">
-                    <IconButton size="small" sx={{ ml: 1 }}>
-                      <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>{user ? user.Firstname.substring(0, 1) : ''}</Avatar>
+                    <IconButton size="small" >
+                      <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>
+                        {/* {user ? user.Firstname.substring(0, 1) : ''} */}
+                        <InsertEmoticonIcon/>
+                      </Avatar>
                     </IconButton>
                   </Tooltip>
                 </MenuBox>
@@ -178,7 +199,7 @@ function HeadBar({ allowedRoutes }) {
           open={open}
           setAnchor={handleClose} />
       </CustomToolbar>
-    </CustomAppBar>
+    </CustomAppBar >
   )
 }
 export default withRouter(HeadBar)

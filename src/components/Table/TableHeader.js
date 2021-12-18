@@ -20,7 +20,7 @@ export default function TableHeader(props) {
     };
     return (
         <TableHead component={'div'}>
-            <TableRow component={'div'}>
+            <TableRow component={'div'} >
                 {role === 'Student' ? <></> : <TableCell padding="normal" component={'div'}>
                     <Checkbox
                         color="primary"

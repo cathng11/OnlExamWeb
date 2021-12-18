@@ -1,65 +1,83 @@
 import { Box, TextField } from '@mui/material';
 import * as React from 'react';
 import ClassService from './../../../services/class.service';
-import AlertBar from './../../Alert/AlertBar';
+import LoadingAlert from './../../Loading/LoadingAlert';
 export default function ClassDialog({ isSave, isEdit, refresh }) {
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
     const [className, setClassName] = React.useState('')
+    const showErrorMessage = () => {
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+        setTimeout(() => {
+            refresh();
+        }, 2000);
+    }
     React.useEffect(() => {
         let mounted = true;
         let classService = ClassService.getInstance();
         if (!isEdit.value && isSave) {
+            setState(s => { return { ...s, loading: true } })
             classService.insertClass({ ClassName: className })
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: 'Inserted new class!' })
+                            setState({ loading: false, alert: true, title: 'Inserted new class!' })
                             refresh();
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
 
         if (isEdit.value) {
+            setState(s => { return { ...s, loading: true } })
             classService.getClassByID(isEdit.id)
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
                             let item = items.data
                             setClassName(item.ClassName)
+                            setState(s => { return { ...s, loading: false } })
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
         if (isSave && isEdit.value) {
+            setState(s => { return { ...s, loading: true } })
             let update = { ClassName: className }
             classService.updateClass(isEdit.id, update)
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: `Updated class ${isEdit.id}!` })
+                            setState({ loading: false, alert: true, title: `Updated class ${isEdit.id}!` })
                             refresh();
 
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
         return () => mounted = false;//eslint-disable-next-line
     }, [isSave])
@@ -71,18 +89,15 @@ export default function ClassDialog({ isSave, isEdit, refresh }) {
             <TextField
                 id="name-text"
                 label="Class Name"
-                variant="filled"
+                variant="outlined"
                 fullWidth={true}
                 margin="normal"
+                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={className}
                 onChange={handleChange}
-                size="small"
+                autoComplete="new-password"
             />
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
         </Box>
     )
 }

@@ -1,15 +1,16 @@
-import React from 'react'
-import { Box, TextField, Typography, InputAdornment } from '@mui/material';
-import AlertBar from './../../Alert/AlertBar';
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DateTimePicker from '@mui/lab/DateTimePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { Box, InputAdornment, TextField, Typography } from '@mui/material';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import LoadingEditAssignment from '../../Skeleton/LoadingEditAssignment';
 import AssignmentService from './../../../services/assignment.service';
+import LoadingAlert from './../../Loading/LoadingAlert';
 
 export default function AssignmentDialog({ isSave, refresh }) {
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -31,10 +32,16 @@ export default function AssignmentDialog({ isSave, refresh }) {
         let value = e.toLocaleString().replace(',', '')
         setInput(s => { return { ...s, TimeEnd: value } })
     }
+    const showErrorMessage = () => {
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+        setTimeout(() => {
+            refresh();
+        }, 2000);
+    }
     React.useEffect(() => {
         let mounted = true;
         let assignmentService = AssignmentService.getInstance()
-        if (examID) {
+        if (examID && !isSave) {
             assignmentService.getDetailAssignment(examID)
                 .then(items => {
                     if (mounted) {
@@ -48,29 +55,38 @@ export default function AssignmentDialog({ isSave, refresh }) {
                             })
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
 
         if (isSave) {
+            setState(s => { return { ...s, loading: true } })
             assignmentService.updateAssignment(examID, input)
                 .then(items => {
+                    console.log(items)
                     if (mounted) {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: 'Updated this assignment!' })
+                            setState({ loading: false, alert: true, title: 'Updated this assignment!' })
                             refresh();
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            setState({ loading: false, alert: true, title: items.message })
+                            setTimeout(() => {
+                                refresh();
+                            }, 3000);
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         } // eslint-disable-next-line
     }, [isSave, examID])
     if (!input) {
@@ -81,20 +97,19 @@ export default function AssignmentDialog({ isSave, refresh }) {
                 <TextField
                     id="name-text"
                     label="Class Name"
-                    variant="filled"
+                    variant="outlined"
                     fullWidth={true}
                     margin="normal"
                     name="ExamName"
                     value={input.ExamName}
                     onChange={handleChange}
-                    size="small"
+                    sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 />
                 <TextField
                     label="Duration"
                     id="duration-text"
-                    variant="filled"
+                    variant="outlined"
                     margin="normal"
-                    size="small"
                     name="Duration"
                     sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                     type='number'
@@ -112,8 +127,9 @@ export default function AssignmentDialog({ isSave, refresh }) {
                         Active from:
                     </Typography>
                     <DateTimePicker
-                        renderInput={(params) => <TextField {...params} margin="normal" size="small" fullWidth={true}
+                        renderInput={(params) => <TextField {...params} margin="normal" fullWidth={true}
                             name="TimeBegin"
+                            sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                         />}
                         value={input.TimeBegin}
                         onChange={handleChangeTimeBegin}
@@ -124,19 +140,14 @@ export default function AssignmentDialog({ isSave, refresh }) {
                         to
                     </Typography>
                     <DateTimePicker
-                        renderInput={(params) => <TextField {...params} margin="normal" size="small" fullWidth={true} />}
+                        renderInput={(params) => <TextField {...params} margin="normal" sx={{ '& .css-186xcr5': { paddingRight: '15px' } }} fullWidth={true} />}
                         value={input.TimeEnd}
                         onChange={handleChangeTimeEnd}
                         ampm={false}
                         name="TimeEnd"
                     />
                 </LocalizationProvider>
-
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
+                <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             </Box>
         )
 }

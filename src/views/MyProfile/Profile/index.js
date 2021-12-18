@@ -61,7 +61,7 @@ export default function Profile({ data }) {
                                 alignItems: 'center',
                                 backgroundColor: 'white',
                                 overflow: 'auto',
-                                boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                                boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
                             }}
                         >
                             <UserProfile data={data} />
@@ -83,8 +83,8 @@ export default function Profile({ data }) {
                                     <Tabs
                                         value={value}
                                         onChange={handleChange}
-                                        textColor="secondary"
-                                        indicatorColor="secondary"
+                                        textColor="primary"
+                                        indicatorColor="primary"
                                         aria-label="secondary tabs example"
                                     >
                                         <Tab value="general" label="General" />
@@ -93,7 +93,7 @@ export default function Profile({ data }) {
                                     </Tabs>
                                 </Box>
                                 <TabPanel value="general" >
-                                    <GeneralProfile data={data} isUpdate={isUpdate} setUpdated={()=>setIsUpdate(false)}/>
+                                    <GeneralProfile data={data} isUpdate={isUpdate} setUpdated={() => setIsUpdate(false)} />
                                 </TabPanel>
                                 <TabPanel value="activities" >
                                     <ActivitiesProfile data={data} />
@@ -123,17 +123,16 @@ export default function Profile({ data }) {
                             alignItems: 'center',
                             boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
                         }}>
-                            {visibleBtn === true ? <><Button
-                                color="inherit"
-                                sx={{ mr: 1 }}
-                                onClick={handleUpdate}
-                            >
-                                Save</Button>
+                            {visibleBtn === true ?
                                 <Button
-                                    color="inherit"
+                                    color="error"
+                                    variant="contained"
                                     sx={{ mr: 1 }}
+                                    onClick={handleUpdate}
                                 >
-                                    Reset</Button></> : <></>}
+                                    Save
+                                </Button>
+                                : <></>}
                         </Paper>
                     </Grid>
                 </Grid>

@@ -85,15 +85,27 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{
+            width: '100%',
+            borderRadius: '20px',
+            background: 'blue',
+
+        }}>
             <Paper sx={{
-                width: '100%', mb: 2,
+                width: '100%',
+                mb: 2,
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
-                borderRadius: '10px',
+                borderRadius: '20px',
+                overflow: 'auto'
             }}>
                 {role === 'Student' ? <></> :
-                    <TableToolbar numSelected={selected.length} view={view} role={role} selected={selected} refresh={() => refresh()} />}
-                <TableContainer component={'div'}>
+                    <TableToolbar
+                        numSelected={selected.length}
+                        view={view}
+                        role={role}
+                        selected={selected}
+                        refresh={() => refresh()} />}
+                <TableContainer component={'div'} sx={{}}>
                     <Table
                         // sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
@@ -112,7 +124,8 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                             component={'div'}
                         />
                         <TableBody component={'div'}>
-                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy))
+                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .sort(getComparator(order, orderBy))
                                 .map((row, index) => {
                                     let id = -1;
                                     if (role === 'Teacher') {
@@ -120,7 +133,8 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                         else if (view === 'Student') id = row.UserID
                                         else if (view === 'Result') id = row.id
                                     } else {
-                                        id = row.id
+                                        if (view === 'Assignment') id = row.ExamID
+                                        else if (view === 'Result') id = index
                                     }
 
                                     const isItemSelected = isSelected(id);
@@ -130,7 +144,6 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                     return (
                                         <TableRow
                                             hover
-                                            // onClick={(event) => handleClick(event, row.id)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}

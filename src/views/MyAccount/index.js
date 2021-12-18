@@ -11,6 +11,7 @@ const CustomPaper = styled(Paper)(({ theme }) => ({
     height: '75vh',
     paddingTop: '30px',
     backdropFilter: 'blur(10px)',
+    borderRadius: '20px',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
 }));
 const ContainerBox = styled(Box)(({ theme }) => ({
@@ -116,15 +117,15 @@ export default function MyAccount() {
                         inputRef={old}
 
                     />
-                    <Typography variant="body1" sx={{ mb: 5 }}>
-                        Your new password must be different from previous used password.
+                    <Typography variant="h6" sx={{ mb: 5,mt:3 }} align="center" color="primary">
+                        Your new password must be different from the previous used password.
                     </Typography>
                     <TextField
                         id="new-password"
                         label="New password"
                         name="New password"
                         type="password"
-                        sx={{ pb: 2 }}
+                        margin="normal"
                         fullWidth={true}
                         size="small"
                         autoComplete="new-password"
@@ -151,7 +152,7 @@ export default function MyAccount() {
                         }}
                     >
                         <Button variant="outlined" sx={{ mr: 5 }} onClick={handleSave}>Save</Button>
-                        <Button variant="contained" onClick={handleReset}>Reset</Button>
+                        <Button variant="contained" color="error" onClick={handleReset}>Reset</Button>
                     </Box>
                 </ContainerBox>
             </CustomPaper>

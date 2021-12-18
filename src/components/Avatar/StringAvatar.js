@@ -1,11 +1,10 @@
-import StringToColor from './StringToColor'
+// import StringToColor from './StringToColor'
 
 export default function StringAvatar(name) {
     try {
-        
         return {
             sx: {
-                bgcolor: StringToColor(name),
+                background: 'linear-gradient( 179.4deg,  rgba(12,20,69,1) -16.9%, rgba(71,30,84,1) 119.9% );',
                 // right: '10px',
                 width: 60,
                 height: 60,
@@ -15,7 +14,7 @@ export default function StringAvatar(name) {
     } catch (error) {
         return {
             sx: {
-                bgcolor: StringToColor(name),
+                background: 'linear-gradient( 179.4deg,  rgba(12,20,69,1) -16.9%, rgba(71,30,84,1) 119.9% );',
                 // right: '10px',
                 width: 60,
                 height: 60,

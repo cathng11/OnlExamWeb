@@ -2,38 +2,43 @@ import { Box, Button, Chip, InputLabel, TextField } from '@mui/material';
 import * as React from 'react';
 import { matchPath, useHistory } from "react-router-dom";
 import ClassService from './../../../services/class.service';
-import AlertBar from './../../Alert/AlertBar';
+import LoadingAlert from './../../Loading/LoadingAlert';
 
-export default function StudentDialog({ isSave, isRefresh }) {
+export default function StudentDialog({ isSave, refresh }) {
     const [members, setMembers] = React.useState([])
-    const [refresh, setRefresh] = React.useState(false)
-    const [state, setState] = React.useState({
-        alert: false,
-        title: ''
-    })
+    const [isRefresh, setRefresh] = React.useState(false)
     const email = React.useRef(null)
-    const handleDelete = (member) => {
-        let list = members
-        list = list.filter((item) => {
-            return item !== member
-        })
-        setMembers(list)
-        setRefresh(!refresh)
-    };
     let history = useHistory();
-
     const match = matchPath(history.location.pathname, {
         path: `/classes/:id/students`,
         exact: true,
         strict: false
     });
     let classID = match.params.id
-
+    const [state, setState] = React.useState({
+        loading: false,
+        alert: false,
+        title: ''
+    })
+    const handleDelete = (member) => {
+        let list = members
+        list = list.filter((item) => {
+            return item !== member
+        })
+        setMembers(list)
+        setRefresh(!isRefresh)
+    };
+    const showErrorMessage = () => {
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+        setTimeout(() => {
+            refresh();
+        }, 2000);
+    }
     const handleAdd = () => {
         let list = members
         let member = email.current.value
         if (member === '') {
-            setState({ alert: true, title: `Email is not valid` })
+            setState({ loading: false, alert: true, title: `Email is not valid` })
         }
         else if (member !== '') {
             let classService = ClassService.getInstance()
@@ -43,58 +48,68 @@ export default function StudentDialog({ isSave, isRefresh }) {
                         if (!list.includes(member)) {
                             list.push(member)
                             setMembers(list)
-                            setRefresh(!refresh)
+                            setRefresh(!isRefresh)
+                            setState(s => { return { ...s, loading: false } })
                         } else if (list.includes(member)) {
-                            setState({ alert: true, title: `User ${member} is existed in Members` })
+                            setState({ loading: false, alert: true, title: `User ${member} is existed in Members` })
                         }
                     }
                     else {
-                        setState({ alert: true, title: items.message })
+                        setState(s => { return { ...s, alert: true, title: items.message } })
+
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    setState(s => { return { ...s, alert: true, title: 'Error. Try again!' } })
+
+                })
         }
     }
     React.useEffect(() => {
         let mounted = true;
-
         if (isSave) {
+            setState(s => { return { ...s, loading: true } })
             let insert = { Email: members }
             let classService = ClassService.getInstance()
             classService.insertMembersInClass(classID, insert)
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: `Added all members in class ${classID}!` })
-                            isRefresh();
+                            setState({ loading: false, alert: true, title: `Added all members in class ${classID}!` })
+                            refresh();
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            isRefresh();
+                            setState({ loading: false, alert: true, title: items.message });
+                            refresh();
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
         return () => { mounted = false };
         //eslint-disable-next-line
-    }, [refresh,isSave])
+    }, [isRefresh, isSave])
     return (
         <Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', pb: 3 }}>
                 <TextField
                     id="email-student"
                     label="Student Email"
-                    variant="filled"
+                    variant="outlined"
                     fullWidth={true}
-                    size="small"
+                    // size="small"
                     margin="normal"
                     inputRef={email}
                     sx={{
                         '& .css-c5v1qu-MuiInputBase-input-MuiFilledInput-input': {
                             background: '#D3E0EA',
                             borderRadius: '5px'
-                        }
+                        },
+                        '& .css-186xcr5': { paddingRight: '15px' }
                     }}
                     helperText="Enter student email here"
                 />
@@ -116,7 +131,7 @@ export default function StudentDialog({ isSave, isRefresh }) {
                     padding: '5px', position: 'absolute', top: '-20px', left: '10px',
                     background: '#fff',
                 }}>
-                    <InputLabel id="demo-simple-select-label" sx={{ color: '#3D4E81',fontWeight: 'bold' }}>Members</InputLabel>
+                    <InputLabel id="demo-simple-select-label" sx={{ color: '#3D4E81', fontWeight: 'bold' }}>Members</InputLabel>
                 </Box>
                 {members.map((mem, index) => {
                     return (
@@ -132,11 +147,7 @@ export default function StudentDialog({ isSave, isRefresh }) {
                 })}
 
             </Box> : <></>}
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
         </Box>
     )
 }

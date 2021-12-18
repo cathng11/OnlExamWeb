@@ -3,26 +3,15 @@ import {Box} from '@mui/material'
 import CustomTable from '../../../../components/Table/CustomTable';
 const headCells = [
     {
-        id: 'id',
-        label: 'ID',
-        disablePadding: false,
-    },
-
-    {
-        id: 'name',
-        label: 'Name',
+        id: 'exam-name',
+        label: 'Exam Name',
         disablePadding: false,
     },
     {
-        id: 'subject',
-        label: 'Subject',
-        disablePadding: false,
+        id: 'total-questions',
+        label: 'Questions',
+        disablePadding: true    ,
     },
-    // {
-    //     id: 'totalQuiz',
-    //     label: 'Total Quiz',
-    //     disablePadding: false,
-    // },
     {
         id: 'duration',
         label: 'Duration',
@@ -31,7 +20,7 @@ const headCells = [
     {
         id: 'begin',
         label: 'Begin Time',
-        disablePadding: true,
+        disablePadding: false,
     },
     {
         id: 'end',
@@ -46,7 +35,7 @@ const headCells = [
     {
         id: 'action',
         label: 'Action',
-        disablePadding: true,
+        disablePadding: false,
     },
 
 ];

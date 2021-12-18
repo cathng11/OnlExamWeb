@@ -2,25 +2,26 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import {
-    Box, FormControl,
+    Box, FormControl, Backdrop, CircularProgress,
     FormControlLabel, Radio, RadioGroup, styled, TextField, Typography
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import ProfileService from './../../../../services/profile.service';
+import AlertBar from './../../../../components/Alert/AlertBar';
 
 const CustomInput = styled(TextField)(({ theme }) => ({
-    paddingBottom: '50px',
     '& label.Mui-focused': {
         color: '#3D4E81',
     },
     '& .MuiOutlinedInput-root': {
         '&:hover fieldset': {
-            border: '1px solid #45b649',
+            border: '1px solid #380036',
         },
         '&.Mui-focused fieldset': {
             borderColor: '#3D4E81',
         },
     },
+    '& .css-186xcr5': { paddingRight: '15px' }
 }));
 const InputField = ({ id, name, label, value, handleChange }) => {
     return (
@@ -29,8 +30,8 @@ const InputField = ({ id, name, label, value, handleChange }) => {
             name={name}
             label={label}
             fullWidth={true}
-            size="small"
             value={value}
+            margin="normal"
             onChange={(e) => handleChange(e)}
             disabled={name === 'userID' ? true : false}
         />
@@ -38,6 +39,11 @@ const InputField = ({ id, name, label, value, handleChange }) => {
 }
 
 export default function GeneralInformation({ data, isUpdate, setUpdated }) {
+    const [state, setState] = React.useState({
+        loading: false,
+        alert: false,
+        title: ''
+    })
     const [input, setInput] = useState({
         Firstname: data.Firstname,
         Lastname: data.Lastname,
@@ -61,20 +67,31 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
     React.useEffect(() => {
         let mounted = true;
         if (isUpdate) {
+            setState(s => { return { ...s, loading: true } })
             if (input !== inputClone.current) {
-
                 let profileService = ProfileService.getInstance();
                 profileService.update(input)
                     .then(items => {
                         if (mounted) {
-                            inputClone.current = input
-                            setUpdated()
+                            if (items.status.Code === 200) {
+                                inputClone.current = input
+                                setUpdated()
+                                setState({ loading: false, alert: true, title: `Updated your profile` })
+                            }
+                            else {
+                                setState({ loading: false, alert: true, title: `Error. Try again!` })
+                            }
+
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        setState({ loading: false, alert: true, title: `Error. Try again!` })
+                    })
             }
             else {
                 setUpdated()
+                setState(s => { return { ...s, loading: false } })
             }
 
         }
@@ -132,6 +149,18 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                 alignItems: 'flex-start',
                 background: 'white'
             }}>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={state.loading}
+                // onClick={handleClose}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+                <AlertBar
+                    title={state.title}
+                    openAlert={state.alert}
+                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
+                />
                 <Box sx={{ width: '50%', pr: 4 }}>
                     {content[0].row1.map((value, index) =>
                         <InputField
@@ -140,6 +169,7 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                             name={value.name}
                             label={value.label}
                             value={value.value}
+                            margin="normal"
                             handleChange={handleChange} />)}
 
                 </Box>
@@ -151,6 +181,7 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                             name={value.name}
                             label={value.label}
                             value={value.value}
+                            margin="normal"
                             handleChange={handleChange} />)}
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
@@ -158,26 +189,32 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                             name="DateOfBirth"
                             value={input.DateOfBirth}
                             onChange={(e) => handleChange(e, 'DateOfBirth')}
-                            renderInput={(params) => <CustomInput {...params} autoFocus
+                            renderInput={(params) => <CustomInput {...params}
                                 // value={input.DateOfBirth}
                                 id="dateOfBirth"
                                 label="Date Of Birth"
                                 fullWidth={true}
                                 name="DateOfBirth"
-                                size="small" />}
+                                margin="normal"
+                
+                                 />}
                         />
                     </LocalizationProvider>
 
-                    <FormControl component="fieldset" sx={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}>
+                    <FormControl
+                        component="fieldset"
+                        margin="normal" sx={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}>
                         <Typography component="div" sx={{ pr: 5 }}>Gender:</Typography>
                         <RadioGroup
-                            row aria-label="Gender" name="Gender"
+                            row
+                            aria-label="Gender"
+                            name="Gender"
                             defaultValue={input.Gender}
                             value={input.Gender} onChange={handleChange}
                         >

@@ -1,11 +1,17 @@
 import CONSTANTS from './../constants/index';
-const headers = {
-    'Content-Type': 'application/json',
-    // 'Authorization': 'Bearer ' + CONSTANTS.TOKEN_TEACHER
+function setHeader(TOKEN) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + TOKEN
+    };
+    return headers
+}
+function joinURL(baseURL, url) {
+    return `${baseURL}/${url}`
 }
 export default class ResultService {
     constructor() {
-        this.domain = "https://mocki.io/v1/6f482847-9b6c-498d-9124-ff68e29dbaf3"
+        this.domain = "https://onlxam-e.herokuapp.com/api"
     }
     static myInstance = null;
     static getInstance() {
@@ -15,7 +21,8 @@ export default class ResultService {
         return this.myInstance
     }
     request(url, method = "POST", data = null) {
-        url = this.domain;
+        let _url = joinURL(this.domain, url);
+        let headers = setHeader(JSON.parse(localStorage.getItem(CONSTANTS.USER_TOKEN)).AccessToken);
         const options = {
             headers,
             method
@@ -23,12 +30,16 @@ export default class ResultService {
         if (data) {
             options.body = JSON.stringify({ ...data })
         }
-        return fetch(url, options)
+        return fetch(_url, options)
     }
-    async getListByAssignment(data) {
-        let url = this.domain;
+    async getListForStudent() {
+        let url = `results/student`;
         let method = "GET";
         return await this.request(url, method).then(res => res.json())
-
+    }
+    async reviewDoneAssignmentForStudent(examID) {
+        let url = `results/${examID}`;
+        let method = "GET";
+        return await this.request(url, method).then(res => res.json())
     }
 }

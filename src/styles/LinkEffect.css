@@ -28,9 +28,10 @@ a.after:after{
 }
 a.before:before,a.after:after{
   height:5px;
-  height:0.2rem;
+  height:0.3rem;
   width:0;
-  background:linear-gradient(to left, #004ff9, #fff94c);
+  border-radius: 20px;
+  background:linear-gradient(to right, #09203f 0%, #537895 100%);;
 }
 
 a.second:after{
@@ -43,9 +44,10 @@ a.before:hover:before,a.after:hover:after{
 
 a.before:before,a.after:after{
   height:5px;
-  height:0.2rem;
+  height:0.3rem;
   width:10;
-  background:linear-gradient(to left, #004ff9, #fff94c);
+  border-radius: 20px;
+  background:linear-gradient(to right, #09203f 0%, #537895 100%);;
 }
 a.second:after{
   right:0;

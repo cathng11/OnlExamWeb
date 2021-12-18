@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
     Box, Button, Card, CardActionArea,
-    CardActions, Divider, IconButton,
+    CardActions, IconButton,
     Menu, MenuItem
 } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
@@ -89,7 +89,7 @@ export default function FolderItem({ data, edit, view, refresh }) {
         }
         handleClose()
     }
-    const heightCard = view === 'Library' ? 400 : 320;
+    const heightCard = view === 'Library' ? '55vh' : '40vh';
     return (
         <Card sx={{
             m: 5,
@@ -100,6 +100,7 @@ export default function FolderItem({ data, edit, view, refresh }) {
             alignItems: 'flex-start',
             boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
             borderRadius: '10px',
+            background:'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);'
         }}
             key={view === 'Library' ? data.LibraryFolderID : data.ClassID}>
             <AlertBar
@@ -107,26 +108,28 @@ export default function FolderItem({ data, edit, view, refresh }) {
                 openAlert={state.alert}
                 closeAlert={() => setState(s => { return { ...s, alert: false } })}
             />
-            <CardActionArea sx={{ height: heightCard - 50 }} onClick={handleDetail}>
+            <CardActionArea sx={{
+                height: '50vh', 
+                background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
+            }} onClick={handleDetail}>
                 {view === 'Library' ? <CardAreaLibrary data={data} /> : <CardAreaClass data={data} />}
             </CardActionArea>
-            <Divider />
+            {/* <Divider /> */}
             <CardActions
                 sx={{
-                    height: 50,
-                    background: 'white',
+                    height: '5vh',
+                    background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
                     width: '100%',
-                    borderTop: '1px solid #bdc3c7'
+                    borderTop: '1px solid gray'
                 }}
                 disableSpacing={true}
             >
-
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    background: 'white',
+                    background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
                     width: '100%'
                 }}>
                     <Button size="small" color="primary" onClick={handleDetail}>
@@ -173,7 +176,7 @@ export default function FolderItem({ data, edit, view, refresh }) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this folder?
+                        Are you sure to delete this folder?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

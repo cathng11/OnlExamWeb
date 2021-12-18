@@ -3,9 +3,9 @@ import { Box, Stack, styled, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import LibraryService from '../../../services/library.service';
-import AlertBar from './../../Alert/AlertBar';
+import LoadingAlert from './../../Loading/LoadingAlert';
 const Input = styled('input')({
     display: 'none',
 });
@@ -21,31 +21,40 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
         Description: ''
     })
     const [state, setState] = useState({
+        loading: false,
         alert: false,
         title: ''
     })
+    const showErrorMessage = () => {
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+        refresh();
+    }
     useEffect(() => {
         let mounted = true;
         let libraryService = LibraryService.getInstance();
         if (!isEdit.value && isSave) {
+            setState(s => { return { ...s, loading: true } })
             libraryService.insert(input)
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
 
-                            setState({ alert: true, title: 'Inserted new folder!' })
+                            setState({ loading: false, alert: true, title: 'Inserted new folder!' })
                             refresh();
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
 
         if (isEdit.value) {
+            setState(s => { return { ...s, loading: true } })
             libraryService.getByID(isEdit.id)
                 .then(items => {
                     if (mounted) {
@@ -56,29 +65,37 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                                 LibraryFolderName: item.LibraryFolderName,
                                 Description: item.Description
                             })
+                            setState(s => { return { ...s, loading: false } })
+
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
         if (isSave && isEdit.value) {
-            libraryService.update(isEdit.id,input)
+            setState(s => { return { ...s, loading: true } })
+            libraryService.update(isEdit.id, input)
                 .then(items => {
                     if (mounted) {
                         if (items.status.Code === 200) {
-                            setState({ alert: true, title: `Updated folder ${isEdit.id}!` })
+                            setState({ loading: false, alert: true, title: `Updated folder ${isEdit.id}!` })
                             refresh();
                         }
                         else {
-                            setState({ alert: true, title: 'Error. Try again!' })
-                            refresh();
+                            showErrorMessage()
                         }
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    showErrorMessage()
+                })
         }
         return () => mounted = false;//eslint-disable-next-line
     }, [isSave])
@@ -94,7 +111,7 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                        <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" >
+                        <SmallAvatar alt="Dolphin" src="/static/images/avatar/1.jpg" sx={{ background: '#dbe7fc' }}>
                             <label htmlFor="icon-button-file">
                                 <Input accept="image/*" id="icon-button-file" type="file" />
                                 <IconButton color="primary" aria-label="upload picture" component="span">
@@ -102,48 +119,52 @@ export default function LibraryDialog({ isSave, isEdit, refresh }) {
                                 </IconButton>
                             </label>
                         </SmallAvatar>
-                    }
-                >
-                    <Avatar sx={{ width: '150px', height: '150px' }} alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                    }>
+                    <Avatar
+                        sx={{
+                            width: '150px',
+                            height: '150px'
+                        }}
+                        alt="Dolphin"
+                        src={input?.Avatar ? input.Avatar : 'D'} />
                 </Badge>
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
+                <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             </Stack>
             <TextField
                 id="name-text"
                 label="Image URL"
-                variant="filled"
+                variant="outlined"
                 fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
+                margin="normal"
+                // size="small"
                 name="Avatar"
+                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={input.Avatar}
                 onChange={handleChange}
             />
             <TextField
                 id="name-text"
                 label="Name Folder"
-                variant="filled"
+                variant="outlined"
                 fullWidth={true}
-                sx={{ pb: 3 }}
-                size="small"
+                margin="normal"
+                // size="small"
                 name="LibraryFolderName"
+                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={input.LibraryFolderName}
                 onChange={handleChange}
             />
             <TextField
                 id="name-text"
                 label="Description"
-                variant="filled"
+                variant="outlined"
                 fullWidth={true}
-                sx={{ pb: 3, background: 'white' }}
-                size="small"
+                margin="normal"
+                // size="small"
                 multiline={true}
                 rows={5}
                 name="Description"
+                sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                 value={input.Description}
                 onChange={handleChange}
             />

@@ -39,15 +39,19 @@ const headCells = [
     },
 ]
 
-export default function QuestionsTable({ data,refresh }) {
+export default function QuestionsTable({ data, refresh }) {
     return (
         <Grid item xs={12} md={12} lg={8} sx={{ background: 'white', pr: 2, pb: { xs: 5, md: 2, lg: 0 } }}>
-            <Paper sx={{
-                width: '100%', overflow: 'hidden', borderRadius: '10px',
-                boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
-            }}>
-                {data?<MainTable rows={data} headCells={headCells} refresh={()=>refresh()}/>:<LoadingTable/>}
-            </Paper>
+            {data ?
+                <Paper
+                    sx={{
+                        width: '100%',
+                        overflow: 'hidden',
+                        borderRadius: '20px',
+                        boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                    }}>
+                    <MainTable rows={data} headCells={headCells} refresh={() => refresh()} />
+                </Paper> : <LoadingTable />}
         </Grid>
     )
 }

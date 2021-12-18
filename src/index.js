@@ -8,6 +8,8 @@ import UserContext from './context/UserContext';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Routes from './routes';
+import DoAssignmentContext from './context/DoAssignmentContext';
+import QuestionContext from './context/QuestionContext';
 
 const theme = createTheme({
   palette: {
@@ -21,23 +23,24 @@ const theme = createTheme({
       light: '#a8ff78',
       main: '#A2DBFA',
       dark: '#0B4619',
-      gradient: 'linear-gradient(to right, #dce35b, #45b649)'
+      gradient: 'linear-gradient(60deg, #29323c 0%, #485563 100%);'
     },
-    info:{
+    info: {
       light: '#a8ff78',
       main: '#76b852',
       dark: '#0B4619',
-      gradient: 'linear-gradient(to right, #dce35b, #45b649)'     
+      gradient: 'linear-gradient(60deg, #29323c 0%, #485563 100%);'
     },
-    error:{
-      main:'#630000',
-      dark:'#3D0000',
+    error: {
+      main: '#630000',
+      dark: '#3D0000',
       light: '#911F27'
     },
-    success:{
-      main:'#4E9F3D',
-      dark:'#1E5128',
-      light: '#D8E9A8'    }
+    success: {
+      main: '#4E9F3D',
+      dark: '#1E5128',
+      light: '#D8E9A8'
+    }
   },
   // typography: { 
   //    useNextVariants: true
@@ -45,20 +48,29 @@ const theme = createTheme({
 });
 function App() {
   const [user, setUser] = useState(null);
-
+  // window.location.reload(false);
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const [assignment, setAssignment] = React.useState(null)
+  const [question, setQuestion] = React.useState([])
+
+  const valueAssignment = React.useMemo(() => ({ assignment, setAssignment }), [assignment, setAssignment]);
+  const valueQuestion = React.useMemo(() => ({ question, setQuestion }), [question, setQuestion]);
   return (
     <UserContext.Provider value={value}>
-      <Router>
-        <Routes />
-      </Router>
+      <DoAssignmentContext.Provider value={valueAssignment} >
+        <QuestionContext.Provider value={valueQuestion}>
+          <Router>
+            <Routes />
+          </Router>
+        </QuestionContext.Provider>
+      </DoAssignmentContext.Provider>
     </UserContext.Provider>
   )
 }
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider  theme={theme}>
+    <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider >
   </React.StrictMode>,
