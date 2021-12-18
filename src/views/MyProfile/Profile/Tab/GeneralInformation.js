@@ -186,7 +186,7 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                         <DatePicker
                             label="Date Of Birth"
                             name="DateOfBirth"
-                            value={input.DateOfBirth}
+                            value={input.DateOfBirth.toString()}
                             onChange={(e) => handleChange(e, 'DateOfBirth')}
                             renderInput={(params) => <CustomInput {...params}
                                 id="dateOfBirth"

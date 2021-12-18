@@ -14,9 +14,9 @@ export default function useUserInfo() {
     const [message, setMessage] = useState(null)
 
     useEffect(() => {
-        async function login() {
+        function login() {
             let authService = AuthService.getInstance();
-            const result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login');
+            const result = authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login');
             if (result.status.Code !== 200) {
                 setMessage(result)
             }
@@ -29,11 +29,11 @@ export default function useUserInfo() {
                 callToken.setToken(token);
             }
         }
-        async function signup() {
+        function signup() {
             let authService = AuthService.getInstance();
             let result = null
             try {
-                result = await authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
+                result = authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
                 setUserInfo({
                     username: '',
                     password: '',
@@ -55,8 +55,8 @@ export default function useUserInfo() {
 
         }
         if (userInfo.isLogin) login();
-        else if (userInfo.isLogin === false) signup() //eslint-disable-next-line
-    }, [userInfo])
+        else if (userInfo.isLogin === false) signup()
+    }, [userInfo,callToken])
     function saveUserInfo(data) {
         setUserInfo(pre => pre = data);
     };
