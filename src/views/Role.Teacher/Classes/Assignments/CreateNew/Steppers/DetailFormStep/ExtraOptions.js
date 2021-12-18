@@ -18,12 +18,12 @@ export default function ExtraOptions() {
         TimeEnd: new Date(),
     });
     const handleChangeTimeBegin = (e) => {
-        let value = e.toLocaleString().replace(',', '')
+        let value = e.toLocaleString().replace(',', '').toString()
         setDate(s => { return { ...s, TimeBegin: value } })
         setAssign(s => { return { ...s, TimeBegin: value } })
     }
     const handleChangeTimeEnd = (e) => {
-        let value = e.toLocaleString().replace(',', '')
+        let value = e.toLocaleString().replace(',', '').toString()
         setDate(s => { return { ...s, TimeEnd: value } })
         setAssign(s => { return { ...s, TimeEnd: value } })
 

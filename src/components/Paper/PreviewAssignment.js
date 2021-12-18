@@ -119,10 +119,10 @@ export default function PreviewAssignment({ dataCreate, close }) {
                             Exam Name: {data.ExamName}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time Begin: {data.TimeBegin.replace('T', ' ').replace('.000Z', '')}
+                            Time Begin: {data.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time End: {data.TimeEnd.replace('T', ' ').replace('.000Z', '')}
+                            Time End: {data.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()}
                         </Typography>
                         <Typography variant="subtitle1">
                             Duration: {data.Duration}
