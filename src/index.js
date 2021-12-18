@@ -1,10 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import UserContext from './context/UserContext';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
 import Routes from './routes';
 import DoAssignmentContext from './context/DoAssignmentContext';
 import QuestionContext from './context/QuestionContext';
@@ -40,21 +39,14 @@ const theme = createTheme({
       light: '#D8E9A8'
     }
   },
-  // typography: { 
-  //    useNextVariants: true
-  // }
 });
 function App() {
-  const [user, setUser] = useState(null);
-  // window.location.reload(false);
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
   const [assignment, setAssignment] = React.useState(null)
   const [question, setQuestion] = React.useState([])
 
   const valueAssignment = React.useMemo(() => ({ assignment, setAssignment }), [assignment, setAssignment]);
   const valueQuestion = React.useMemo(() => ({ question, setQuestion }), [question, setQuestion]);
   return (
-    <UserContext.Provider value={value}>
       <DoAssignmentContext.Provider value={valueAssignment} >
         <QuestionContext.Provider value={valueQuestion}>
           <Router>
@@ -62,7 +54,6 @@ function App() {
           </Router>
         </QuestionContext.Provider>
       </DoAssignmentContext.Provider>
-    </UserContext.Provider>
   )
 }
 
@@ -74,8 +65,4 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

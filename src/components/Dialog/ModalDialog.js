@@ -77,7 +77,6 @@ export default function ModalDialog({ open, handleClose }) {
     })
     const handleSave = () => {
         setIsSave(true)
-        // setIsEdit(s => { return { ...s, value: false } })
     }
     React.useEffect(() => {
         setIsEdit({
@@ -139,12 +138,7 @@ export default function ModalDialog({ open, handleClose }) {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}
-                        // sx={{
-                        //     display: 'flex',
-                        //     flexDirection: 'column',
-                        //     m: 'auto',
-                        //     width: 'fit-content',
-                        // }}
+
                         noValidate
                         autoComplete="off"
                     >

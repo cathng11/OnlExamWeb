@@ -97,8 +97,6 @@
 }
 
 .login .container {
-
-    /* background-color: #fff; */
     border-radius: 10px;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
         0 10px 10px rgba(0, 0, 0, 0.22);
@@ -171,7 +169,6 @@
 }
 
 .login .overlay {
-    /* background-image: url(../images/overlay); */
     background: #2c3e50;
     background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);
     background: linear-gradient(to right, #2c3e50, #bdc3c7);

@@ -47,7 +47,6 @@ function Classes({ children }) {
             <FolderGridContainer container >
                 {data ? <Folders data={data} view={"Classes"} edit={handleEdit} refresh={() => setRefresh(!refresh)} /> : <LoadingFolder view={'Classes'} />}
             </FolderGridContainer>
-            {/* <ClassRoom/> */}
         </ WrapperContainer>
 
     )

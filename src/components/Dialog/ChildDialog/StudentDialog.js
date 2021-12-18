@@ -101,7 +101,6 @@ export default function StudentDialog({ isSave, refresh }) {
                     label="Student Email"
                     variant="outlined"
                     fullWidth={true}
-                    // size="small"
                     margin="normal"
                     inputRef={email}
                     sx={{

@@ -13,6 +13,7 @@ import TrueFalse from '../../../../Role.Teacher/Classes/Results/DetailResult/Qui
 import AlertBar from './../../../../../components/Alert/AlertBar';
 import DoAssignmentContext from './../../../../../context/DoAssignmentContext';
 import QuestionContext from './../../../../../context/QuestionContext';
+import AssignmentService from './../../../../../services/assignment.service';
 
 export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
     let history = useHistory();// eslint-disable-next-line
@@ -54,34 +55,28 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
         let timeEnd = new Date()
 
         let doingTime = timeEnd.getTime() - _assignment.TimeBegin.getTime()
-        console.log(Math.round(doingTime / 60000))
         delete _assignment.TimeBegin
         let finalData = { ..._assignment, Questions: allQuestions, DoingTime: doingTime }
-        console.log(finalData)
-        setDisableBlock()
-        setTimeout(() => {
-            history.replace(`/${user.Username}/assignment`)
-        }, 3000);
-        // let assignmentService = AssignmentService.getInstance()
-        // assignmentService.submitAssignment(finalData)
-        //     .then(items => {
-        //         console.log(items)
-        //         if (items.status.Code === 200) {
-        //             setState({ alert: true, title: `Submitted your assignment!` })
-        //             // history.goBack()
-        //             setTimeout(() => {
-        //                 history.replace(`/${user.Username}/assignment`)
-        //             }, 3000);
-        //         }
-        //         else {
-        //             setState({ alert: true, title: `Cannot submit. Try again!` })
-        //         }
 
-        //     })
-        //     .catch((err) => {
-        //         console.error(err)
-        //         setState({ alert: true, title: `Cannot submit. Try again!` })
-        //     });
+        let assignmentService = AssignmentService.getInstance()
+        assignmentService.submitAssignment(finalData)
+            .then(items => {
+                if (items.status.Code === 200) {
+                    setState({ alert: true, title: `Submitted your assignment!` })
+                    setDisableBlock()
+                    setTimeout(() => {
+                        history.replace(`/${user.Username}/assignment`)
+                    }, 3000);
+                }
+                else {
+                    setState({ alert: true, title: `Cannot submit. Try again!` })
+                }
+
+            })
+            .catch((err) => {
+                console.error(err)
+                setState({ alert: true, title: `Cannot submit. Try again!` })
+            });
     }
     const type = {
         'Single Choice': <SingleChoice Solution={data[activeStep].Solution} index={activeStep} />,
@@ -105,7 +100,6 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    // height: 50,
                     p: 5,
                     pb: 0,
                 }}

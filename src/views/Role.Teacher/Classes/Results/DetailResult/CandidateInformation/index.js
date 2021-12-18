@@ -72,7 +72,6 @@ export default function CandidateInformation({info}) {
                     placeholder="Feedback"
                     fullWidth={true}
                     size="small"
-                // defaultValue="Default Value"
                 />
             </Box>
         </Box>

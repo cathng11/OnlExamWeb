@@ -20,7 +20,6 @@ import Performance from '../views/Role.Teacher/Classes/Performance';
 
 const PrivateRoutesConfig = [
 
-    //Common Views
     {
         path: '/',
         exact: true,
@@ -54,7 +53,6 @@ const PrivateRoutesConfig = [
         type: 'MenuItem',
         component: () => <></>
     },
-    //Role.Teacher Views
     {
         path: '/library',
         exact: true,
@@ -111,10 +109,7 @@ const PrivateRoutesConfig = [
                 exact: false,
                 path: '/result',
                 title: 'Result',
-                // permission: [
-                //     Roles.SUPER_ADMIN,
-                //     Roles.ADMIN
-                // ]
+
             }
         ]
     },
@@ -141,17 +136,7 @@ const PrivateRoutesConfig = [
             Roles.TEACHER,
         ],
     },
-    // {
-    //     path: '/assignment/:id_assignment/edit',
-    //     exact: false,
-    //     title: 'Edit Assignment',
-    //     type: 'None',
-    //     component: () => <CreateNewAssignment />,
-    //     permission: [
-    //         Roles.ADMIN,
-    //         Roles.TEACHER,
-    //     ],
-    // },
+
     {
         path: '/grade-assignment',
         exact: false,
@@ -163,7 +148,6 @@ const PrivateRoutesConfig = [
             Roles.TEACHER,
         ],
     },
-    // Role.Student Views
 
     {
         path: '/assignment',

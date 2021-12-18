@@ -3,11 +3,16 @@
         "ampm",
         "Celler",
         "classname",
+        "clickaway",
         "describedby",
         "Firstname",
+        "Fullname",
         "labelledby",
         "Lastname",
         "ONEXAMINE",
+        "Roboto",
+        "Selecteds",
+        "tabpanel",
         "timevalue"
     ]
 }

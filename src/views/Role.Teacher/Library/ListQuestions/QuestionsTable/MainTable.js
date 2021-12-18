@@ -88,7 +88,6 @@ export default function MainTable({ rows, headCells,refresh }) {
                                         row={row}
                                         isItemSelected={isItemSelected}
                                         labelId={labelId}
-                                        // itemSelected={handleItemSelected}
                                         handleClickItem={handleClickItem}
                                     />
                                 );

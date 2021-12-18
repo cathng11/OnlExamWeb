@@ -15,12 +15,8 @@ import {
     Collapse,
 } from '@mui/material'
 export default function RowTable({ handleClickItem, row, isItemSelected, labelId }) {
-    // const { row } = props;
-    // const [selected, setSelected] = React.useState([]);
-
     const [open, setOpen] = React.useState(false);
     const handleClick = (event, id) => {
-        // setSelected(id);
         handleClickItem(id);
     };
     return (
@@ -53,7 +49,6 @@ export default function RowTable({ handleClickItem, row, isItemSelected, labelId
                 >
                     {row.QuestionID}
                 </TableCell>
-                {/* <TableCell align="right">{row.id}</TableCell> */}
                 <TableCell align="left" >{row.Question}</TableCell>
                 <TableCell align="left">{row.Type}</TableCell>
                 <TableCell align="left">{row.Level}</TableCell>

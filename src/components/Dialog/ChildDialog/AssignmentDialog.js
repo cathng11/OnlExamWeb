@@ -69,7 +69,6 @@ export default function AssignmentDialog({ isSave, refresh }) {
             setState(s => { return { ...s, loading: true } })
             assignmentService.updateAssignment(examID, input)
                 .then(items => {
-                    console.log(items)
                     if (mounted) {
                         if (items.status.Code === 200) {
                             setState({ loading: false, alert: true, title: 'Updated this assignment!' })

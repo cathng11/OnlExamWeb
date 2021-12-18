@@ -27,7 +27,6 @@ export default function HelperText({ txt, isError }) {
             marginTop: '4px',
             marginRight: '14px',
             marginBottom: '0',
-            // marginLeft: '14px',
         }}>{text} </Typography>
     )
 }

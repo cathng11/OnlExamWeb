@@ -152,7 +152,6 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={state.loading}
-                // onClick={handleClose}
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>
@@ -190,7 +189,6 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
                             value={input.DateOfBirth}
                             onChange={(e) => handleChange(e, 'DateOfBirth')}
                             renderInput={(params) => <CustomInput {...params}
-                                // value={input.DateOfBirth}
                                 id="dateOfBirth"
                                 label="Date Of Birth"
                                 fullWidth={true}

@@ -96,16 +96,12 @@ export default function ClassRoom({ children }) {
                             <Tab value="students" label="Students" />
                             <Tab value="assignments" label="Assignments" />
                             <Tab value="result" label="Result" />
-                            {/* {allowedRoutes.map(({ path, title }) =>
-                                <Link key={path} to={`${basePath}${path}`} style={{ marginRight: '10px' }}>{title}</Link>
-                            )} */}
                         </StyledTabs>
                     </Container>
 
                 </Grid>
                 <Grid item sx={{ background: 'white', width: '100%' }}>
                     <Container sx={{ background: 'white' }}>
-                        {/* <ListStudents /> */}
                         <MapAllowedRoutes
                             routes={allowedRoutes}
                             basePath={`${basePath}`}

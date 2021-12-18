@@ -107,7 +107,6 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                         refresh={() => refresh()} />}
                 <TableContainer component={'div'} sx={{}}>
                     <Table
-                        // sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={'medium'}
                         component={'div'}
@@ -159,7 +158,6 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                                 row={row}
                                                 view={view}
                                                 role={role}
-                                                // selectedRow={selected}
                                                 setSelectedRow={setSelectedRow}
                                             />
 

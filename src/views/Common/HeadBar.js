@@ -22,7 +22,6 @@ const MenuLink = ({ title, path, activeOnlyWhenExact, username }) => {
           >
             <Link
               to={username ? `/${username}${path}` : path}
-              // to={path}
               className="second after" style={{ color: color, fontWeight: weight }}>{title}</Link>
           </Button>
         )
@@ -61,8 +60,6 @@ const CustomAppBar = styled(AppBar)(({ theme }) => ({
   padding: 0,
   background: 'white',
   color: 'black',
-  // borderBottom: '1px solid #D1D1D1',
-  // boxShadow:'none'
   backdropFilter: 'blur(150px)',
   boxShadow: 'rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;',
 }));
@@ -91,7 +88,6 @@ const MenuBox = styled(Box)(({ theme }) => ({
   width: '150px',
   borderRadius: '10px',
   boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-  // border: '1px solid #eef2f3',
   '&:hover': {
     cursor: 'pointer'
   }
@@ -138,9 +134,7 @@ function HeadBar({ allowedRoutes }) {
               </Grid>
             </CaptionGridContainer>
             <Grid container item xs={12} md={12} lg={12}
-            // background-color: #1d2951;
-            // background-image: linear-gradient(315deg, #1d2951 0%, #dbe7fc 74%);
-            
+
             >
               <Grid item lg={10} sx={{ p: 2 }}>
                 <div
@@ -163,7 +157,6 @@ function HeadBar({ allowedRoutes }) {
               <Grid item xs={2} md={2} lg={2}
                 sx={{
                   p: 2,
-                  // background: 'linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);' 
                 }}
               >
                 <MenuBox onClick={handleClick} >
@@ -174,7 +167,6 @@ function HeadBar({ allowedRoutes }) {
                       flexGrow: 0.1,
                       ml: 4,
                       fontWeight: 'bold',
-                      // color:'#1d2951'
                     }}
                     fontSize="small"
                     color="white"
@@ -184,7 +176,6 @@ function HeadBar({ allowedRoutes }) {
                   <Tooltip title="Account settings">
                     <IconButton size="small" >
                       <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>
-                        {/* {user ? user.Firstname.substring(0, 1) : ''} */}
                         <InsertEmoticonIcon/>
                       </Avatar>
                     </IconButton>

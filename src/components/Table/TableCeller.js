@@ -11,8 +11,7 @@ import PreviewDialog from './../Dialog/PreviewDialog';
 import ResultDialog from './../Dialog/ResultDialog';
 
 export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected }) {
-    // const { view, role, row, setSelectedRow, labelId, isItemSelected } = props;
-    // const [selected, setSelected] = React.useState(selectedRow);
+
     let location = useLocation();
     let history = useHistory();
     const page = {
@@ -82,7 +81,6 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         } else if (status === 'Completed') {
             history.push(`${history.location.pathname}?previewExamID=${row.ExamID}`);
             setOpenPreviewAssignment(true)
-            console.log('Completed')
         }
         else if (status === 'Inactive') {
             setState({ alert: true, title: 'It is not valid time to take!' })
@@ -241,7 +239,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                         openAlert={state.alert}
                         closeAlert={() => setState(s => { return { ...s, alert: false } })}
                     />
-                                        <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
+                    <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
 
                 </>
             )

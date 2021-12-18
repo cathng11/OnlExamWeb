@@ -49,7 +49,6 @@ function ClassItem({ item, open }) {
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={state.loading}
-            // onClick={handleClose}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>

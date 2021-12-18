@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import React from 'react';
 const WrapperContainer = styled(Container)(({ theme }) => ({
     marginTop: '60px',
-    marginBottm: '40px',
+    marginBottom: '40px',
     fontSize: '0.75rem',
     width: '100%',
 }));

@@ -12,19 +12,14 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
     }),
     '&.Mui-focused': {
         width: 320,
-        // boxShadow: theme.customShadows.z8 
         borderColor: '#659999'
     },
-    
     '& fieldset': {
         borderWidth: `1px !important`,
-        // borderColor: `${theme.palette.grey[500_32]} !important`
     }
 }));
 export default function SearchBtn() {
     return <SearchStyle
-        // value={filterName}
-        // onChange={onFilterName}
         placeholder="Search..."
         startAdornment={
             <InputAdornment position="start">

@@ -19,7 +19,6 @@ function Question({ data, index }) {
         'Single Choice': <SingleChoice Solution={data.Solution} Answer={data.Answer} index={null} />,
         'Multiple Choices': <MultipleChoice Solution={data.Solution} Answer={data.Answer} index={null} />,
         'True/False': <TrueFalse Solution={data.Solution} Answer={data.Answer} index={null} />,
-        // 'Short Answer': <ShortAnswer Solution={data.Solution}/>,
         'Essay': <Essay Solution={data.Solution} Answer={data.Answer} index={null} />
     }
 
@@ -30,7 +29,6 @@ function Question({ data, index }) {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-            // sx={{width: '100%',background: 'red'}}
             >
                 <Grid item xs={12}>
                     <Typography variant="subtitle1" sx={{ textAlign: 'left' }}>
@@ -38,9 +36,7 @@ function Question({ data, index }) {
                         <Divider />
                     </Typography>
                 </Grid>
-                {/* <Grid item xs={1}>
-                    <Chip label=" color="success" />
-                </Grid> */}
+
             </Grid>
 
             <Grid container item xs={12}>

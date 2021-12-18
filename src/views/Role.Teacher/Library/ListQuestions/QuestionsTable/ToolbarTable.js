@@ -1,6 +1,4 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-// import FileDownloadIcon from '@mui/icons-material/FileDownload';
-// import FileUploadIcon from '@mui/icons-material/FileUpload';
 import EditIcon from '@mui/icons-material/Edit';
 import {
     alpha,
@@ -21,11 +19,6 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
         alert: false,
         title: ''
     })
-    // const match = matchPath(history.location.pathname, {
-    //     path: `/library/folder/:nameFolder/:idFolder`,
-    //     exact: true,
-    //     strict: false
-    // });
 
     function handleEdit() {
         history.push(`${history.location.pathname}?editID=${selected}`);
@@ -127,24 +120,6 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
 
                 ) : (
                     <>
-                        {/* <Tooltip title="Add">
-                        <IconButton>
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Import">
-                        <IconButton>
-                            <FileUploadIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Export">
-                        <IconButton>
-                            <FileDownloadIcon />
-                        </IconButton>
-                    </Tooltip> */}
-                        {/* <Button color="inherit" startIcon={<AddIcon />} onClick={handleAdd}>ADD</Button> */}
-                        {/* <Button color="inherit" startIcon={<FileUploadIcon />}>IMPORT</Button>
-                    <Button color="inherit" startIcon={<FileDownloadIcon />}>EXPORT</Button> */}
                     </>
                 )}
             </Toolbar>

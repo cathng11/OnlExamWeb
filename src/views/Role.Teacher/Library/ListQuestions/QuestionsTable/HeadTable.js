@@ -51,8 +51,6 @@ export default function HeadTable(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                {/* <TableCell sx={{background: 'gray' }} align='left'
-                padding='normal'>Answer</TableCell> */}
             </TableRow>
         </TableHead>
     );

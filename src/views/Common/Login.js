@@ -55,9 +55,7 @@ function Login() {
         }// eslint-disable-next-line
     }, [mobileRes, TOKEN, user, state,history]);
 
-    // const handleClose = () => {
-    //     setState(s => { return { ...s, loading: false } });
-    // };
+
     const handleLogin = e => {
         setState(s => { return { ...s, loading: true, alert: false } });
         e.preventDefault();
@@ -156,7 +154,6 @@ function Login() {
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                     open={state.loading}
-                    // onClick={handleClose}
                 >
                     <CircularProgress color="inherit" />
                 </Backdrop>

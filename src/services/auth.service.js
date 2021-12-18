@@ -32,9 +32,5 @@ export default class AuthService {
         return await this.request(url, method, data).then(res => res.json())
 
     }
-    // async signup(data) {
-    //     let url = 'signup';
-    //     let method = "POST";
-    //     return await this.request(url, method, data).then(res => res.json())
-    // }
+
 }

@@ -10,7 +10,6 @@ export default function CardAreaClass({ data }) {
                 height="150"
                 sx={{
                     background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
-                    // height: '100px' 
                 }}
                 title={data.ClassName}
                 subheader={`ID: ${data.ClassID}`}

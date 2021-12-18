@@ -54,22 +54,7 @@ const UpcomingSchedule = () => {
         </Timeline>
     )
 }
-// const TopGridContainer = styled(Grid)(({ theme }) => ({
-//     // p: 3,
-//     display: 'flex',
-//     flexDirection: 'row',
-//     background: 'white',
-// }));
-// const IntroGridContainer = styled(Grid)(({ theme }) => ({
-//     display: 'flex',
-//     justifyContent: 'flex-start',
-//     alignItems: 'flex-end',
-// }))
-// const DateGridContainer = styled(Grid)(({ theme }) => ({
-//     display: 'flex',
-//     justifyContent: 'flex-end',
-//     alignItems: 'flex-end',
-// }))
+
 
 function Dashboard(route) {
     const [value, onChange] = useState(new Date())
@@ -78,7 +63,6 @@ function Dashboard(route) {
         <Container sx={{ mt: 5, mb: 2 }} maxWidth="full">
             <CssBaseline />
             <Grid container rowSpacing={4} direction="row" >
-                {/* <Grid item lg={1}></Grid> */}
                 <Grid container item lg={12} sx={{ p: { xs: 3, md: 5, lg: 10 }, pb: { xs: 0, md: 0, lg: 0 } }}>
                     <Grid container item xs={12} rowSpacing={4} columnSpacing={12}>
                         <Grid
@@ -89,7 +73,6 @@ function Dashboard(route) {
                             lg={9}
                             rowSpacing={4}
                             sx={{
-                                // p: 3,
                                 display: 'flex',
                                 flexDirection: 'row',
                                 background: 'white',
@@ -181,8 +164,6 @@ function Dashboard(route) {
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
                                             background: '#dbe7fc',
-                                            // boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;',
-                                            // background: 'linear-gradient(to bottom, #799f0c 0%,#799f0c 20%,#ffffff 20%,#ffffff 100%)',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
@@ -228,8 +209,6 @@ function Dashboard(route) {
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-                                    // boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px #3D4E81'
-
                                 }}
                             ></Item>
                         </Grid>
@@ -263,7 +242,6 @@ function Dashboard(route) {
                             </Typography>
                             <Item
                                 sx={{
-                                    // background: '#041C32',
                                     backdropFilter: 'blur(50px) ',
                                     boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)',
                                     backgroundImage: `url(${logo})`,
@@ -304,15 +282,14 @@ function Dashboard(route) {
                                 <Button variant="contained" sx={{
 
                                     backgroundImage: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
-                                    // margin: '10px',
-                                    // padding: '15px 45px',
+
                                     textAlign: 'center',
                                     textTransform: 'uppercase',
                                     transition: '0.5s',
                                     backgroundSize: '200% auto',
                                     color: 'white',
                                     boxShadow: '0 0 20px #eee',
-                                    borderradius: '10px',
+                                    borderRadius: '20px',
                                     display: 'block',
 
 
@@ -340,83 +317,9 @@ function Dashboard(route) {
                             >
 
                             </Box>
-
-                            {/* <Typography
-                                mb={2}
-                                variant="h5"
-                                component="div"
-                                sx={{ fontWeight: 'bold' }}
-                            >
-                                Subject
-                            </Typography>
-                            <Demo
-                                sx={{
-                                    '::-webkit-scrollbar': {
-                                        width: '5px',
-                                    },
-                                    '::-webkit-scrollbar-thumb': {
-                                        backgroundColor: '#eef2f3',
-                                    },
-                                    '::-webkit-scrollbar-thumb:hover': {
-                                        backgroundColor: 'black',
-                                    },
-
-                                    '::-webkit-scrollbar-track': {
-                                        backgroundColor: 'white',
-                                    },
-                                    maxHeight: 200,
-                                    background: 'white',
-                                    overflow: 'auto',
-                                }}
-                            >
-                                <List>
-                                    {generate(
-                                        <Paper
-                                            sx={{
-                                                fontSize: '0.75em',
-                                                // padding:0,
-                                                mb: '10px',
-                                                borderRadius: '20px',
-                                                background: '#FFFFFF',
-                                                color: '#EBE645',
-                                                boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;',
-                                                '&:hover': {
-                                                    background: '#2f243a',
-                                                    color: 'white',
-                                                },
-                                            }}
-                                        >
-                                            <ListItem sx={{ padding: '3px 5px 3px 15px' }}>
-                                                <ListItemAvatar>
-                                                    <Avatar
-                                                        sx={{
-                                                            bgcolor: '#1C1C1C',
-                                                            width: 32,
-                                                            height: 32,
-                                                            fontSize: '1rem',
-                                                        }}
-                                                    >
-                                                        1
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    sx={{
-                                                        p: 0,
-                                                        // '.css-10hburv-MuiTypography-root': { fontSize: '0.875rem' },
-                                                        // '.css-83ijpv-MuiTypography-root': { fontSize: '0.75rem' },
-                                                    }}
-                                                    primary="Database"
-                                                    secondary="4 class"
-                                                />
-                                            </ListItem>
-                                        </Paper>,
-                                    )}
-                                </List>
-                            </Demo> */}
                         </Grid>
                     </Grid>
                 </Grid>
-                {/* <Grid item lg={1} sx={{ background: 'white' }}></Grid> */}
             </Grid>
         </Container >
     )

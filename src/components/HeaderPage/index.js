@@ -22,7 +22,6 @@ export default function HeaderPage({ dialog,refresh }) {
     const [open, setOpen] = React.useState({
         pageName: '', isOpen: false, id: ''
     });
-    // const [data, setData] = React.useState(null)
     React.useEffect(() => {
         setOpen({ pageName: dialog.pageName, isOpen: dialog.isOpen, id: dialog.id })
     }, [dialog]);
@@ -54,7 +53,6 @@ export default function HeaderPage({ dialog,refresh }) {
                     autoComplete="off"
                 >
                     <Input placeholder="Search"
-                        // inputProps={'Search'} 
                         sx={{ mr: 5 }} />
                     <Fab size="small" color="primary" aria-label="add" onClick={handleClick}>
                         <AddIcon />

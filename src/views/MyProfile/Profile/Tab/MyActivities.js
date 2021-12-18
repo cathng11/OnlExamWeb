@@ -40,7 +40,6 @@ function ActivityItem({ data }) {
                 </Avatar>
             </ListItemAvatar>
             <ListItemButton
-            // disablePadding
             >
                 <ListItemText primary={data.content + ' - ' + data.subject} />
             </ListItemButton>
