@@ -50,8 +50,7 @@ function Login() {
         if (history.location.pathname==='/register' && user.message && user.message.status.Code === 200) {
             setState(s => { return { loading: false, alert: true, title: "Signup Successfully" } })
             user.setMessage(null)
-            openLogin() 
-            history.push('/login')
+            history.replace('/login')
         }
     }, [mobileRes, TOKEN, user, state,history]);
 
