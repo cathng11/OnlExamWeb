@@ -1,10 +1,9 @@
 import GoogleIcon from '@mui/icons-material/Google';
-import { Backdrop, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from "react-google-login";
 import { useHistory } from 'react-router-dom';
 import '../../styles/Login.css';
-import AlertBar from './../../components/Alert/AlertBar';
+import LoadingAlert from './../../components/Loading/LoadingAlert';
 import APP_CONSTANTS from './../../constants';
 import useUserInfo from './../../hooks/useUserInfo';
 
@@ -56,13 +55,18 @@ function Login() {
 
 
     const handleLogin = e => {
-        setState(s => { return { ...s, loading: true, alert: false } });
         e.preventDefault();
-        user.setUserInfo({
-            username: loginForm.username,
-            password: loginForm.password,
-            isLogin: true
-        });
+        if (loginForm.username !== '' || loginForm.password !== '') {
+            setState(s => { return { ...s, loading: true, alert: false } });
+            user.setUserInfo({
+                username: loginForm.username,
+                password: loginForm.password,
+                isLogin: true
+            });
+        } else {
+            setState(s => { return { ...s, alert: true, title: 'Input fields are required' } });
+        }
+
     }
     const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);//eslint-disable-line
 
@@ -123,6 +127,7 @@ function Login() {
         }
     };
     function responseGoogleError(response) {
+        console.log("hi")
         setState(s => { return { ...s, alert: true, title: response } })
     };
     function openLogin(e) {
@@ -150,17 +155,7 @@ function Login() {
     return (
         <div className="login" style={{ boxSizing: 'border-box' }}>
             <div className={"container" + rightPanelActive} id="login">
-                <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={state.loading}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
+                <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false, title: '' } })} />
                 <div className={"form-container sign-up-container  " + mobileRes.signup}>
                     <form action="#" >
                         <h1>Create Account</h1>

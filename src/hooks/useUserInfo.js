@@ -16,47 +16,44 @@ export default function useUserInfo() {
     useEffect(() => {
         function login() {
             let authService = AuthService.getInstance();
-            const result = authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login');
-            if (result.status.Code !== 200) {
-                setMessage(result)
-            }
-            else {
-                const token = {
-                    "AccessToken": result.accessToken
-                };
-                localStorage.setItem('roles', result.data.RoleName.toUpperCase());
-                localStorage.setItem('user', JSON.stringify(result.data))
-                callToken.setToken(token);
-            }
+            authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login')
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        const token = {
+                            "AccessToken": items.accessToken
+                        };
+                        localStorage.setItem('roles', items.data.RoleName.toUpperCase());
+                        localStorage.setItem('user', JSON.stringify(items.data))
+                        callToken.setToken(token);
+                    }
+                    else {
+                        setMessage(items)
+                    }
+                })
         }
         function signup() {
             let authService = AuthService.getInstance();
-            let result = null
-            try {
-                result = authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup');
-                setUserInfo({
-                    username: '',
-                    password: '',
-                    confirm_pass: '',
-                    fullName: '',
-                    imageURL: '',
-                    isLogin: null,
+            authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup')
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        setUserInfo({
+                            username: '',
+                            password: '',
+                            confirm_pass: '',
+                            fullName: '',
+                            imageURL: '',
+                            isLogin: null,
+                        })
+                    }
+                    else {
+                        setMessage(items)
+                        setUserInfo(s => { return { ...s, isLogin: null } })
+                    }
                 })
-            } catch {
-                result = {
-                    status: {
-                        Status: 'Error',
-                        Code: 601
-                    },
-                    message: 'Can not register. Try again!'
-                }
-            }
-            setMessage(result)
-
         }
         if (userInfo.isLogin) login();
         else if (userInfo.isLogin === false) signup()
-    }, [userInfo,callToken])
+    }, [userInfo, callToken])
     function saveUserInfo(data) {
         setUserInfo(pre => pre = data);
     };

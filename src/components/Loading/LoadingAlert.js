@@ -36,7 +36,7 @@ export default function LoadingAlert({ state, close }) {
                 open={state.alert}
                 autoHideDuration={6000}
                 onClose={handleClose}
-                message={state.title}
+                message={state.title !== '' ? state.title.toString() : ' '}
                 action={action}
             />
         </div>
