@@ -1,3 +1,6 @@
+import 'core-js/es/map';
+import 'core-js/es/set';
+import 'raf/polyfill';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom';
