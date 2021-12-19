@@ -38,7 +38,7 @@ export default function ExtraOptions() {
                 display: 'flex',
                 height: '70vh',
                 flexDirection: 'column',
-                background: '#D6E6F2',
+                background: '#D3E0EA',
                 p: 5,
                 boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
                 borderRadius: '10px'

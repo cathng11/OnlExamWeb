@@ -50,8 +50,8 @@ export default function AssignmentDialog({ isSave, refresh }) {
                             setInput({
                                 ExamName: item.ExamName,
                                 Duration: item.Duration,
-                                TimeBegin: item.TimeBegin.toString(),
-                                TimeEnd: item.TimeEnd.toString(),
+                                TimeBegin: item.TimeBegin?.toString(),
+                                TimeEnd: item.TimeEnd?.toString(),
                             })
                         }
                         else {

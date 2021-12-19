@@ -87,6 +87,8 @@ export default function PreviewAssignment({ dataCreate, close }) {
                     .catch(err => console.error(err))
             }
             else if (role === 'STUDENT') {
+                console.log(role)
+
                 let resultService = ResultService.getInstance()
                 resultService.reviewDoneAssignmentForStudent(examID)
                     .then(items => {
@@ -119,10 +121,10 @@ export default function PreviewAssignment({ dataCreate, close }) {
                             Exam Name: {data.ExamName}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time Begin: {data.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()}
+                            Time Begin: {data.TimeBegin?.replace('T', ' ').replace('.000Z', '').toString()}
                         </Typography>
                         <Typography variant="subtitle1">
-                            Time End: {data.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()}
+                            Time End: {data.TimeEnd?.replace('T', ' ').replace('.000Z', '').toString()}
                         </Typography>
                         <Typography variant="subtitle1">
                             Duration: {data.Duration}

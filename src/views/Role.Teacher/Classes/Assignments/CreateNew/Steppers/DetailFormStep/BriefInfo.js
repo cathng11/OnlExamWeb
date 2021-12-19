@@ -47,7 +47,7 @@ export default function BriefInfo({ info }) {
           display: 'flex',
           height: '70vh',
           flexDirection: 'column',
-          background: '#D6E6F2',
+          background: '#D3E0EA',
           p: 5,
           overflow: 'auto',
           boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
@@ -64,7 +64,8 @@ export default function BriefInfo({ info }) {
           margin="normal"
           size="small"
           disabled={true}
-          focus={'true'}
+          focus='true'
+          sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
           value={currentClass.ClassID}
         />
         <TextField
@@ -74,8 +75,9 @@ export default function BriefInfo({ info }) {
           margin="normal"
           size="small"
           disabled={true}
-          focus={'true'}
-          notched={"true"}
+          focus='true'
+          notched="true"
+          sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
           value={currentClass.ClassName}
         />
         <TextField
@@ -86,6 +88,7 @@ export default function BriefInfo({ info }) {
           size="small"
           name="ExamName"
           value={input.ExamName}
+          sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
           onChange={handleChange}
         />
         <FormControl margin="normal" size="small">
@@ -96,9 +99,10 @@ export default function BriefInfo({ info }) {
             value={libraryFolder}
             label="Question Folder"
             onChange={handleLibrary}
+            sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
           >
             {listLibraryFolders.map((folder, index) => {
-              return (<MenuItem key={index} value={folder.LibraryFolderID}>{folder.LibraryFolderName.toString()}</MenuItem>)
+              return (<MenuItem key={index} value={folder.LibraryFolderID}>{folder.LibraryFolderName?.toString()}</MenuItem>)
             })}
 
           </Select>
@@ -110,6 +114,7 @@ export default function BriefInfo({ info }) {
           getOptionLabel={(option) => option.ClassName}
           filterSelectedOptions
           size="small"
+          sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
           onChange={handleMultipleClasses}
           renderInput={(params) => (
             <TextField {...params} label="Classes" placeholder="Create this assignment to other classes" margin="normal" />

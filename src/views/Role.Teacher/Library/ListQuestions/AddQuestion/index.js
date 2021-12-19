@@ -7,6 +7,7 @@ import React from 'react';
 import { matchPath, useHistory, useLocation } from "react-router-dom";
 import LibraryService from '../../../../../services/library.service';
 import AlertBar from './../../../../../components/Alert/AlertBar';
+import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
 
 export default function AddQuestion({ isRefresh }) {
     const [input, setInput] = React.useState({
@@ -215,23 +216,13 @@ export default function AddQuestion({ isRefresh }) {
     }
     return (
         <Grid item xs={12} md={12} lg={4} sx={{ background: 'white' }}>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={state.loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false }})}/>
             <Paper sx={{
                 background: 'white',
-                borderRadius: '20px',
                 p: 4,
                 overflow: 'auto',
-                boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+                borderLeft: '1px solid #D5D5D5',
+                boxShadow:'none'
             }}>
                 <Box
                     sx={{
@@ -243,8 +234,8 @@ export default function AddQuestion({ isRefresh }) {
                         background: 'white',
 
                     }}>
-                    <Typography color="primary" variant="h5">
-                        {query.get("editID") ? `Edit question ${query.get("editID")}` : 'Create new question'}
+                    <Typography color="primary" variant="h5" sx={{ fontWeight: 'bold'}}>
+                        {query.get("editID") ? `Edit Question ${query.get("editID")}` : 'Create New Question'}
                     </Typography>
                     <Box
                         component="form"

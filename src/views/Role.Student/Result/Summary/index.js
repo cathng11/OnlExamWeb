@@ -1,13 +1,21 @@
-import { Grid, Paper, styled, Typography } from '@mui/material'
+import { Box, Grid, styled, Typography } from '@mui/material'
 import React from 'react'
-const SummaryPaper = styled(Paper)(({ theme }) => ({
-    height: '15vh',
-    boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
+const TopBox = styled(Box)(({ theme }) => ({
+    height: '10vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius:'20px',
+    borderTop: '2px solid #000c40',
+    backdropFilter: 'blur(50px)',
+}))
+const BottomBox = styled(Box)(({ theme }) => ({
+    height: '10vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottom: '2px solid #000c40',
     backdropFilter: 'blur(50px)',
 }))
 export default function Summary({ data }) {
@@ -34,17 +42,17 @@ export default function Summary({ data }) {
     return (
         <Grid container item xs={12} md={12} lg={12} direction="row" spacing={5}>
             <Grid item xs={6} md={3} lg={3}>
-                <SummaryPaper>
+                <TopBox >
                     <Typography variant="body1" align='center'>
                         Average Score:
                     </Typography>
                     <Typography variant="h6" color="error" sx={{ fontWeight: 'bold' }} align='center'>
                         {input ? input.score : ''}
                     </Typography>
-                </SummaryPaper>
+                </TopBox >
             </Grid>
             <Grid item xs={6} md={3} lg={3}>
-                <SummaryPaper>
+                <BottomBox >
                     <Typography variant="body1" align='center'>
                         Tests Taken:
                     </Typography>
@@ -52,27 +60,27 @@ export default function Summary({ data }) {
                         {input ? input.testsTaken : ''}
                     </Typography>
 
-                </SummaryPaper>
+                </BottomBox >
             </Grid>
             <Grid item xs={6} md={3} lg={3}>
-                <SummaryPaper>
+                <TopBox >
                     <Typography variant="body1" align='center'>
                         Average Time:
                     </Typography>
                     <Typography variant="h6" color="error" sx={{ fontWeight: 'bold' }} align='center'>
                         {input ? input.time : ''} m
                     </Typography>
-                </SummaryPaper>
+                </TopBox >
             </Grid>
             <Grid item xs={6} md={3} lg={3}>
-                <SummaryPaper>
+                <BottomBox >
                     <Typography variant="body1" align='center'>
                         Rank:
                     </Typography>
                     <Typography variant="h6" color="error" sx={{ fontWeight: 'bold' }} align='center'>
                         3
                     </Typography>
-                </SummaryPaper>
+                </BottomBox >
 
             </Grid>
         </Grid >

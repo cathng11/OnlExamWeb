@@ -55,9 +55,13 @@ const UpcomingSchedule = () => {
     )
 }
 
-
 function Dashboard(route) {
     const [value, onChange] = useState(new Date())
+    let time = "Morning"
+    if (value.getHours() > 0) time = "Morning"
+    else if (value.getHours > 0 && value?.getHours < 12) time = "Afternoon"
+    else if (value.getHours > 12) time = "Evening"
+
     const user = JSON.parse(localStorage.getItem('user'))
     return (
         <Container sx={{ mt: 5, mb: 2 }} maxWidth="full">
@@ -90,7 +94,7 @@ function Dashboard(route) {
                                 >
                                     <Box>
                                         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                                            Good evening, {user.Firstname}
+                                            Good {time}, {user.Firstname}
                                         </Typography>
                                         <Typography variant="subtitle1">
                                             Here's what's happening in your account today.
@@ -149,7 +153,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background: '#dbe7fc',
+                                            background: 'radial-gradient( circle farthest-corner at 1.3% 2.8%,  rgba(239,249,249,1) 0%, rgba(182,199,226,1) 100.2% );',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
@@ -163,7 +167,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background: '#dbe7fc',
+                                            background: 'radial-gradient( circle farthest-corner at 1.3% 2.8%,  rgba(239,249,249,1) 0%, rgba(182,199,226,1) 100.2% );',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >
@@ -177,7 +181,7 @@ function Dashboard(route) {
                                             maxWeight: 240,
                                             overflow: 'hidden',
                                             backdropFilter: 'blur(50px)',
-                                            background: '#dbe7fc',
+                                            background: 'radial-gradient( circle farthest-corner at 1.3% 2.8%,  rgba(239,249,249,1) 0%, rgba(182,199,226,1) 100.2% );',
                                             boxShadow: '11px 13px 19px 4px rgba(55,59,68,0.7)'
                                         }}
                                     >

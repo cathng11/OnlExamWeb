@@ -88,7 +88,6 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
         <Box sx={{
             width: '100%',
             borderRadius: '20px',
-            background: 'blue',
 
         }}>
             <Paper sx={{
@@ -98,14 +97,14 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                 borderRadius: '20px',
                 overflow: 'auto'
             }}>
-                {role === 'Student' ? <></> :
+                {role === 'Student' || view === 'Result' ? <></> :
                     <TableToolbar
                         numSelected={selected.length}
                         view={view}
                         role={role}
                         selected={selected}
                         refresh={() => refresh()} />}
-                <TableContainer component={'div'} sx={{}}>
+                <TableContainer component={'div'} >
                     <Table
                         aria-labelledby="tableTitle"
                         size={'medium'}
@@ -121,6 +120,7 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                             headCells={headCells}
                             role={role}
                             component={'div'}
+                            view={view}
                         />
                         <TableBody component={'div'}>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -130,7 +130,7 @@ export default function CustomTable({ rows, view, headCells, role, refresh }) {
                                     if (role === 'Teacher') {
                                         if (view === 'Assignment') id = row.ExamID
                                         else if (view === 'Student') id = row.UserID
-                                        else if (view === 'Result') id = row.id
+                                        else if (view === 'Result') id = index
                                     } else {
                                         if (view === 'Assignment') id = row.ExamID
                                         else if (view === 'Result') id = index

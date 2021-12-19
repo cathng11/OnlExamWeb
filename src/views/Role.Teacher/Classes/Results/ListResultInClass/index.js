@@ -1,19 +1,72 @@
 import { Container } from '@mui/material';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import PropTypes from 'prop-types';
 import * as React from 'react';
+import { matchPath, useHistory } from "react-router-dom";
 import LoadingTable from '../../../../../components/Skeleton/LoadingTable';
 import CustomTable from '../../../../../components/Table/CustomTable';
-import data from '../../../../../data/Data_Grade.json'
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import AssignmentService from './../../../../../services/assignment.service';
-import { matchPath, useHistory } from "react-router-dom";
+import ResultService from './../../../../../services/result.service';
+const headCells = [
+    {
+        id: 'userID',
+        label: 'UserID',
+        disablePadding: false,
+    },
+    {
+        id: 'fullname',
+        label: 'Full Name',
+        disablePadding: false,
+    },
+    {
+        id: 'finishedTime',
+        label: 'Finished Time',
+        disablePadding: false,
+    },
+    {
+        id: 'grade',
+        label: 'Grade',
+        disablePadding: false,
+    },
+    {
+        id: 'status',
+        label: 'Status',
+        disablePadding: false,
+    },
+    {
+        id: 'action',
+        label: 'Action',
+        disablePadding: false,
+    },
 
+];
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
+    let history = useHistory();
+    const { children, value, index, item, classID, ...other } = props;
+    const [data, setData] = React.useState(null)
+    React.useEffect(() => {
+        let mounted = true;
+        if (props.item && value === index) {
+            let resultService = ResultService.getInstance()
+            resultService.getListResult({
+                ClassID: classID,
+                ExamID: item.ExamID
+            })
+                .then(items => {
+                    console.log(items)
+                    if (mounted) {
+                        if (items.status.Code === 200) {
+                            setData(items.data)
+                            history.push(`${history.location.pathname}?examID=${item.ExamID}`)
+                        }
+                    }
+                })
+                .catch((err) => { console.error(err) });
+        }
+        return () => { mounted = false };//eslint-disable-next-line
+    }, [value])
     return (
         <div
             role="tabpanel"
@@ -22,9 +75,9 @@ function TabPanel(props) {
             aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
-            {value === index && (
+            {value === index && data && (
                 <Box sx={{ p: 3 }}>
-                    <Typography component={'div'}>{children}</Typography>
+                    <CustomTable key={index} rows={data.Students} headCells={headCells} view={'Result'} role={'Teacher'} />
                 </Box>
             )}
         </div>
@@ -43,56 +96,7 @@ function a11yProps(index) {
         'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
-const rows = data
-const headCells = [
-    {
-        id: 'avatar',
-        label: 'Avatar',
-        disablePadding: true,
-    },
-    {
-        id: 'id',
-        label: 'User ID',
-        disablePadding: false,
-    },
 
-    {
-        id: 'firstname',
-        label: 'First Name',
-        disablePadding: false,
-    },
-    {
-        id: 'lastname',
-        label: 'Last Name',
-        disablePadding: false,
-    },
-    {
-        id: 'finishedTime',
-        label: 'Finished Time',
-        disablePadding: false,
-    },
-    {
-        id: 'status',
-        label: 'Status',
-        disablePadding: false,
-    },
-    {
-        id: 'correct',
-        label: 'Correct Ans',
-        disablePadding: true,
-    },
-    {
-        id: 'grade',
-        label: 'Grade',
-        disablePadding: false,
-    },
-    {
-        id: 'action',
-        label: 'Action',
-        disablePadding: true,
-    },
-
-];
 export default function ListResultInClass() {
     let history = useHistory();
     const [value, setValue] = React.useState(0);
@@ -106,17 +110,20 @@ export default function ListResultInClass() {
         exact: true,
         strict: false
     });
+    let classID = match.params.id
     React.useEffect(() => {
         let mounted = true;
-        let classID = match.params.id
         let assignmentService = AssignmentService.getInstance()
         assignmentService.getListByClassID(classID)
             .then(items => {
                 if (mounted) {
-                    if (items.status.Code === 200)
-                    {
+                    if (items.status.Code === 200) {
                         let list = []
-                        items.data.map(item => list.push(item.ExamID))
+                        items.data.filter(i => {
+                            let tspEnd = new Date(i.TimeEnd).getTime();
+                            let tspNow = new Date().getTime() + 7 * 3600000;
+                            return tspNow > tspEnd
+                        }).map(item => list.push({ ExamID: item.ExamID, ExamName: item.ExamName }))
                         setAssignment(list);
                     }
                 }
@@ -128,8 +135,8 @@ export default function ListResultInClass() {
         return (
             <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
                 <Box
-                    sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: '100%' }}
-                    
+                    sx={{ flexGrow: 1, display: 'flex', height: '100%' }}
+
                 >
                     <Tabs
                         orientation="vertical"
@@ -137,14 +144,17 @@ export default function ListResultInClass() {
                         value={value}
                         onChange={handleChange}
                         aria-label="Vertical tabs example"
-                        sx={{ borderRight: 1, borderColor: 'divider',pt:5 }}
+                        sx={{ borderRight: 1, borderColor: 'divider', pt: 5, maxWidth: 200 }}
                     >
-                        {assignment.map((item, index) => <Tab label={item} {...a11yProps(index)} key={index} />)}
+                        {assignment.map((item, index) => <Tab
+                            label={item.ExamName}
+                            {...a11yProps(index)}
+                            key={index}
+                        />)}
                     </Tabs>
-                    {assignment.map((item, index) => 
-                    <TabPanel value={value} index={index} key={index} component={'div'}>
-                        <CustomTable rows={rows} headCells={headCells} view={'Result'} role={'Teacher'} />
-                    </TabPanel>)}
+                    {assignment.map((item, index) =>
+                        <TabPanel value={value} index={index} key={index} component={'div'} item={item} classID={classID}>
+                        </TabPanel>)}
 
                 </Box>
 

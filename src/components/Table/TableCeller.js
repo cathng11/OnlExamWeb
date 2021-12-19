@@ -6,9 +6,9 @@ import {
 import React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router';
 import MemberClassDialog from '../Dialog/MemberClassDialog';
-import AlertBar from './../Alert/AlertBar';
 import PreviewDialog from './../Dialog/PreviewDialog';
 import ResultDialog from './../Dialog/ResultDialog';
+import LoadingAlert from './../Loading/LoadingAlert';
 
 export default function TableCeller({ view, role, row, setSelectedRow, labelId, isItemSelected }) {
 
@@ -26,6 +26,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         strict: false
     });
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -52,7 +53,13 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
 
 
     function handleClickGrade() {
-        history.push(`/grade-assignment?inClass=${match.params.id}&id=${row.id}`);
+        let query = new URLSearchParams(location.search)
+        if (row.DoingTime) {
+            history.push(`/grade-assignment?inClass=${match.params.id}&examID=${query.get("examID")}&studentID=${row.UserID}`);
+        }
+        else {
+            setState(s => { return { ...s, alert: true, title: 'Not show details because student did not turn in!' } })
+        }
     }
     const [openPreviewAssignment, setOpenPreviewAssignment] = React.useState(false)
 
@@ -83,7 +90,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
             setOpenPreviewAssignment(true)
         }
         else if (status === 'Inactive') {
-            setState({ alert: true, title: 'It is not valid time to take!' })
+            setState(s => { return { ...s, alert: true, title: 'It is not valid time to take!' } })
         }
     }
     const [openResultDialog, setOpenResultDialog] = React.useState(false)
@@ -140,24 +147,12 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         else if (view === 'Result') {
             return (
                 <>
-                    <TableCell padding="normal" component={'div'}>
-                        <Checkbox
-                            color="primary"
-                            onClick={(event) => handleClick(event, row.id)}
-                            checked={isItemSelected}
-                        />
-                    </TableCell>
-                    <TableCell padding="none" align="left" component={'div'}>
-                        <Avatar alt={row.name} src={row.avatar} />
-                    </TableCell>
-                    <TableCell align="left" component={'div'}>{row.id}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.firstname}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.lastname}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.finishedTime}</TableCell>
-                    <TableCell align="left" component={'div'}><Chip label={row.status} color={statusColor[row.status]} /></TableCell>
-                    <TableCell align="left" component={'div'}>{row.correct}/{row.totalAnswers}</TableCell>
-                    {row.status === 'Accepted' ? <TableCell align="left" component={'div'}>{row.grade}</TableCell>
-                        : <TableCell align="left" component={'div'}><Chip label="Pending" color="warning" /></TableCell>}
+                    <TableCell align="left" component={'div'}>{row.UserID}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.Firstname + " " + row.Lastname}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.DoingTime ? row.DoingTime : 'Not Submit'}</TableCell>
+                    {row.Accept ? <TableCell align="left" component={'div'}>{row.Mark}</TableCell> : <TableCell align="left" component={'div'}><Chip label="Pending" sx={{ background: '#EBE645' }} /></TableCell>}
+                    <TableCell align="left" component={'div'}>
+                        <Chip label={row.Accept ? "Accepted" : "Not Accept"} color={statusColor[row.Accept]} /></TableCell>
                     <TableCell align="left" component={'div'}>
                         <Tooltip title="Grade">
                             <div>
@@ -167,13 +162,14 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                             </div>
                         </Tooltip>
                     </TableCell>
+                    <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
                 </>
             )
         }
         else if (view === 'Assignment') {
             let status = handleStatus(row.TimeBegin, row.TimeEnd)
-            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()
-            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()
+            let begin = row.TimeBegin?.replace('T', ' ').replace('.000Z', '').toString()
+            let end = row.TimeEnd?.replace('T', ' ').replace('.000Z', '').toString()
             return (
                 <>
                     <TableCell padding="normal" component={'div'}>
@@ -213,8 +209,8 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
     if (role === 'Student') {
         if (view === 'Assignment') {
             let status = handleStatus(row.TimeBegin, row.TimeEnd)
-            let begin = row.TimeBegin.replace('T', ' ').replace('.000Z', '').toString()
-            let end = row.TimeEnd.replace('T', ' ').replace('.000Z', '').toString()
+            let begin = row.TimeBegin?.replace('T', ' ').replace('.000Z', '').toString()
+            let end = row.TimeEnd?.replace('T', ' ').replace('.000Z', '').toString()
             return (
                 <>
                     <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
@@ -234,11 +230,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                             {action[status]}
                         </Button>
                     </TableCell>
-                    <AlertBar
-                        title={state.title}
-                        openAlert={state.alert}
-                        closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                    />
+                    <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
                     <PreviewDialog open={openPreviewAssignment} handleClose={handleClose} />
 
                 </>

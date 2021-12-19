@@ -1,5 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
     alpha,
     Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Toolbar, Tooltip, Typography
@@ -7,8 +8,9 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from "react-router-dom";
-import AlertBar from './../../../../../components/Alert/AlertBar';
 import SearchBtn from './../../../../../components/Button/SearchBtn';
+import ModalDialog from './../../../../../components/Dialog/ModalDialog';
+import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
 import LibraryService from './../../../../../services/library.service';
 
 
@@ -16,10 +18,13 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
     let history = useHistory();
     const [openDialog, setOpenDialog] = React.useState(false)
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
-
+    const [openModal, setOpenModal] = React.useState({
+        pageName: 'ImportQuestions', isOpen: false, id: ''
+    });
     function handleEdit() {
         history.push(`${history.location.pathname}?editID=${selected}`);
     }
@@ -27,18 +32,28 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
         history.push(`${history.location.pathname}`);
         setOpenDialog(true)
     }
-
+    const handleImportStudents = () => {
+        setOpenModal({ pageName: 'ImportQuestions', isOpen: true, id: '' });
+    }
+    const handleModalClose = (value) => {
+        refresh();
+        setOpenModal(s => { return { ...s, isOpen: false } });
+    };
     function handleAcceptDel() {
+        setState(s => { return { ...s, loading: true } })
         let libraryService = LibraryService.getInstance()
         libraryService.deleteQuestions({ QuestionID: selected })
             .then(items => {
                 if (items.status.Code === 200) {
-                    setState({ alert: true, title: `Deleted questions ${selected}!` })
+                    setState({ loading: false, alert: true, title: `Deleted questions ${selected}!` })
                     refresh();
                 } else {
-                    setState({ alert: true, title: items.message })
+                    setState({ loading: false, alert: true, title: items.message })
                 }
-            }).catch(err => console.error(err))
+            }).catch(err => {
+                console.error(err)
+                setState({ loading: false, alert: true, title: 'Error. Try again!' })
+            })
         handleClose()
     }
     function handleClose() {
@@ -46,11 +61,7 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
     }
     return (
         <div>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             <Dialog
                 open={openDialog}
                 onClose={handleClose}
@@ -72,6 +83,8 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <ModalDialog open={openModal} handleClose={handleModalClose} />
+
             <Toolbar
                 sx={{
                     pl: { sm: 2 },
@@ -120,6 +133,12 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
 
                 ) : (
                     <>
+                        <Button 
+                        color="primary" 
+                        startIcon={<FileUploadIcon />} 
+                        onClick={handleImportStudents} 
+                        sx={{p:3}}
+                        >IMPORT</Button>
                     </>
                 )}
             </Toolbar>

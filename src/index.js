@@ -12,7 +12,7 @@ const theme = createTheme({
   palette: {
     primary: {
       light: '#A2DBFA',
-      main: '#3D4E81',
+      main: '#000C40',
       dark: '#6E7FF3',
       gradient: 'linear-gradient(-225deg, #3D4E81 0%, #5753C9 48%, #6E7FF3 100%)'
     },

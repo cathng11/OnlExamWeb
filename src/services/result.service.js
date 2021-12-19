@@ -38,13 +38,13 @@ export default class ResultService {
         return await this.request(url, method).then(res => res.json())
     }
     async reviewDoneAssignmentForStudent(examID) {
-        let url = `results/${examID}`;
+        let url = `results/student/${examID}`;
         let method = "GET";
         return await this.request(url, method).then(res => res.json())
     }
     async getListResult(data) {
         let url = `results/teacher`;
-        let method = "GET";
+        let method = "POST";
         return await this.request(url, method,data).then(res => res.json())
     }
 }

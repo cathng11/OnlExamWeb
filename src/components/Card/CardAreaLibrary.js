@@ -29,10 +29,10 @@ export default function CardAreaLibrary({data}) {
                     {data.LibraryFolderName}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Created on: {data.CreatedDate.substring(0,9).toString()}
+                    Created on: {data.CreatedDate?.substring(0,9).toString()}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Last updated: {data.UpdatedDate.substring(0,9).toString()}
+                    Last updated: {data.UpdatedDate?.substring(0,9).toString()}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     Total questions: {data.TotalQuestions}

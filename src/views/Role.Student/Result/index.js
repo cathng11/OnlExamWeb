@@ -75,17 +75,14 @@ export default function Result() {
                             <Box
                                 sx={{
                                     height: '15vh',
-                                    p: 5,
+                                    p: 2,
                                 }}>
                                 <Typography variant="h4" sx={{ color: '#000C40', fontWeight: 'bold' }} align='justify'>
                                     <BorderColorIcon fontSize="large" /> My Assignment Results
                                 </Typography>
-                                <Box sx={{
-                                    mt: 1,
-                                    height: '5px',
-                                    width: '100%',
-                                    background: 'linear-gradient(to right, #f0f2f0, #000c40)'
-                                }} />
+                                <Typography variant="subtitle1" sx={{ color: 'gray',pl:5}} align='justify'>
+                                    Here is a list of the assignments that you have done.
+                                </Typography>
                             </Box>
                         </Grid>
                         <Grid container item xs={12} md={6} lg={6} direction="row" spacing={5}>

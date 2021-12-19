@@ -1,7 +1,7 @@
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import {
     Box, Grid, IconButton,
-    styled, Typography
+    styled, Typography, Button
 } from '@mui/material';
 import React from 'react';
 const Input = styled('input')({
@@ -63,10 +63,23 @@ export default function BriefInformation({ data }) {
             <Typography variant='h5'>
                 {data.FirstName} {data.LastName}
             </Typography>
-            <Typography variant='body1'>
-                {data.RoleName}
-            </Typography>
-            <Box sx={{ width: '100%', pl: 5, pr: 5,pt:3 }}>
+            <Button variant="contained"
+                disable="true"
+                sx={{
+                    backgroundImage: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
+                    textAlign: 'center',
+                    textTransform: 'uppercase',
+                    transition: '0.5s',
+                    backgroundSize: '200% auto',
+                    color: 'white',
+                    boxShadow: '0 0 20px #eee',
+                    borderRadius: '10px',
+                    display: 'block',
+                    pl: 5,
+                    pr: 5,
+                }}>{data.RoleName}</Button>
+
+            <Box sx={{ width: '100%', pl: 5, pr: 5, pt: 3 }}>
                 <Grid container spacing={2}>
                     {_data.map((val) => <DetailItem data={val} key={val.content} />)}
                 </Grid>
