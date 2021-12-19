@@ -8,35 +8,34 @@ import data from '../../../../../data/Data'
 import CandidateInformation from './CandidateInformation'
 import CandidateExamPaper from './CandidateExamPaper'
 
-const info = [
-    {
-        content: 'UserID',
-        value: '1209302',
-    },
-    {
-        content: 'Fullname',
-        value: 'John Henry',
-    },
-    {
-        content: 'Email',
-        value: 'john@gmail.com',
-    },
-    {
-        content: 'Class',
-        value: '19N32',
-    },
-    {
-        content: 'Subject',
-        value: 'Database',
-    },
-    {
-        content: 'Assignment',
-        value: 'Midterm Exam',
-    },
-]
-
-
 export default function DetailResult() {
+    const info = [
+        {
+            content: 'UserID',
+            value: '1209302',
+        },
+        {
+            content: 'Fullname',
+            value: 'John Henry',
+        },
+        {
+            content: 'Email',
+            value: 'john@gmail.com',
+        },
+        {
+            content: 'Class',
+            value: '19N32',
+        },
+        {
+            content: 'Subject',
+            value: 'Database',
+        },
+        {
+            content: 'Assignment',
+            value: 'Midterm Exam',
+        },
+    ]
+    
     return (
         <Container maxWidth="full" sx={{ mt: 4, mb: 2 }}>
             <Grid container spacing={5}>

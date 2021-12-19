@@ -127,8 +127,8 @@ function Login() {
         }
     };
     function responseGoogleError(response) {
-        console.log("hi")
-        setState(s => { return { ...s, alert: true, title: response } })
+        console.info(response)
+        setState(s => { return { ...s, alert: true, title: 'Google Login Error' } })
     };
     function openLogin(e) {
         if (e) e.preventDefault();

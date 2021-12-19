@@ -1,13 +1,9 @@
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import DatePicker from '@mui/lab/DatePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import {
-    Box, FormControl, Backdrop, CircularProgress,
-    FormControlLabel, Radio, RadioGroup, styled, TextField, Typography
+    Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Typography
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
+import LoadingAlert from './../../../../components/Loading/LoadingAlert';
 import ProfileService from './../../../../services/profile.service';
-import AlertBar from './../../../../components/Alert/AlertBar';
 
 const CustomInput = styled(TextField)(({ theme }) => ({
     '& label.Mui-focused': {
@@ -38,65 +34,76 @@ const InputField = ({ id, name, label, value, handleChange }) => {
     )
 }
 
-export default function GeneralInformation({ data, isUpdate, setUpdated }) {
+export default function GeneralInformation({ data }) {
     const [state, setState] = React.useState({
         loading: false,
         alert: false,
         title: ''
     })
     const [input, setInput] = useState({
-        Firstname: data.Firstname,
-        Lastname: data.Lastname,
+        Firstname: data.Firstname ? data.Firstname : '',
+        Lastname: data.Lastname ? data.Lastname : '',
         Email: data.Email,
-        Address: data.Address,
-        Phone: data.Phone,
+        Address: data.Address ? data.Address : '',
+        Phone: data.Phone ? data.Phone : '',
         Gender: data.Gender === false ? "false" : "true",
-        DateOfBirth: data.DateOfBirth,
-        Avatar: data.Avatar,
+        DateOfBirth: data.DateOfBirth ? new Date(data.DateOfBirth).toLocaleDateString('en-US') : '',
+        Avatar: data.Avatar ? data.Avatar : '',
     })
     let inputClone = useRef(input);
     const handleChange = (e, tag) => {
-        const name = tag ? 'DateOfBirth' : e.target.name;
-        let value = name === 'DateOfBirth' ? e : e.target.value;
-        if (name === "Gender") {
-            value = e.target.value === "true" ? true : false;
-        }
+        const name = e.target.name;
+        let value = e.target.value;
+
         setInput(s => { return { ...s, [name]: value } })
     }
+    function isValidDate(dt) {
+        var reValidDate = /^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/;
+        return reValidDate.test(dt);
+    }
+    function isValidPhoneNumber(dt) {
+        var reValidPhone = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/;
+        return reValidPhone.test(dt);
+    }
 
-    React.useEffect(() => {
-        let mounted = true;
-        if (isUpdate) {
-            setState(s => { return { ...s, loading: true } })
-            if (input !== inputClone.current) {
-                let profileService = ProfileService.getInstance();
-                profileService.update(input)
-                    .then(items => {
-                        if (mounted) {
-                            if (items.status.Code === 200) {
-                                inputClone.current = input
-                                setUpdated()
-                                setState({ loading: false, alert: true, title: `Updated your profile` })
-                            }
-                            else {
-                                setState({ loading: false, alert: true, title: `Error. Try again!` })
-                            }
-
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err)
+    const handleUpdate = () => {
+        setState(s => { return { ...s, loading: true } })
+        if (!isValidDate(input.DateOfBirth)) {
+            setState({ loading: false, alert: true, title: `Invalid Birthday` })
+            return;
+        }
+        else if (!isValidPhoneNumber(input.Phone)) {
+            setState({ loading: false, alert: true, title: `Invalid Phone Number` })
+            return;
+        }
+        else if (Object.values(input).filter(value => value === "").length > 0) {
+            setState({ loading: false, alert: true, title: `Input fields are required` })
+            return;
+        }
+        else if (input !== inputClone.current) {
+            let profileService = ProfileService.getInstance();
+            profileService.update(input)
+                .then(items => {
+                    if (items.status.Code === 200) {
+                        inputClone.current = input
+                        setState({ loading: false, alert: true, title: `Updated your profile` })
+                    }
+                    else {
                         setState({ loading: false, alert: true, title: `Error. Try again!` })
-                    })
-            }
-            else {
-                setUpdated()
-                setState(s => { return { ...s, loading: false } })
-            }
+                    }
+
+
+                })
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: `Error. Try again!` })
+                })
+        }
+        else {
+            setState({ loading: false, alert: true, title: `Nothing is updated!` })
 
         }
-        return () => mounted = false;
-    }, [data, isUpdate, input, setUpdated])
+    }
     let content = [
         {
             row1: [
@@ -140,91 +147,93 @@ export default function GeneralInformation({ data, isUpdate, setUpdated }) {
 
     ]
     return (
-        <React.Fragment>
+        <React.Fragment >
             <Box sx={{
                 width: '100%',
+                height: '50vh',
                 display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                background: 'white'
             }}>
-                <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                    open={state.loading}
-                >
-                    <CircularProgress color="inherit" />
-                </Backdrop>
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
-                <Box sx={{ width: '50%', pr: 4 }}>
-                    {content[0].row1.map((value, index) =>
-                        <InputField
-                            key={index}
-                            id={index}
-                            name={value.name}
-                            label={value.label}
-                            value={value.value}
-                            margin="normal"
-                            handleChange={handleChange} />)}
+                <Box sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    background: 'white'
+                }}>
+                    <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
+                    <Box sx={{ width: '50%', pr: 4 }}>
+                        {content[0].row1.map((value, index) =>
+                            <InputField
+                                key={index}
+                                id={index}
+                                name={value.name}
+                                label={value.label}
+                                value={value.value}
+                                margin="normal"
+                                handleChange={handleChange} />)}
 
-                </Box>
-                <Box sx={{ width: '50%' }}>
-                    {content[1].row2.map((value, index) =>
-                        <InputField
-                            key={index}
-                            id={index}
-                            name={value.name}
-                            label={value.label}
-                            value={value.value}
-                            margin="normal"
-                            handleChange={handleChange} />)}
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                    </Box>
+                    <Box sx={{ width: '50%' }}>
+                        {content[1].row2.map((value, index) =>
+                            <InputField
+                                key={index}
+                                id={index}
+                                name={value.name}
+                                label={value.label}
+                                value={value.value}
+                                margin="normal"
+                                handleChange={handleChange} />)}
+
+                        <TextField
                             label="Date Of Birth"
                             name="DateOfBirth"
-                            value={input.DateOfBirth.toString()}
-                            onChange={(e) => handleChange(e, 'DateOfBirth')}
-                            renderInput={(params) => <CustomInput {...params}
-                                id="dateOfBirth"
-                                label="Date Of Birth"
-                                fullWidth={true}
-                                name="DateOfBirth"
-                                margin="normal"
-                
-                                 />}
-                        />
-                    </LocalizationProvider>
+                            value={input.DateOfBirth}
+                            placeholder="MM/DD/YYYY"
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullWidth={true}
+                            margin="normal" />
 
-                    <FormControl
-                        component="fieldset"
-                        margin="normal" sx={{
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                        <Typography component="div" sx={{ pr: 5 }}>Gender:</Typography>
-                        <RadioGroup
-                            row
-                            aria-label="Gender"
-                            name="Gender"
-                            defaultValue={input.Gender}
-                            value={input.Gender} onChange={handleChange}
-                        >
-                            <FormControlLabel value={false} control={<Radio />} label="Female" />
-                            <FormControlLabel value={true} control={<Radio />} label="Male" />
+                        <FormControl
+                            component="fieldset"
+                            margin="normal" sx={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}>
+                            <Typography component="div" sx={{ pr: 5 }}>Gender:</Typography>
+                            <RadioGroup
+                                row
+                                name="Gender"
+                                // defaultValue={input.Gender}
+                                value={input.Gender} onChange={handleChange}
+                            >
+                                <FormControlLabel value={"false"} control={<Radio />} label="Female" />
+                                <FormControlLabel value={"true"} control={<Radio />} label="Male" />
 
-                        </RadioGroup>
-                    </FormControl>
+                            </RadioGroup>
+                        </FormControl>
+
+                    </Box>
+                </Box >
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Button
+                        color="error"
+                        variant="contained"
+                        onClick={handleUpdate}
+                    >
+                        Save
+                    </Button>
                 </Box>
-
             </Box>
 
-        </React.Fragment>
+
+        </React.Fragment >
     )
 }

@@ -1,7 +1,7 @@
 import { Avatar, Container, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import {Tabs,styled} from '@mui/material';
+import { Tabs, styled } from '@mui/material';
 import * as React from 'react';
 import { useHistory, useParams } from "react-router-dom";
 import MapAllowedRoutes from '../../../../routes/MapAllowedRoutes';
@@ -9,28 +9,28 @@ import { getAllowedRoutes } from '../../../../utils/index';
 import logo from '../../../../assets/images/cool-background.png'
 const StyledTabs = styled((props) => (
     <Tabs
-      {...props}
-      TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        {...props}
+        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
     />
-  ))({
-    '& .css-19ta96l-MuiButtonBase-root-MuiTab-root': {
-        color: '#3D4E81'
+))({
+    '& .css-1vk3ecm-MuiButtonBase-root-MuiTab-root': {
+        color: '#D5D5D5'
     },
     '& .MuiTabs-indicator': {
-      display: 'flex',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
     },
-    '& .css-19ta96l-MuiButtonBase-root-MuiTab-root.Mui-selected':{
-        color:'#A2DBFA'
+    '& .css-1vk3ecm-MuiButtonBase-root-MuiTab-root.Mui-selected': {
+        color: '#A2DBFA'
     },
     '& .MuiTabs-indicatorSpan': {
-      maxWidth: 100,
-      width: '100%',
-      backgroundColor: '#A2DBFA',
+        maxWidth: 100,
+        width: '100%',
+        backgroundColor: '#A2DBFA',
     },
 
-  });
+});
 export default function ClassRoom({ children }) {
 
     let allowedRoutes = [];
@@ -61,11 +61,13 @@ export default function ClassRoom({ children }) {
             }
         }}>
             <Grid container >
-                <Grid item sx={{ background: '#041C32', borderBottom: '1px solid gray', width: '100%',
-            backgroundImage: `url(${logo})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center', }} >
+                <Grid item sx={{
+                    background: '#041C32', borderBottom: '1px solid gray', width: '100%',
+                    backgroundImage: `url(${logo})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }} >
                     <Container>
                         <Box >
                             <Grid container sx={{ p: 2, pt: 4 }} columnSpacing={2}>
@@ -73,7 +75,7 @@ export default function ClassRoom({ children }) {
                                     <Avatar
                                         alt={user.Username}
                                         src={user.Avatar}
-                                        sx={{ width: 72, height: 72,border:'1px solid black',background:'#47597E' }}
+                                        sx={{ width: 72, height: 72, border: '1px solid black', background: '#47597E' }}
                                     />
                                 </Grid>
                                 <Grid item>
@@ -89,7 +91,8 @@ export default function ClassRoom({ children }) {
                         <StyledTabs
                             value={value}
                             onChange={handleChange}
-                            aria-label="secondary tabs example"
+                            aria-label="tab-classroom"
+                            
 
                         >
                             <Tab value="performance" label="Performance" />

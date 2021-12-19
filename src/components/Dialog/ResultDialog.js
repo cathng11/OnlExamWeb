@@ -29,11 +29,11 @@ export default function ResultDialog({ open, data, close }) {
         },
         {
             title: "Time Begin",
-            text: data.TimeBegin.toString(),
+            text: data.TimeBegin?.replace('T', ' ').replace('.000Z', '').toString(),
         },
         {
             title: "Time End",
-            text: data.TimeEnd.toString(),
+            text: data.TimeEnd?.replace('T', ' ').replace('.000Z', '').toString(),
         },
         {
             title: "Limit Time",
@@ -45,11 +45,11 @@ export default function ResultDialog({ open, data, close }) {
         },
         {
             title: "Time Submit",
-            text: data.TimeSubmit.toString(),
+            text: data.TimeSubmit?.replace('T', ' ').replace('.000Z', '').toString(),
         },
         {
             title: "Finished Time",
-            text: data.DoingTime.toString(),
+            text: data.DoingTime?.toString(),
         },
         {
             title: "Mark",

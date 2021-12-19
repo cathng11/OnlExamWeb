@@ -1,5 +1,4 @@
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import SkateboardingIcon from '@mui/icons-material/Skateboarding';
 import {
   AppBar, Avatar, Box, Button, Grid, IconButton, styled, Toolbar, Tooltip, Typography
 } from '@mui/material';
@@ -7,9 +6,9 @@ import * as React from 'react';
 import {
   Link, Route, withRouter
 } from "react-router-dom";
+import LOGO from '../../assets/images/dolphin.png';
 import '../../styles/LinkEffect.css';
 import MenuBar from '../Menu/MenuBar';
-
 const MenuLink = ({ title, path, activeOnlyWhenExact, username }) => {
   return (
     <Route
@@ -109,10 +108,9 @@ function HeadBar({ allowedRoutes }) {
         <Grid container>
           <Grid item xs={2} md={2} lg={2}>
             <LogoBox>
-              <Box >
-                <SkateboardingIcon />
-              </Box>
+              <Avatar alt="D" src={LOGO} sx={{ width: 24, height: 24 }}/>
               <Typography variant="h4" component="div" sx={{
+                pl:1,
                 flexGrow: 0.1,
                 fontFamily: 'Lemon, cursive'
               }} color="#EAEDF2" >
@@ -176,7 +174,7 @@ function HeadBar({ allowedRoutes }) {
                   <Tooltip title="Account settings">
                     <IconButton size="small" >
                       <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>
-                        <InsertEmoticonIcon/>
+                        <InsertEmoticonIcon />
                       </Avatar>
                     </IconButton>
                   </Tooltip>

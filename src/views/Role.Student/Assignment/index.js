@@ -3,7 +3,8 @@ import {
     CssBaseline,
     Grid,
     Paper,
-    styled
+    styled,
+    Box
 } from '@mui/material';
 import React from 'react';
 import LoadingClassStudent from './../../../components/Skeleton/LoadingClassStudent';
@@ -19,7 +20,7 @@ const ClassPaper = styled(Paper)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'white',
+    background: 'white',
     overflow: 'auto',
     boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
 }));
@@ -72,9 +73,18 @@ export default function Assignment() {
                         rowSpacing={{ xs: 4, md: 0, lg: 0 }}
                         columnSpacing={8}>
                         <Grid item xs={12} md={4} lg={4} sx={{ background: 'white' }}>
-                            <ClassPaper>
+                            <Box sx={{
+                                height: '60vh',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                background: 'white',
+                                overflow: 'auto',
+                                borderRight:'1px solid #EAEAEA'
+                            }}>
                                 {listClass ? <ListClass data={listClass} open={handleOpenAssignment} /> : <LoadingClassStudent />}
-                            </ClassPaper>
+                            </Box>
                         </Grid>
                         <Grid item xs={12} md={8} lg={8}>
                             {open.state && open.data ? <TableAssignment data={open.data} /> : <LoadingTable />}

@@ -93,7 +93,7 @@ export default function TransferQuizList({ questions, randomQuestions }) {
         setAssign(s => { return { ...s, Questions: right } })// eslint-disable-next-line
     }, [right, questions, randomQuestions])
     const customList = (title, items) => (
-        <Card sx={{ border: 0, boxShadow: 0, background: '#D6E6F2', }}>
+        <Card sx={{ border: 0, boxShadow: 0, background: '#D3E0EA', }}>
             <CardHeader
                 sx={{ px: 2, py: 1 }}
                 avatar={
@@ -119,7 +119,7 @@ export default function TransferQuizList({ questions, randomQuestions }) {
             <List
                 sx={{
                     height: '30vh',
-                    background: '#D6E6F2',
+                    background: '#D3E0EA',
                     overflow: 'auto',
                 }}
                 dense

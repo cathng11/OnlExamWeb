@@ -1,14 +1,13 @@
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {
-    Avatar, Backdrop, Container, CircularProgress,
-    List,
+    Avatar, Container, List,
     ListItem, ListItemAvatar, ListItemText
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import LoadingAlert from './../../../../components/Loading/LoadingAlert';
 import AssignmentService from './../../../../services/assignment.service';
-import AlertBar from './../../../../components/Alert/AlertBar';
 
 function ClassItem({ item, open }) {
     let history = useHistory()
@@ -44,21 +43,12 @@ function ClassItem({ item, open }) {
                 <IconButton edge="end" aria-label="detail" onClick={handleClick} >
                     <ArrowRightIcon />
                 </IconButton>
-            }
-        >
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={state.loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            }>
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             <ListItemAvatar>
-                <Avatar sx={{ background: '#3D4E81 ' }}>{item.ClassID}</Avatar>
+                <Avatar sx={{ background: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)' }}>
+                    {item.ClassID}
+                </Avatar>
             </ListItemAvatar>
             <ListItemText
                 primary={item.ClassName}
@@ -70,7 +60,6 @@ function ClassItem({ item, open }) {
 export default function ListClass({ data, open }) {
     return (
         <Container maxWidth="full">
-
             <List sx={{ width: '100%', p: 2 }}>
                 {data.map((item, index) =>
                     <ClassItem key={index} item={item} open={(id, data) => open(id, data)} />)}

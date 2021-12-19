@@ -198,7 +198,7 @@ export default function RandQuizOptions() {
             height: '70vh',
             boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
             borderRadius: '10px',
-            background: '#D6E6F2',
+            background: '#D3E0EA',
             p: 3
         }}>
             <AlertBar
@@ -222,7 +222,8 @@ export default function RandQuizOptions() {
                                 size="small"
                                 name="total-questions"
                                 type='number'
-                                sx={{ width: '40%' }}
+                                sx={{ width: '40%','& .css-186xcr5': { paddingRight: '15px' } }}
+
                                 InputProps={{
                                     inputProps: {
                                         max: questions.length, min: 0
@@ -236,7 +237,7 @@ export default function RandQuizOptions() {
                                 id="max-essay"
                                 margin="normal"
                                 size="small"
-                                sx={{ width: '40%' }}
+                                sx={{ width: '40%','& .css-186xcr5': { paddingRight: '15px' } }}
                                 name="max-essay"
                                 type='number'
                                 InputProps={{
@@ -253,6 +254,7 @@ export default function RandQuizOptions() {
                             name="question-type"
                             options={quizType}
                             getOptionLabel={(option) => option}
+                            sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
                             onChange={handleChangeType}
                             filterSelectedOptions
                             size="small"
@@ -310,6 +312,7 @@ export default function RandQuizOptions() {
                                             '.css-nz481w-MuiInputBase-input-MuiInput-input': {
                                                 padding: 0,
                                             },
+                                            '& .css-186xcr5': { paddingRight: '15px' }
                                         }}
                                         InputProps={{
                                             inputProps: {
@@ -332,6 +335,7 @@ export default function RandQuizOptions() {
                                             '.css-nz481w-MuiInputBase-input-MuiInput-input': {
                                                 padding: 0,
                                             },
+                                            '& .css-186xcr5': { paddingRight: '15px' }
                                         }}
                                         InputProps={{
                                             inputProps: {
@@ -354,6 +358,7 @@ export default function RandQuizOptions() {
                                             '.css-nz481w-MuiInputBase-input-MuiInput-input': {
                                                 padding: 0,
                                             },
+                                            '& .css-186xcr5': { paddingRight: '15px' }
                                         }}
                                         InputProps={{
                                             inputProps: {

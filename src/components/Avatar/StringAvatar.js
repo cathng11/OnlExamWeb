@@ -3,7 +3,7 @@ export default function StringAvatar(name) {
     try {
         return {
             sx: {
-                background: 'linear-gradient( 179.4deg,  rgba(12,20,69,1) -16.9%, rgba(71,30,84,1) 119.9% );',
+                background: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
                 width: 60,
                 height: 60,
             },
@@ -12,7 +12,7 @@ export default function StringAvatar(name) {
     } catch (error) {
         return {
             sx: {
-                background: 'linear-gradient( 179.4deg,  rgba(12,20,69,1) -16.9%, rgba(71,30,84,1) 119.9% );',
+                background: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
                 width: 60,
                 height: 60,
             },

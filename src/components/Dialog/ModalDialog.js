@@ -13,6 +13,7 @@ import ClassDialog from './ChildDialog/ClassDialog';
 import LibraryDialog from './ChildDialog/LibraryDialog';
 import StudentDialog from './ChildDialog/StudentDialog';
 import ImportStudentsDialog from './ChildDialog/ImportStudentsDialog';
+import ImportQuestionsDialog from './ChildDialog/ImportQuestionsDialog';
 
 
 
@@ -98,8 +99,8 @@ export default function ModalDialog({ open, handleClose }) {
         'Classes': <ClassDialog isSave={isSave} isEdit={isEdit} refresh={handleRefresh} />,
         'Result': <ResultDialog />,
         'Student': <StudentDialog isSave={isSave} refresh={handleRefresh}/>,
-        'ImportStudents': <ImportStudentsDialog isSave={isSave} refresh={handleRefresh}/>
-
+        'ImportStudents': <ImportStudentsDialog isSave={isSave} refresh={handleRefresh}/>,
+        'ImportQuestions': <ImportQuestionsDialog isSave={isSave} refresh={handleRefresh}/>
     }
 
     const titleCreate = {
@@ -109,6 +110,7 @@ export default function ModalDialog({ open, handleClose }) {
         'Result': 'Result Assignment',
         'Student': 'Add New Students',
         'ImportStudents': 'Import Multiple Students',
+        'ImportQuestions': 'Import Multiple Questions',
 
     }
     const titleEdit = {
