@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Checkbox, Chip, CircularProgress, FormControl, FormControlLabel, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Chip, FormControl, FormControlLabel, Grid, Paper, Typography } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import React from 'react';
 import { matchPath, useHistory, useLocation } from "react-router-dom";
 import LibraryService from '../../../../../services/library.service';
-import AlertBar from './../../../../../components/Alert/AlertBar';
 import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
 
 export default function AddQuestion({ isRefresh }) {
