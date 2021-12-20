@@ -10,9 +10,8 @@ import {
 } from '@mui/material'
 import React, { memo, useState } from 'react'
 import Calendar from 'react-calendar'
-import '../../styles/Calendar.css'
 import logo from '../../assets/images/cool-background.png'
-
+import '../../styles/Calendar.css'
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -63,6 +62,13 @@ function Dashboard(route) {
     else if (value.getHours > 12) time = "Evening"
 
     const user = JSON.parse(localStorage.getItem('user'))
+    const Mailto = ({ email, subject = '', body = '', children }) => {
+        let params = subject || body ? '?' : '';
+        if (subject) params += `subject=${encodeURIComponent(subject)}`;
+        if (body) params += `${subject ? '&' : ''}body=${encodeURIComponent(body)}`;
+
+        return <a href={`mailto:${email}${params}`} style={{color:'white'}}>{children}</a>;
+    };
     return (
         <Container sx={{ mt: 5, mb: 2 }} maxWidth="full">
             <CssBaseline />
@@ -284,9 +290,7 @@ function Dashboard(route) {
                                     Keep in touch with us to update new features
                                 </Typography>
                                 <Button variant="contained" sx={{
-
                                     backgroundImage: 'linear-gradient(to right, #005C97 0%, #363795  51%, #005C97  100%)',
-
                                     textAlign: 'center',
                                     textTransform: 'uppercase',
                                     transition: '0.5s',
@@ -295,15 +299,20 @@ function Dashboard(route) {
                                     boxShadow: '0 0 20px #eee',
                                     borderRadius: '20px',
                                     display: 'block',
-
-
                                     '&:hover': {
                                         backgroundPosition: 'right center',
                                         color: '#fff',
                                         textDecoration: 'none',
 
                                     }
-                                }}>Connect</Button>
+                                }}>
+                                    <Mailto 
+                                        email="contact.onlxam@gmail.com" 
+                                        subject="Feedback From User" 
+                                        body="Hello World!">
+                                        Connect
+                                    </Mailto>
+                                    </Button>
 
                             </Box>
 

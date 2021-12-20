@@ -4,15 +4,15 @@ import {
     Typography
 } from '@mui/material';
 import React from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import LoadingPreviewAssignment from '../Skeleton/LoadingPreviewAssignment';
 import AssignmentService from './../../services/assignment.service';
+import ResultService from './../../services/result.service';
 import Essay from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/Essay';
 import MultipleChoice from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/MultipleChoice';
 import SingleChoice from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/SingleChoice';
 import TrueFalse from './../../views/Role.Teacher/Classes/Results/DetailResult/QuizType/TrueFalse';
-import AlertBar from './../Alert/AlertBar';
-import ResultService from './../../services/result.service';
+import LoadingAlert from './../Loading/LoadingAlert';
 
 function Question({ data, index }) {
     const type = {
@@ -55,6 +55,7 @@ function Question({ data, index }) {
 export default function PreviewAssignment({ dataCreate, close }) {
     const [data, setData] = React.useState(null)
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -71,6 +72,7 @@ export default function PreviewAssignment({ dataCreate, close }) {
             setData(dataCreate)
         }
         if (examID) {
+            setState(s => { return { ...s, loading: true } })
             if (role === 'TEACHER') {
                 let assignmentService = AssignmentService.getInstance()
                 assignmentService.getDetailAssignment(examID)
@@ -80,15 +82,18 @@ export default function PreviewAssignment({ dataCreate, close }) {
                                 setData(items.data)
                             }
                             else {
-                                setState({ alert: true, title: 'Error. Try again!' })
+                                setState({ loading: false, alert: true, title: items.message })
                             }
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                    })
+                setState(s => { return { ...s, loading: false } })
             }
             else if (role === 'STUDENT') {
-                console.log(role)
-
+                setState(s => { return { ...s, loading: true } })
                 let resultService = ResultService.getInstance()
                 resultService.reviewDoneAssignmentForStudent(examID)
                     .then(items => {
@@ -96,15 +101,19 @@ export default function PreviewAssignment({ dataCreate, close }) {
                             setData(items.data)
                         }
                         else {
-                            setState({ alert: true, title: 'Cannot review because you did not turn in this assignment' })
+                            setState({ loading: false, alert: true, title: 'Cannot review because you did not turn in this assignment' })
                             history.goBack()
                             setTimeout(() => {
                                 close();
-                              }, 3000);
-                            
+                            }, 3000);
+
                         }
                     })
-                    .catch(err => console.error(err))
+                    .catch(err => {
+                        console.error(err)
+                        setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                    })
+                setState(s => { return { ...s, loading: false } })
             }
         }
         return () => { mounted = false };//eslint-disable-next-line
@@ -142,11 +151,7 @@ export default function PreviewAssignment({ dataCreate, close }) {
                     </Grid>
                 </Grid>
                 : <LoadingPreviewAssignment />}
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
         </Box>
     )
 }

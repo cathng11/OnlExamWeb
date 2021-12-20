@@ -5,39 +5,7 @@ import {
 import * as React from 'react'
 import MainTable from './MainTable'
 import LoadingTable from './../../../../../components/Skeleton/LoadingTable';
-
-const headCells = [
-    {
-        id: 'id',
-        numeric: false,
-        disablePadding: true,
-        label: 'ID',
-    },
-    {
-        id: 'question',
-        numeric: false,
-        disablePadding: false,
-        label: 'Question',
-    },
-    {
-        id: 'type',
-        numeric: false,
-        disablePadding: false,
-        label: 'Type',
-    },
-    {
-        id: 'level',
-        numeric: false,
-        disablePadding: false,
-        label: 'Level',
-    },
-    {
-        id: 'solution',
-        numeric: false,
-        disablePadding: true,
-        label: 'Solution',
-    },
-]
+import { ListQuestions } from '../../../../../data/HeadCells';
 
 export default function QuestionsTable({ data, refresh }) {
     return (
@@ -50,7 +18,7 @@ export default function QuestionsTable({ data, refresh }) {
                         borderRadius: '20px',
                         boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
                     }}>
-                    <MainTable rows={data} headCells={headCells} refresh={() => refresh()} />
+                    <MainTable rows={data} headCells={ListQuestions} refresh={() => refresh()} />
                 </Paper> : <LoadingTable />}
         </Grid>
     )

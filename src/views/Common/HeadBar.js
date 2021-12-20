@@ -1,6 +1,5 @@
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import {
-  AppBar, Avatar, Box, Button, Grid, IconButton, styled, Toolbar, Tooltip, Typography
+  AppBar, Avatar, Box, Button, Grid, styled, Toolbar, Typography
 } from '@mui/material';
 import * as React from 'react';
 import {
@@ -79,16 +78,22 @@ const LogoBox = styled(Box)(({ theme }) => ({
   height: '100%',
 }));
 
-const MenuBox = styled(Box)(({ theme }) => ({
-  background: '#242052',
-  display: 'flex',
-  alignItems: 'center',
+const CustomButton = styled(Button)(({ theme }) => ({
+  backgroundImage: '#242052',
   textAlign: 'center',
-  width: '150px',
-  borderRadius: '10px',
-  boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+  textTransform: 'lowercase',
+  transition: '0.5s',
+  backgroundSize: '200% auto',
+  color: 'white',
+  boxShadow: '0 0 20px #eee',
+  borderRadius: '20px',
+  paddingLeft: '30px',
+  paddingRight: '30px',
+  display: 'block',
   '&:hover': {
-    cursor: 'pointer'
+    backgroundPosition: 'right center',
+    color: '#fff',
+    textDecoration: 'none',
   }
 }));
 function HeadBar({ allowedRoutes }) {
@@ -108,9 +113,9 @@ function HeadBar({ allowedRoutes }) {
         <Grid container>
           <Grid item xs={2} md={2} lg={2}>
             <LogoBox>
-              <Avatar alt="D" src={LOGO} sx={{ width: 24, height: 24 }}/>
+              <Avatar alt="D" src={LOGO} sx={{ width: 24, height: 24 }} />
               <Typography variant="h4" component="div" sx={{
-                pl:1,
+                pl: 1,
                 flexGrow: 0.1,
                 fontFamily: 'Lemon, cursive'
               }} color="#EAEDF2" >
@@ -125,7 +130,7 @@ function HeadBar({ allowedRoutes }) {
                 <CaptionTypo title="09032491405" />
               </Grid>
               <Grid item xs={3}>
-                <CaptionTypo title="no-reply@dolphinexam.com" />
+                <CaptionTypo title="contact.onlxam@gmail.com" />
               </Grid>
               <Grid item xs={7}>
                 <CaptionTypo title="193 Nguyen Luong Bang, Da Nang city, Viet Nam" />
@@ -157,28 +162,11 @@ function HeadBar({ allowedRoutes }) {
                   p: 2,
                 }}
               >
-                <MenuBox onClick={handleClick} >
-                  <Typography
-                    variant="p"
-                    component="div"
-                    sx={{
-                      flexGrow: 0.1,
-                      ml: 4,
-                      fontWeight: 'bold',
-                    }}
-                    fontSize="small"
-                    color="white"
-                  >
-                    {user ? user.Username : ''}
-                  </Typography>
-                  <Tooltip title="Account settings">
-                    <IconButton size="small" >
-                      <Avatar sx={{ width: 24, height: 24, background: '#3D4E81' }}>
-                        <InsertEmoticonIcon />
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
-                </MenuBox>
+                <CustomButton
+                  variant="contained"
+                  onClick={handleClick}>
+                  {user ? user.Username : ''}
+                </CustomButton>
               </Grid>
             </Grid>
           </Grid>

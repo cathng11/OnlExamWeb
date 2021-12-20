@@ -14,20 +14,24 @@ export default function useUserInfo() {
     const [message, setMessage] = useState(null)
 
     useEffect(() => {
+        let mounted = true;
+
         function login() {
             let authService = AuthService.getInstance();
             authService.sendRequest({ username: userInfo.username, password: userInfo.password }, 'login')
                 .then(items => {
-                    if (items.status.Code === 200) {
-                        const token = {
-                            "AccessToken": items.accessToken
-                        };
-                        localStorage.setItem('roles', items.data.RoleName.toUpperCase());
-                        localStorage.setItem('user', JSON.stringify(items.data))
-                        callToken.setToken(token);
-                    }
-                    else {
-                        setMessage(items)
+                    if (mounted) {
+                        if (items.status.Code === 200) {
+                            const token = {
+                                "AccessToken": items.accessToken
+                            };
+                            localStorage.setItem('roles', items.data.RoleName.toUpperCase());
+                            localStorage.setItem('user', JSON.stringify(items.data))
+                            callToken.setToken(token);
+                        }
+                        else {
+                            setMessage(items)
+                        }
                     }
                 })
         }
@@ -35,24 +39,27 @@ export default function useUserInfo() {
             let authService = AuthService.getInstance();
             authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup')
                 .then(items => {
-                    if (items.status.Code === 200) {
-                        setUserInfo({
-                            username: '',
-                            password: '',
-                            confirm_pass: '',
-                            fullName: '',
-                            imageURL: '',
-                            isLogin: null,
-                        })
-                    }
-                    else {
-                        setMessage(items)
-                        setUserInfo(s => { return { ...s, isLogin: null } })
+                    if (mounted) {
+                        if (items.status.Code === 200) {
+                            setUserInfo({
+                                username: '',
+                                password: '',
+                                confirm_pass: '',
+                                fullName: '',
+                                imageURL: '',
+                                isLogin: null,
+                            })
+                        }
+                        else {
+                            setMessage(items)
+                            setUserInfo(s => { return { ...s, isLogin: null } })
+                        }
                     }
                 })
         }
         if (userInfo.isLogin) login();
         else if (userInfo.isLogin === false) signup()
+        return () => { mounted = false };//eslint-disable-next-line
     }, [userInfo, callToken])
     function saveUserInfo(data) {
         setUserInfo(pre => pre = data);

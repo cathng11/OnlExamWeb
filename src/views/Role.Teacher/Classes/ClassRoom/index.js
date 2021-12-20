@@ -13,24 +13,29 @@ const StyledTabs = styled((props) => (
         TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
     />
 ))({
-    '& .css-1vk3ecm-MuiButtonBase-root-MuiTab-root': {
-        color: '#D5D5D5'
-    },
     '& .MuiTabs-indicator': {
         display: 'flex',
         justifyContent: 'center',
         backgroundColor: 'transparent',
-    },
-    '& .css-1vk3ecm-MuiButtonBase-root-MuiTab-root.Mui-selected': {
-        color: '#A2DBFA'
     },
     '& .MuiTabs-indicatorSpan': {
         maxWidth: 100,
         width: '100%',
         backgroundColor: '#A2DBFA',
     },
-
 });
+const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+    ({ theme }) => ({
+      marginRight: theme.spacing(1),
+      color: 'rgba(255, 255, 255, 0.7)',
+      '&.Mui-selected': {
+        color: '#A2DBFA',
+      },
+      '&.Mui-focusVisible': {
+        backgroundColor: 'rgba(100, 95, 228, 0.32)',
+      },
+    }),
+  );
 export default function ClassRoom({ children }) {
 
     let allowedRoutes = [];
@@ -92,13 +97,13 @@ export default function ClassRoom({ children }) {
                             value={value}
                             onChange={handleChange}
                             aria-label="tab-classroom"
-                            
+
 
                         >
-                            <Tab value="performance" label="Performance" />
-                            <Tab value="students" label="Students" />
-                            <Tab value="assignments" label="Assignments" />
-                            <Tab value="result" label="Result" />
+                            <StyledTab value="performance" label="Performance" />
+                            <StyledTab value="students" label="Students" />
+                            <StyledTab value="assignments" label="Assignments" />
+                            <StyledTab value="result" label="Result" />
                         </StyledTabs>
                     </Container>
 

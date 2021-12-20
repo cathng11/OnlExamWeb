@@ -7,41 +7,11 @@ import * as React from 'react';
 import { matchPath, useHistory } from "react-router-dom";
 import LoadingTable from '../../../../../components/Skeleton/LoadingTable';
 import CustomTable from '../../../../../components/Table/CustomTable';
+import { ListResultsForTeacher } from '../../../../../data/HeadCells';
 import AssignmentService from './../../../../../services/assignment.service';
 import ResultService from './../../../../../services/result.service';
-const headCells = [
-    {
-        id: 'userID',
-        label: 'UserID',
-        disablePadding: false,
-    },
-    {
-        id: 'fullname',
-        label: 'Full Name',
-        disablePadding: false,
-    },
-    {
-        id: 'finishedTime',
-        label: 'Finished Time',
-        disablePadding: false,
-    },
-    {
-        id: 'grade',
-        label: 'Grade',
-        disablePadding: false,
-    },
-    {
-        id: 'status',
-        label: 'Status',
-        disablePadding: false,
-    },
-    {
-        id: 'action',
-        label: 'Action',
-        disablePadding: false,
-    },
+import CircularProgress from '@mui/material/CircularProgress';
 
-];
 function TabPanel(props) {
     let history = useHistory();
     const { children, value, index, item, classID, ...other } = props;
@@ -55,7 +25,6 @@ function TabPanel(props) {
                 ExamID: item.ExamID
             })
                 .then(items => {
-                    console.log(items)
                     if (mounted) {
                         if (items.status.Code === 200) {
                             setData(items.data)
@@ -69,17 +38,29 @@ function TabPanel(props) {
     }, [value])
     return (
         <div
+            style={{ width: '100%', height: '100%' }}
             role="tabpanel"
             hidden={value !== index}
             id={`vertical-tabpanel-${index}`}
             aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
-            {value === index && data && (
-                <Box sx={{ p: 3 }}>
-                    <CustomTable key={index} rows={data.Students} headCells={headCells} view={'Result'} role={'Teacher'} />
-                </Box>
-            )}
+            <Box sx={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                {!data ? <CircularProgress color="primary" /> : <></>}
+                {value === index && data && (
+                    <Box sx={{ p: 3 }}>
+                        <CustomTable key={index} rows={data.Students} headCells={ListResultsForTeacher} view={'Result'} role={'Teacher'} />
+                    </Box>
+                )}
+            </Box>
+
+
         </div>
     );
 }

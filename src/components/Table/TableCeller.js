@@ -51,8 +51,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         setSelectedRow(event, id);
     };
 
-
-    function handleClickGrade() {
+    function handleGrade() {
         let query = new URLSearchParams(location.search)
         if (row.DoingTime) {
             history.push(`/grade-assignment?inClass=${match.params.id}&examID=${query.get("examID")}&studentID=${row.UserID}`);
@@ -156,7 +155,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                     <TableCell align="left" component={'div'}>
                         <Tooltip title="Grade">
                             <div>
-                                <IconButton onClick={handleClickGrade} >
+                                <IconButton onClick={handleGrade} >
                                     <EditIcon />
                                 </IconButton>
                             </div>

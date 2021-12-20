@@ -19,7 +19,7 @@ export default function TableHeader(props) {
         onRequestSort(event, property);
     };
     return (
-        <TableHead component={'div'} sx={{background:'radial-gradient( circle farthest-corner at 1.3% 2.8%,  rgba(239,249,249,1) 0%, rgba(182,199,226,1) 100.2% );'}}>
+        <TableHead component={'div'}>
             <TableRow component={'div'} >
                 {role === 'Student' || view === 'Result' ? <></> : <TableCell padding="normal" component={'div'}>
                     <Checkbox

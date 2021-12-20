@@ -1,8 +1,7 @@
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import {
-    Box, Button, Dialog, DialogActions, DialogContent,
-    DialogContentText, DialogTitle, MobileStepper, Paper, Typography, useTheme
+    Box, Button, MobileStepper, Paper, Typography, useTheme
 } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router';
@@ -10,15 +9,16 @@ import Essay from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizTyp
 import MultipleChoice from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/MultipleChoice';
 import SingleChoice from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/SingleChoice';
 import TrueFalse from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/TrueFalse';
-import AlertBar from './../../../../../components/Alert/AlertBar';
+import MessageDialog from './../../../../../components/Dialog/MessageDialog';
+import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
 import DoAssignmentContext from './../../../../../context/DoAssignmentContext';
 import QuestionContext from './../../../../../context/QuestionContext';
 import AssignmentService from './../../../../../services/assignment.service';
 
 export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
-    let history = useHistory();// eslint-disable-next-line
-    const { assignment, setAssignment } = React.useContext(DoAssignmentContext)// eslint-disable-next-line
-    const { question, setQuestion } = React.useContext(QuestionContext)
+    let history = useHistory();
+    const { assignment } = React.useContext(DoAssignmentContext)
+    const { question } = React.useContext(QuestionContext)
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = data.length;
@@ -42,6 +42,7 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
     };
 
     const handleAccept = () => {
+        setState(s => { return { ...s, loading: true } })
         let user = JSON.parse(localStorage.getItem("user"))
         let _assignment = assignment
         let doneQuestion = question
@@ -62,21 +63,23 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
         assignmentService.submitAssignment(finalData)
             .then(items => {
                 if (items.status.Code === 200) {
-                    setState({ alert: true, title: `Submitted your assignment!` })
+                    setState({ loading: false, alert: true, title: `Submitted your assignment!` })
                     setDisableBlock()
                     setTimeout(() => {
                         history.replace(`/${user.Username}/assignment`)
                     }, 3000);
                 }
                 else {
-                    setState({ alert: true, title: `Cannot submit. Try again!` })
+                    setState({ loading: false, alert: true, title: `Cannot submit. Try again!` })
                 }
 
             })
             .catch((err) => {
                 console.error(err)
-                setState({ alert: true, title: `Cannot submit. Try again!` })
+                setState({ loading: false, alert: true, title: `Cannot submit. Try again!` })
             });
+        setState(s => { return { ...s, loading: false } })
+
     }
     const type = {
         'Single Choice': <SingleChoice Solution={data[activeStep].Solution} index={activeStep} />,
@@ -154,32 +157,13 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
                     </Button>
                 }
             />
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
-            <Dialog
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
+            <MessageDialog
                 open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Message from DolphinExam: "}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure to submit this assignment?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-                    <Button onClick={handleAccept} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                close={() => setOpenDialog(false)}
+                accepted={handleAccept}
+                content={"Are you sure to submit this assignment?"}
+            />
         </Box>
     )
 }

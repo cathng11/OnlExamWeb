@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import { Prompt, useHistory, useLocation } from 'react-router';
 import LoadingDoAssignment from '../../../../components/Skeleton/LoadingDoAssignment';
-import AlertBar from './../../../../components/Alert/AlertBar';
+import LoadingAlert from './../../../../components/Loading/LoadingAlert';
 import DoAssignmentContext from './../../../../context/DoAssignmentContext';
 import useUnload from './../../../../hooks/useUnload';
 import AssignmentService from './../../../../services/assignment.service';
@@ -28,6 +28,7 @@ export default function DoAssignment() {
         setProgress(progress);
     }
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -70,14 +71,14 @@ export default function DoAssignment() {
                             setProgress(100 / item.Questions.length)
                         }
                         else {
-                            setState({ alert: true, title: `Cannot load data. Try again!` })
+                            setState(s => { return { ...s, alert: true, title: `Cannot load data. Try again!` } })
                             history.goBack()
                         }
                     }
                 })
                 .catch((err) => {
                     console.error(err)
-                    setState({ alert: true, title: `Cannot load data. Try again!` })
+                    setState(s => { return { ...s, alert: true, title: `Error. Try again!` } })
                     history.goBack()
                 });
         }
@@ -86,11 +87,7 @@ export default function DoAssignment() {
     if (!data) {
         return (
             <Container maxWidth="full" sx={{ mt: 6, mb: 2 }}>
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
+                <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
                 <LoadingDoAssignment />
             </Container>
         )
@@ -102,11 +99,8 @@ export default function DoAssignment() {
                     when={blockReloadPage}
                     message='You have unsaved changes, are you sure you want to leave?'
                 />
-                <AlertBar
-                    title={state.title}
-                    openAlert={state.alert}
-                    closeAlert={() => setState(s => { return { ...s, alert: false } })}
-                />
+                <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
+
                 <Grid container spacing={5}>
                     <Grid item xs={12} md={3} lg={3}>
                         <Paper sx={{ p: 3, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>

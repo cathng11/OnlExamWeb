@@ -1,19 +1,20 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import EditIcon from '@mui/icons-material/Edit';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
     alpha,
-    Button, IconButton, Toolbar, Tooltip, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+    Button, IconButton, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { matchPath, useHistory } from "react-router-dom";
 import SearchBtn from '../../components/Button/SearchBtn';
-import ModalDialog from './../Dialog/ModalDialog';
-import AlertBar from './../Alert/AlertBar';
-import ClassService from './../../services/class.service';
 import AssignmentService from './../../services/assignment.service';
+import ClassService from './../../services/class.service';
+import MessageDialog from './../Dialog/MessageDialog';
+import ModalDialog from './../Dialog/ModalDialog';
+import LoadingAlert from './../Loading/LoadingAlert';
 
 
 
@@ -27,6 +28,7 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
     });
     const [openDialog, setOpenDialog] = React.useState(false)
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -60,19 +62,23 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
         setOpenDialog(true)
     }
     function handleAcceptDel() {
+        setState(s => { return { ...s, loading: true } })
         if (view === 'Assignment') {
             let assignmentService = AssignmentService.getInstance()
             assignmentService.deleteAssignment(selected, { ClassID: match.params.id })
                 .then(items => {
                     if (items.status.Code === 200) {
-                        setState({ alert: true, title: `Deleted assignment ${selected} from this class` })
+                        setState({ loading: false, alert: true, title: `Deleted assignment ${selected} from this class` })
                         refresh()
                     }
                     else {
-                        setState({ alert: true, title: items.message })
+                        setState({ loading: false, alert: true, title: items.message })
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                })
         }
         else if (view === 'Student') {
             let classService = ClassService.getInstance()
@@ -81,13 +87,16 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                 .then(items => {
                     if (items.status.Code === 200) {
                         refresh()
-                        setState({ alert: true, title: `Deleted members ${selected} from this class` })
+                        setState({ loading: false, alert: true, title: `Deleted members ${selected} from this class` })
                     }
                     else {
-                        setState({ alert: true, title: items.message })
+                        setState({ loading: false, alert: true, title: items.message })
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                })
         }
         else if (view === 'Result') {
         }
@@ -154,7 +163,7 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
 
             ) : (
                 <>
-                   
+
                     {view === 'Result' ? <></> :
                         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickAdd} sx={{ p: 3 }}>ADD</Button>
                     }
@@ -162,32 +171,13 @@ export default function TableToolbar({ numSelected, view, selected, refresh }) {
                 </>
             )}
             <ModalDialog open={openModal} handleClose={handleClose} />
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
-            <Dialog
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
+            <MessageDialog
                 open={openDialog}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"DolphinExam: "}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure to delete?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={handleAcceptDel} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                close={handleCloseDialog}
+                accepted={handleAcceptDel}
+                content={"Are you sure to delete?"}
+            />
         </Toolbar>
     );
 };

@@ -3,12 +3,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
     alpha,
-    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Toolbar, Tooltip, Typography
+    Button, IconButton, Toolbar, Tooltip, Typography
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import SearchBtn from './../../../../../components/Button/SearchBtn';
+import MessageDialog from './../../../../../components/Dialog/MessageDialog';
 import ModalDialog from './../../../../../components/Dialog/ModalDialog';
 import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
 import LibraryService from './../../../../../services/library.service';
@@ -62,29 +63,13 @@ export default function ToolbarTable({ numSelected, selected, refresh }) {
     return (
         <div>
             <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
-            <Dialog
+            <MessageDialog
                 open={openDialog}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"DolphinExam: "}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAcceptDel} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                close={handleClose}
+                accepted={handleAcceptDel}
+                content={"Are you sure to delete ?"}
+            />
             <ModalDialog open={openModal} handleClose={handleModalClose} />
-
             <Toolbar
                 sx={{
                     pl: { sm: 2 },

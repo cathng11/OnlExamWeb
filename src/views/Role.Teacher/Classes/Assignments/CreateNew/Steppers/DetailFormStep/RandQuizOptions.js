@@ -4,7 +4,7 @@ import {
 import React from 'react';
 import { useHistory } from "react-router-dom";
 import LoadingNewAssignment from '../../../../../../../components/Skeleton/LoadingNewAssignment';
-import AlertBar from './../../../../../../../components/Alert/AlertBar';
+import LoadingAlert from './../../../../../../../components/Loading/LoadingAlert';
 import AssignmentContext from './../../../../../../../context/AssignmentContext';
 import LibraryService from './../../../../../../../services/library.service';
 import TransferQuizList from './TransferQuizList';
@@ -170,12 +170,13 @@ export default function RandQuizOptions() {
         setNum(0)
     }
     const handleError = () => {
-        setState({ alert: true, title: 'Error. Try again!' })
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
         history.goBack()
     }
     React.useEffect(() => {
         let mounted = true;
         if (!randomQuestions.state) {
+            setState(s => { return { ...s, loading: true } })
             let libraryService = LibraryService.getInstance()
             libraryService.getQuestionsByLibID(assign.LibraryFolderID)
                 .then(items => {
@@ -187,9 +188,12 @@ export default function RandQuizOptions() {
                         }
                     }
                 })
-                .catch((err) => { console.error(err) });
-            return () => { mounted = false };
-        }// eslint-disable-next-line
+                .catch((err) => {
+                    handleError()
+                });
+            setState(s => { return { ...s, loading: false } })
+        }
+        return () => { mounted = false };// eslint-disable-next-line
     }, [type, randomQuestions])
     if (!questions)
         return (<LoadingNewAssignment />)
@@ -201,11 +205,7 @@ export default function RandQuizOptions() {
             background: '#D3E0EA',
             p: 3
         }}>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             <Grid container >
                 <Grid container item xs={12} >
                     <Grid item xs={6}>
@@ -222,7 +222,7 @@ export default function RandQuizOptions() {
                                 size="small"
                                 name="total-questions"
                                 type='number'
-                                sx={{ width: '40%','& .css-186xcr5': { paddingRight: '15px' } }}
+                                sx={{ width: '40%', '& .css-186xcr5': { paddingRight: '15px' } }}
 
                                 InputProps={{
                                     inputProps: {
@@ -237,7 +237,7 @@ export default function RandQuizOptions() {
                                 id="max-essay"
                                 margin="normal"
                                 size="small"
-                                sx={{ width: '40%','& .css-186xcr5': { paddingRight: '15px' } }}
+                                sx={{ width: '40%', '& .css-186xcr5': { paddingRight: '15px' } }}
                                 name="max-essay"
                                 type='number'
                                 InputProps={{

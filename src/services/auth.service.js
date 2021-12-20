@@ -7,7 +7,7 @@ function joinURL(baseURL, url) {
 }
 export default class AuthService {
     constructor() {
-        this.domain = "https://onlxam-a.herokuapp.com/api/auth"
+        this.domain = "https://onlxam.herokuapp.com/api/auth"
     }
     static myInstance = null;
     static getInstance() {
@@ -28,6 +28,12 @@ export default class AuthService {
         return fetch(_url, options)
     }
     async sendRequest(data, url) {
+        let method = "POST";
+        return await this.request(url, method, data).then(res => res.json())
+
+    }
+    async resetPassword(data) {
+        let url = 'reset-password'
         let method = "POST";
         return await this.request(url, method, data).then(res => res.json())
 

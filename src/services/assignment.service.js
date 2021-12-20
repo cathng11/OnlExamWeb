@@ -11,7 +11,7 @@ function joinURL(baseURL, url) {
 }
 export default class AssignmentService {
     constructor() {
-        this.domain = "https://onlxam-e.herokuapp.com/api"
+        this.domain = "https://onlxam.herokuapp.com/api"
     }
     static myInstance = null;
     static getInstance() {
