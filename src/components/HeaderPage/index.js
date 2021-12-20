@@ -54,7 +54,7 @@ export default function HeaderPage({ dialog,refresh }) {
                 >
                     <Input placeholder="Search"
                         sx={{ mr: 5 }} />
-                    <Fab size="small" color="secondary" aria-label="add" onClick={handleClick}>
+                    <Fab size="small" sx={{background:'radial-gradient( circle farthest-corner at 1.3% 2.8%,  rgba(239,249,249,1) 0%, rgba(182,199,226,1) 100.2% )'}} aria-label="add" onClick={handleClick}>
                         <AddIcon />
                     </Fab>
                 </SearchBox>

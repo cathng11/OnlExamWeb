@@ -1,12 +1,18 @@
 import GoogleIcon from '@mui/icons-material/Google';
+import { Button, TextField, Typography } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import React, { useEffect, useState } from 'react';
 import { GoogleLogin } from "react-google-login";
 import { useHistory } from 'react-router-dom';
 import '../../styles/Login.css';
+import { isEmptyObject, isValidEmail } from '../../utils';
 import LoadingAlert from './../../components/Loading/LoadingAlert';
 import APP_CONSTANTS from './../../constants';
 import useUserInfo from './../../hooks/useUserInfo';
-
+import AuthService from './../../services/auth.service';
 const CLIENT_ID = APP_CONSTANTS.CLIENT_ID;
 
 function Login() {
@@ -23,9 +29,13 @@ function Login() {
         password: '',
         conf: ''
     })
+    const [reset, setReset] = useState({
+        username: '',
+        email: ''
+    })
     const [rightPanelActive, setRightPanelActive] = useState("");
     const [mobileRes, setMobileRes] = useState({ login: "m-container", signup: "display-none" });
-
+    const [openDialog, setOpenDialog] = useState(false)
     const [state, setState] = useState({
         loading: false,
         alert: false,
@@ -56,7 +66,7 @@ function Login() {
 
     const handleLogin = e => {
         e.preventDefault();
-        if (loginForm.username !== '' || loginForm.password !== '') {
+        if (!isEmptyObject(loginForm)) {
             setState(s => { return { ...s, loading: true, alert: false } });
             user.setUserInfo({
                 username: loginForm.username,
@@ -68,18 +78,17 @@ function Login() {
         }
 
     }
-    const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);//eslint-disable-line
 
     const handleSignUp = e => {
         e.preventDefault();
         let { username, email, password, conf } = signupForm
-        if (!username || !email || !password || !conf) {
+        if (isEmptyObject(signupForm)) {
             setState(s => { return { ...s, alert: true, title: 'Input fields are required!' } });
         }
         else if (username.length < 5) {
             setState(s => { return { ...s, alert: true, title: 'Username must be 5 characters long!' } });
         }
-        else if (!validEmailRegex.test(email)) {
+        else if (!isValidEmail(email)) {
             setState(s => { return { ...s, alert: true, title: 'Email is not valid!' } });
         }
         else if (password.length < 8) {
@@ -128,7 +137,6 @@ function Login() {
     };
     function responseGoogleError(response) {
         console.info(response)
-        setState(s => { return { ...s, alert: true, title: 'Google Login Error' } })
     };
     function openLogin(e) {
         if (e) e.preventDefault();
@@ -147,11 +155,29 @@ function Login() {
         if (window.innerWidth < 600) {
             setRightPanelActive("");
             setMobileRes(preState => preState = { login: "display-none", signup: "m-container" });
-
         }
         history.replace('/register')
     }
-
+    const handleReset = (e) => {
+        e.preventDefault();
+        setState(s => { return { ...s, loading: true } });
+        let authService = AuthService.getInstance();
+        authService.resetPassword({ Username: reset.username, Email: reset.email })
+            .then(items => {
+                if (items.status.Code === 200) {
+                    setState({ alert: true, title: 'Check your mail to get new password', loading: false });
+                    
+                }
+                else {
+                    setState({ alert: true, title: items.message, loading: false });
+                }
+            })
+            .catch(err => {
+                console.error(err)
+                setState({ loading: false, alert: true, title: 'Error. Try again!' })
+            })
+        setOpenDialog(false)
+    }
     return (
         <div className="login" style={{ boxSizing: 'border-box' }}>
             <div className={"container" + rightPanelActive} id="login">
@@ -258,7 +284,12 @@ function Login() {
                             value={loginForm.password}
                             onChange={handleChangeLogin}
                             required />
-                        <a href="/#">Forgot your password?</a>
+                        <Typography
+                            variant="body1"
+                            color="primary"
+                            onClick={() => setOpenDialog(true)}
+                            sx={{ '&:hover': { cursor: "pointer" } }}
+                        >Forgot your password?</Typography>
                         <button onClick={handleLogin}>Sign In</button>
                         <button className="ghost-m" id="signUp" onClick={openSignUp} >Sign Up</button>
                     </form>
@@ -278,7 +309,48 @@ function Login() {
                     </div>
                 </div>
             </div>
-
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                maxWidth="md"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Enter your register email and username to reset your password:
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        id="name-text"
+                        variant="outlined"
+                        label="Username"
+                        fullWidth={true}
+                        margin="normal"
+                        name="usernameReset"
+                        value={reset.username}
+                        onChange={(e) => setReset(s => { return { ...s, username: e.target.value } })}
+                        autoComplete="new-password"
+                        sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
+                    />
+                    <TextField
+                        id="name-text"
+                        variant="outlined"
+                        label="Email"
+                        fullWidth={true}
+                        margin="normal"
+                        name="emailReset"
+                        value={reset.email}
+                        onChange={(e) => setReset(s => { return { ...s, email: e.target.value } })}
+                        autoComplete="new-password"
+                        sx={{ '& .css-186xcr5': { paddingRight: '15px' } }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleReset} autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

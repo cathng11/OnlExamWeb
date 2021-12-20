@@ -1,10 +1,10 @@
 import {
-    Box, Button, Dialog, DialogActions, DialogContent,
-    DialogContentText, DialogTitle, Paper, Step, StepLabel, Stepper
+    Box, Button, Paper, Step, StepLabel, Stepper
 } from '@mui/material';
 import React from 'react';
 import { useHistory } from "react-router-dom";
-import AlertBar from './../../../../../../components/Alert/AlertBar';
+import MessageDialog from './../../../../../../components/Dialog/MessageDialog';
+import LoadingAlert from './../../../../../../components/Loading/LoadingAlert';
 import AssignmentContext from './../../../../../../context/AssignmentContext';
 import AssignmentService from './../../../../../../services/assignment.service';
 import BriefInfo from './DetailFormStep/BriefInfo';
@@ -26,6 +26,7 @@ function ActiveStep({ activeStep, currentClass, classes, library }) {
 export default function Steppers({ currentClass, classes, library }) {
     const { assign, setAssign } = React.useContext(AssignmentContext);
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -41,7 +42,7 @@ export default function Steppers({ currentClass, classes, library }) {
     const handleNext = () => {
         if (activeStep === 0) {
             if (!assign.LibraryFolderID || !assign.ExamName || assign.Duration === 0) {
-                setState({ alert: true, title: 'Input fields are required' })
+                setState(s => { return { alert: true, title: 'Input fields are required' } })
             }
             else {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -49,10 +50,10 @@ export default function Steppers({ currentClass, classes, library }) {
         }
         if (activeStep === 1) {
             if (assign.Type && assign.Type.length > 2 && assign.Type.includes('Essay') && assign.MaxEssay === 0) {
-                setState({ alert: true, title: 'Maximum mark for the essay fields is required' })
+                setState(s => { return { alert: true, title: 'Maximum mark for the essay fields is required' } })
             }
             else if (!assign.Questions) {
-                setState({ alert: true, title: 'Questions field is required' })
+                setState(s => { return { alert: true, title: 'Questions field is required' } })
             }
             else {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -60,10 +61,10 @@ export default function Steppers({ currentClass, classes, library }) {
         }
         if (activeStep === 2) {
             if (!assign.TimeBegin || !assign.TimeEnd) {
-                setState({ alert: true, title: 'Input fields are required' })
+                setState(s => { return { alert: true, title: 'Input fields are required' } })
             }
             else if (assign.TimeEnd <= assign.TimeBegin) {
-                setState({ alert: true, title: 'Invalid range time' })
+                setState(s => { return { alert: true, title: 'Invalid range time' } })
             }
             else {
                 setOpenDialog({ state: true, title: "Are you sure to create this assignment ?", action: 'create' })
@@ -87,6 +88,7 @@ export default function Steppers({ currentClass, classes, library }) {
         }
         else if (openDialog.action === 'create') {
             handleCloseDialog()
+            setState(s => { return { ...s, loading: true } })
             let questionsID = assign.Questions.map(i => { return i.QuestionID })
             let classID = assign.ClassID.map(i => { return i.ClassID }).concat(parseInt(currentClass))
             let assignment = {
@@ -102,16 +104,20 @@ export default function Steppers({ currentClass, classes, library }) {
             assignmentService.createAssignment(assignment)
                 .then(items => {
                     if (items.status.Code === 200) {
-                        setState({ alert: true, title: 'Created this assignment' })
+                        setState({ loading: false, alert: true, title: 'Created this assignment' })
                         history.replace(`/classes/${currentClass}/assignments`)
                     }
                     else {
-                        setState({ alert: true, title: 'Error. Try again' })
+                        setState({ loading: false, alert: true, title: 'Error. Try again' })
                         history.goBack()
                     }
 
                 })
-                .catch((err) => { console.error(err) });
+                .catch((err) => {
+                    console.error(err)
+                    setState(s => { return { ...s, loading: false } })
+                });
+            setState(s => { return { ...s, loading: false } })
         }
 
     }
@@ -120,32 +126,13 @@ export default function Steppers({ currentClass, classes, library }) {
     }
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
-            <Dialog
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
+            <MessageDialog
                 open={openDialog.state}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"DolphinExam: "}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {openDialog.title}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={handleAccept} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                close={handleCloseDialog}
+                accepted={handleAccept}
+                content={openDialog.title}
+            />
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps = {}

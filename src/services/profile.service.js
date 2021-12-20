@@ -13,7 +13,7 @@ function joinURL(baseURL, url) {
 }
 export default class ProfileService {
     constructor() {
-        this.domain = "https://onlxam-a.herokuapp.com/api"
+        this.domain = "https://onlxam.herokuapp.com/api"
     }
     static myInstance = null;
     static getInstance() {

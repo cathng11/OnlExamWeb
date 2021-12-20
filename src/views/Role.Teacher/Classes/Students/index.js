@@ -3,42 +3,10 @@ import * as React from 'react';
 import { matchPath, useHistory } from "react-router-dom";
 import LoadingTable from '../../../../components/Skeleton/LoadingTable';
 import CustomTable from '../../../../components/Table/CustomTable';
+import { ListStudentsForTeacher } from '../../../../data/HeadCells';
 import ClassService from './../../../../services/class.service';
 
-const headCells = [
-    {
-        id: 'Avatar',
-        label: 'Avatar',
-        disablePadding: true,
-    },
 
-    {
-        id: 'Username',
-        label: 'Username',
-        disablePadding: false,
-    },
-    {
-        id: 'Firstname',
-        label: 'FirstName',
-        disablePadding: false,
-    },
-    {
-        id: 'Lastname',
-        label: 'LastName',
-        disablePadding: false,
-    },
-    {
-        id: 'Email',
-        label: 'Email',
-        disablePadding: false,
-    },
-    {
-        id: 'action',
-        label: 'Action',
-        disablePadding: false,
-    },
-
-];
 export default function ListStudents() {
     let history = useHistory();
     const [refresh, setRefresh]= React.useState(false)
@@ -57,16 +25,23 @@ export default function ListStudents() {
             .then(items => {
                 if (mounted) {
                     if (items.status.Code === 200)
+                    {
                         setData(items.data);
+                    }
+                    else{
+
+                    }
                 }
             })
-            .catch((err) => {console.error(err)});
+            .catch((err) => {
+                console.error(err)
+            });
         return () => { mounted = false };//eslint-disable-next-line
     }, [refresh])
     if (data) {
         return (
             <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
-                <CustomTable rows={data} headCells={headCells} view={'Student'} role={'Teacher'} refresh={()=>setRefresh(!refresh)}/>
+                <CustomTable rows={data} headCells={ListStudentsForTeacher} view={'Student'} role={'Teacher'} refresh={()=>setRefresh(!refresh)}/>
             </Container>
         )
     }

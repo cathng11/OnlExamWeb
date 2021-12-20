@@ -1,25 +1,25 @@
-import React from 'react'
-import { Grid, Container, Typography, Box } from '@mui/material'
-import Logo from '../../../../../assets/images/boy_computer.png'
-import Steppers from './Steppers'
-import { useLocation, useHistory } from "react-router-dom";
+import { Box, Container, Grid, Typography } from '@mui/material';
+import React from 'react';
+import { useHistory, useLocation } from "react-router-dom";
+import Logo from '../../../../../assets/images/boy_computer.png';
+import LoadingAlert from './../../../../../components/Loading/LoadingAlert';
+import LoadingNewAssignment from './../../../../../components/Skeleton/LoadingNewAssignment';
+import AssignmentContext from './../../../../../context/AssignmentContext';
 import ClassService from './../../../../../services/class.service';
 import LibraryService from './../../../../../services/library.service';
-import LoadingNewAssignment from './../../../../../components/Skeleton/LoadingNewAssignment';
-import AlertBar from './../../../../../components/Alert/AlertBar';
-import AssignmentContext from './../../../../../context/AssignmentContext';
+import Steppers from './Steppers';
 
 export default function CreateNew() {
     const [assign, setAssign] = React.useState({
         ClassID: [],
-        LibraryFolderID:'',
+        LibraryFolderID: '',
         ExamName: '',
         TimeBegin: '',
         TimeEnd: '',
         Duration: 0,
         Questions: [],
         MaxEssay: 0,
-        Type:[]
+        Type: []
     })
     const value = React.useMemo(() => ({ assign, setAssign }), [assign, setAssign]);
 
@@ -34,7 +34,7 @@ export default function CreateNew() {
     let query = new URLSearchParams(location.search)
     let classID = query.get("inClass")
     const handleError = () => {
-        setState({ alert: true, title: 'Error. Try again!' })
+        setState({ loading: false, alert: true, title: 'Error. Try again!' })
         history.goBack()
     }
     React.useEffect(() => {
@@ -47,11 +47,15 @@ export default function CreateNew() {
                     if (items.status.Code === 200)
                         setClasses(items.data);
                     else {
-                        handleError()
+                        setState({ loading: false, alert: true, title: items.message })
+                        history.goBack()
                     }
                 }
             })
-            .catch((err) => { console.error(err) });
+            .catch((err) => { 
+                console.error(err)
+                handleError()
+             });
         let libraryService = LibraryService.getInstance()
         libraryService.getList()
             .then(items => {
@@ -59,12 +63,15 @@ export default function CreateNew() {
                     if (items.status.Code === 200)
                         setLibrary(items.data);
                     else {
-                        handleError()
-
+                        setState({ loading: false, alert: true, title: items.message })
+                        history.goBack()
                     }
                 }
             })
-            .catch((err) => { console.error(err) });
+            .catch((err) => { 
+                console.error(err) 
+                handleError()
+            });
         return () => { mounted = false };// eslint-disable-next-line
     }, [])
     return (
@@ -106,11 +113,7 @@ export default function CreateNew() {
                     </Grid>
                 </Grid>
             </Grid>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
         </Container>
     )
 }

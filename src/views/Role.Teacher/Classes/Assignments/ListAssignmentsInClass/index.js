@@ -4,45 +4,8 @@ import LoadingTable from '../../../../../components/Skeleton/LoadingTable';
 import CustomTable from '../../../../../components/Table/CustomTable';
 import { matchPath, useHistory } from "react-router-dom";
 import AssignmentService from '../../../../../services/assignment.service';
+import { ListAssignmentsForTeacher } from '../../../../../data/HeadCells';
 
-const headCells = [
-    {
-        id: 'name',
-        label: 'Name',
-        disablePadding: false,
-    },
-    {
-        id: 'totalQuiz',
-        label: 'Total Quiz',
-        disablePadding: true,
-    },
-    {
-        id: 'duration',
-        label: 'Duration',
-        disablePadding: true,
-    },
-    {
-        id: 'timeBegin',
-        label: 'Time Begin',
-        disablePadding: false,
-    },
-    {
-        id: 'timeEnd',
-        label: 'Time End',
-        disablePadding: false,
-    },
-    {
-        id: 'status',
-        label: 'Status',
-        disablePadding: false,
-    },
-    {
-        id: 'action',
-        label: 'Action',
-        disablePadding: false,
-    },
-
-];
 export default function ListAssignmentsInClass() {
     let history = useHistory();
     const [data, setData] = React.useState(null)
@@ -71,7 +34,7 @@ export default function ListAssignmentsInClass() {
             <Container maxWidth="full" sx={{ mt: 2, mb: 2 }}>
                 <CustomTable
                     rows={data}
-                    headCells={headCells}
+                    headCells={ListAssignmentsForTeacher}
                     view={'Assignment'}
                     role={'Teacher'}
                     refresh={() => setRefresh(!refresh)} />

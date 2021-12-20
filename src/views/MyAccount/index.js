@@ -1,10 +1,10 @@
 import {
-    Backdrop, Box, Button, CircularProgress, Container, Paper, styled, TextField,
+    Box, Button, Container, Paper, styled, TextField,
     Typography
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import AlertBar from './../../components/Alert/AlertBar';
+import LoadingAlert from './../../components/Loading/LoadingAlert';
 import ProfileService from './../../services/profile.service';
 
 const CustomPaper = styled(Paper)(({ theme }) => ({
@@ -39,6 +39,7 @@ export default function MyAccount() {
     });
     const handleSave = (e) => {
         e.preventDefault();
+
         let _old = old.current.value;
         let _newPass = newPass.current.value;
         let _confirm = confirm.current.value;
@@ -52,21 +53,27 @@ export default function MyAccount() {
             setState(s => { return { ...s, alert: true, title: 'Confirm password is not matched!' } });
         }
         else {
-
+            setState(s => { return { ...s, loading: true } });
             let profileService = ProfileService.getInstance();
             profileService.updatePassword({ OldPassword: _old, NewPassword: _newPass })
                 .then(items => {
                     if (items.status.Code === 200) {
-                        setState(s => { return { alert: true, title: 'Changed password', loading: false } });
+                        setState({ alert: true, title: 'Changed password', loading: false });
                         setTimeout(() => {
                             handleLogout()
                         }, 1000);
                     }
                     else {
-                        setState(s => { return { alert: true, title: items.message, loading: false } });
+                        setState({alert: true, title: items.message, loading: false});
                     }
                 })
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                })
         }
+        setState(s => { return { ...s, loading: false } });
+
     }
     function handleLogout() {
         localStorage.clear("token");
@@ -83,23 +90,10 @@ export default function MyAccount() {
         newPass.current = null;
         confirm.current = null
     }
-    const handleClose = () => {
-        setState(s => { return { ...s, loading: false } });
-    };
+
     return (
         <WrapperContainer maxWidth="sm">
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={state.loading}
-                onClick={handleClose}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             <CustomPaper >
                 <ContainerBox >
                     <Typography variant="h5" sx={{ mb: 5, }}>
@@ -117,7 +111,7 @@ export default function MyAccount() {
                         inputRef={old}
 
                     />
-                    <Typography variant="h6" sx={{ mb: 5,mt:3 }} align="center" color="primary">
+                    <Typography variant="h6" sx={{ mb: 5, mt: 3 }} align="center" color="primary">
                         Your new password must be different from the previous used password.
                     </Typography>
                     <TextField

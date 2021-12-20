@@ -6,16 +6,12 @@ import {
     CardActions, IconButton,
     Menu, MenuItem
 } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import React from 'react';
 import { useHistory } from "react-router-dom";
-import AlertBar from '../Alert/AlertBar';
 import ClassService from './../../services/class.service';
 import LibraryService from './../../services/library.service';
+import MessageDialog from './../Dialog/MessageDialog';
+import LoadingAlert from './../Loading/LoadingAlert';
 import CardAreaClass from './CardAreaClass';
 import CardAreaLibrary from './CardAreaLibrary';
 export default function FolderItem({ data, edit, view, refresh }) {
@@ -24,6 +20,7 @@ export default function FolderItem({ data, edit, view, refresh }) {
     const open = Boolean(anchorEl)
     const [openDialog, setOpenDialog] = React.useState(false)
     const [state, setState] = React.useState({
+        loading: false,
         alert: false,
         title: ''
     })
@@ -55,21 +52,25 @@ export default function FolderItem({ data, edit, view, refresh }) {
         setOpenDialog(true)
     }
     const handleAcceptDel = () => {
+        setState(s => { return { ...s, loading: true } })
         if (view === 'Library') {
             let id = data.LibraryFolderID
             let libraryService = LibraryService.getInstance();
             libraryService.delete(id)
                 .then(items => {
                     if (items.status.Code === 200) {
-                        setState({ alert: true, title: `Deleted folder ${id}!` })
+                        setState({ loading: false, alert: true, title: `Deleted folder ${id}!` })
                         history.push('/library')
                         refresh()
                     }
                     else {
-                        setState({ alert: true, title: 'Error. Try again!' })
+                        setState({ loading: false, alert: true, title: items.message })
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: 'Error. Try again!' })
+                })
         }
         if (view === 'Classes') {
             let id = data.ClassID
@@ -77,17 +78,23 @@ export default function FolderItem({ data, edit, view, refresh }) {
             classService.deleteClass(id)
                 .then(items => {
                     if (items.status.Code === 200) {
-                        setState({ alert: true, title: `Deleted class ${id}!` })
+                        setState({ loading: false, alert: true, title: `Deleted class ${id}!` })
                         history.push('/classes')
                         refresh()
                     }
                     else {
-                        setState({ alert: true, title: 'Error. Try again!' })
+                        setState({ loading: false, alert: true, title: items.message })
                     }
                 })
-                .catch(err => console.error(err))
+                .catch(err => {
+                    console.error(err)
+                    setState({ loading: false, alert: true, title: 'Error. Try again!' })
+
+                })
         }
         handleClose()
+        setState(s => { return { ...s, loading: false } })
+
     }
     const heightCard = view === 'Library' ? '55vh' : '40vh';
     return (
@@ -100,16 +107,12 @@ export default function FolderItem({ data, edit, view, refresh }) {
             alignItems: 'flex-start',
             boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px',
             borderRadius: '10px',
-            background:'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);'
+            background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);'
         }}
             key={view === 'Library' ? data.LibraryFolderID : data.ClassID}>
-            <AlertBar
-                title={state.title}
-                openAlert={state.alert}
-                closeAlert={() => setState(s => { return { ...s, alert: false } })}
-            />
+            <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
             <CardActionArea sx={{
-                height: '50vh', 
+                height: '50vh',
                 background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
             }} onClick={handleDetail}>
                 {view === 'Library' ? <CardAreaLibrary data={data} /> : <CardAreaClass data={data} />}
@@ -131,7 +134,7 @@ export default function FolderItem({ data, edit, view, refresh }) {
                     background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);',
                     width: '100%'
                 }}>
-                    <Button size="small" color="primary" onClick={handleDetail}>
+                    <Button size="small" color="error" onClick={handleDetail}>
                         Detail
                     </Button>
                     <IconButton
@@ -145,8 +148,6 @@ export default function FolderItem({ data, edit, view, refresh }) {
                         <MoreVertIcon />
                     </IconButton>
                 </Box>
-
-
                 <Menu
                     id="menu"
                     anchorEl={anchorEl}
@@ -164,27 +165,12 @@ export default function FolderItem({ data, edit, view, refresh }) {
                     </MenuItem>
                 </Menu>
             </CardActions>
-            <Dialog
+            <MessageDialog
                 open={openDialog}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"DolphinExam: "}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure to delete this folder?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAcceptDel} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                close={handleClose}
+                accepted={handleAcceptDel}
+                content={"Are you sure to delete this folder?"}
+            />
         </Card >
     )
 }

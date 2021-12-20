@@ -12,7 +12,7 @@ function joinURL(baseURL, url) {
 }
 export default class LibraryService {
     constructor() {
-        this.domain = "https://onlxam-q.herokuapp.com/api"
+        this.domain = "https://onlxam.herokuapp.com/api"
     }
     static myInstance = null;
     static getInstance() {

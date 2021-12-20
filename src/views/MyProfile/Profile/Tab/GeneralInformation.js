@@ -2,6 +2,7 @@ import {
     Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Typography
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
+import { isEmptyObject, isValidDate, isValidPhone } from '../../../../utils';
 import LoadingAlert from './../../../../components/Loading/LoadingAlert';
 import ProfileService from './../../../../services/profile.service';
 
@@ -57,14 +58,6 @@ export default function GeneralInformation({ data }) {
 
         setInput(s => { return { ...s, [name]: value } })
     }
-    function isValidDate(dt) {
-        var reValidDate = /^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/;
-        return reValidDate.test(dt);
-    }
-    function isValidPhoneNumber(dt) {
-        var reValidPhone = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/;
-        return reValidPhone.test(dt);
-    }
 
     const handleUpdate = () => {
         setState(s => { return { ...s, loading: true } })
@@ -72,11 +65,11 @@ export default function GeneralInformation({ data }) {
             setState({ loading: false, alert: true, title: `Invalid Birthday` })
             return;
         }
-        else if (!isValidPhoneNumber(input.Phone)) {
+        else if (!isValidPhone(input.Phone)) {
             setState({ loading: false, alert: true, title: `Invalid Phone Number` })
             return;
         }
-        else if (Object.values(input).filter(value => value === "").length > 0) {
+        else if (isEmptyObject(input)) {
             setState({ loading: false, alert: true, title: `Input fields are required` })
             return;
         }
@@ -211,20 +204,17 @@ export default function GeneralInformation({ data }) {
                             <RadioGroup
                                 row
                                 name="Gender"
-                                // defaultValue={input.Gender}
                                 value={input.Gender} onChange={handleChange}
                             >
                                 <FormControlLabel value={"false"} control={<Radio />} label="Female" />
                                 <FormControlLabel value={"true"} control={<Radio />} label="Male" />
-
                             </RadioGroup>
                         </FormControl>
-
                     </Box>
                 </Box >
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Button
-                        color="error"
+                        color="primary"
                         variant="contained"
                         onClick={handleUpdate}
                     >
