@@ -93,8 +93,6 @@ export default function FolderItem({ data, edit, view, refresh }) {
                 })
         }
         handleClose()
-        setState(s => { return { ...s, loading: false } })
-
     }
     const heightCard = view === 'Library' ? '55vh' : '40vh';
     return (

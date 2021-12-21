@@ -4,9 +4,9 @@ import { Grid, Paper, Skeleton, Box } from '@mui/material';
 export default function LoadingDoAssignment() {
     return (
         <div>
-            <Grid container spacing={2}>
+            <Grid container spacing={5}>
                 <Grid item xs={12} md={3} lg={3}>
-                    <Paper sx={{ p: 5, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',height:'50vh' }}>
+                    <Paper sx={{ p: 3, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;', height: '50vh',borderRadius: '10px'}}>
                         <Skeleton animation="wave" height={20} width="100%" />
                         <Skeleton animation="wave" height={20} width="80%" />
                         <Skeleton animation="wave" height={20} width="80%" />
@@ -16,18 +16,17 @@ export default function LoadingDoAssignment() {
                 </Grid>
                 <Grid container item xs={9} md={7} lg={7} spacing={2}>
                     <Grid item xs={12}>
-                        <Paper sx={{p: 3, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
+                        <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',p:3,borderRadius: '10px' }}>
                             <Skeleton animation="wave" height={20} width="100%" />
                         </Paper>
 
                     </Grid>
                     <Grid item xs={12}>
-                        <Paper sx={{ p: 5,boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',height:'50vh'}}>
+                        <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;', height: '50vh',p:3,borderRadius: '10px' }}>
                             <Skeleton animation="wave" height={20} width="100%" />
                             <Skeleton animation="wave" height={20} width="80%" />
                             <Skeleton animation="wave" height={20} width="80%" />
                             <Skeleton animation="wave" height={20} width="80%" />
-
                         </Paper>
                     </Grid>
 
@@ -40,7 +39,6 @@ export default function LoadingDoAssignment() {
                         alignItems: 'center',
                     }}>
                         <Skeleton variant="circular" width={'7vw'} height={'7vw'} />
-
                     </Box>
                 </Grid>
             </Grid>

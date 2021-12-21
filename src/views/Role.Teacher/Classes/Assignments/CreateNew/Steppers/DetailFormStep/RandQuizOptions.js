@@ -191,7 +191,6 @@ export default function RandQuizOptions() {
                 .catch((err) => {
                     handleError()
                 });
-            setState(s => { return { ...s, loading: false } })
         }
         return () => { mounted = false };// eslint-disable-next-line
     }, [type, randomQuestions])
