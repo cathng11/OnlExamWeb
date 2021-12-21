@@ -1,49 +1,12 @@
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import React from 'react';
+import { ListResultsForStudent } from '../../../data/HeadCells';
 import LoadingResultStudent from './../../../components/Skeleton/LoadingResultStudent';
 import CustomTable from './../../../components/Table/CustomTable';
 import ResultService from './../../../services/result.service';
 import Summary from './Summary';
-const headCells = [
-    {
-        id: 'class-name',
-        label: 'ClassName',
-        disablePadding: false,
-    },
 
-    {
-        id: 'teacher',
-        label: 'Teacher',
-        disablePadding: false,
-    },
-    {
-        id: 'exam-name',
-        label: 'Exam Name',
-        disablePadding: false,
-    },
-    {
-        id: 'finished-time',
-        label: 'Finished Time',
-        disablePadding: true,
-    },
-    {
-        id: 'status',
-        label: 'Status',
-        disablePadding: false,
-    },
-    {
-        id: 'grade',
-        label: 'Grade',
-        disablePadding: false,
-    },
-    {
-        id: 'action',
-        label: 'Action',
-        disablePadding: false,
-    },
-
-];
 export default function Result() {
     const [data, setData] = React.useState(null)
     React.useEffect(() => {
@@ -92,7 +55,7 @@ export default function Result() {
                     </Grid>
                     <Grid item xs={12} >
                         
-                            <CustomTable rows={data} headCells={headCells} view={'Result'} role={'Student'} />
+                            <CustomTable rows={data} headCells={ListResultsForStudent} view={'Result'} role={'Student'} />
                     </Grid>
                 </Grid>
             </Container>

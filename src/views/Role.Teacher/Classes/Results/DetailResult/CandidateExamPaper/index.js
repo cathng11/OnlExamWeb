@@ -129,7 +129,6 @@ export default function CandidateExamPaper({ data }) {
                 setState({ loading: false, alert: true, title: 'Error. Try again!' })
 
             });
-        setState(s => { return { ...s, loading: false } })
     }
     const handleBack = () => {
         history.goBack()

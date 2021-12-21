@@ -1,5 +1,6 @@
 import { Box, Grid, styled, Typography } from '@mui/material'
 import React from 'react'
+import ResultService from './../../../../services/result.service';
 const TopBox = styled(Box)(({ theme }) => ({
     height: '10vh',
     display: 'flex',
@@ -21,6 +22,8 @@ const BottomBox = styled(Box)(({ theme }) => ({
 export default function Summary({ data }) {
     const [input, setInput] = React.useState(null)
     React.useEffect(() => {
+        let mounted = true;
+
         if (data) {
             let score = 0
             let time = 0
@@ -37,7 +40,19 @@ export default function Summary({ data }) {
                 testsTaken: data.length,
                 time: time / count,
             })
+            let resultService = ResultService.getInstance()
+            resultService.getRankStudent()
+                .then(items => {
+                    if (mounted) {
+                        if (items.status.Code === 200) {
+                            setInput(s => { return { ...s, rank: items.data.Rank } })
+                        }
+                    }
+                })
+                .catch((err) => { console.error(err) });
         }
+        return () => { mounted = false };
+
     }, [data])
     return (
         <Grid container item xs={12} md={12} lg={12} direction="row" spacing={5}>
@@ -78,7 +93,7 @@ export default function Summary({ data }) {
                         Rank:
                     </Typography>
                     <Typography variant="h6" color="error" sx={{ fontWeight: 'bold' }} align='center'>
-                        3
+                        {input ? input.rank : ''}
                     </Typography>
                 </BottomBox >
 

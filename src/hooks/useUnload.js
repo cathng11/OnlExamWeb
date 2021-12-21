@@ -1,34 +1,15 @@
-import React,{ useRef, useEffect } from 'react';
-import DoAssignmentContext from './../context/DoAssignmentContext';
-import QuestionContext from './../context/QuestionContext';
-import AssignmentService from './../services/assignment.service';
+import { useEffect, useRef } from 'react';
 
 const useUnload = fn => {
     const cb = useRef(fn);
-    const { assignment } = React.useContext(DoAssignmentContext)// eslint-disable-next-line
-    const { question, setQuestion } = React.useContext(QuestionContext)
+
     useEffect(() => {
         cb.current = fn;
-
     }, [fn]);
-    const options=()=>{
-        let _assignment = assignment
-        delete _assignment.Questions
-        let finalData = { ..._assignment, Questions: question }
-        let assignmentService = AssignmentService.getInstance()
-        assignmentService.submitAssignment(finalData)
-            .then(items => {
-            })
-            .catch((err) => {
-                console.error(err)
-            });
-    };
     useEffect(() => {
         const onUnload = (...args) => { cb.current?.(...args) };
-
         window.addEventListener("beforeunload", onUnload);
-       
-        return () => window.removeEventListener("beforeunload", onUnload , options);//eslint-disable-next-line
+        return () => window.removeEventListener("beforeunload", onUnload );//eslint-disable-next-line
     }, []);
 };
 

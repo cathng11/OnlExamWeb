@@ -67,4 +67,14 @@ export default class AssignmentService {
         let method = "POST";
         return await this.request(url, method, data).then(res => res.json())
     }
+    async getLatestAssignment(data) {
+        let url = 'exams/e/dashboard';
+        let method = "POST";
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async getStatics(data) {
+        let url = 'exams/t/dashboard';
+        let method = "POST";
+        return await this.request(url, method, data).then(res => res.json())
+    }
 }

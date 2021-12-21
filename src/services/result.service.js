@@ -45,16 +45,22 @@ export default class ResultService {
     async getListResult(data) {
         let url = `results/teacher`;
         let method = "POST";
-        return await this.request(url, method,data).then(res => res.json())
+        return await this.request(url, method, data).then(res => res.json())
     }
     async getResultOfStudent(id, data) {
         let url = `results/teacher/${id}`;
         let method = "POST";
-        return await this.request(url, method,data).then(res => res.json())
+        return await this.request(url, method, data).then(res => res.json())
     }
     async confirmResult(data) {
         let url = `results/teacher/mark/confirm `;
         let method = "POST";
-        return await this.request(url, method,data).then(res => res.json())
+        return await this.request(url, method, data).then(res => res.json())
+    }
+    async getRankStudent() {
+        let role = localStorage.getItem('roles')
+        let url = role === 'STUDENT' ? `results/student/gpa/all` : `results/teacher/gpa/all`;
+        let method = "GET";
+        return await this.request(url, method).then(res => res.json())
     }
 }

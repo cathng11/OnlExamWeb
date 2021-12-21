@@ -31,3 +31,25 @@ export function isValidDate(date) {
 export function isEmptyObject(object) {
     return Object.values(object).filter(value => value === "").length > 0
 }
+
+export function handleDataAssignment(assignment, question) {
+    try {
+        let _assignment = assignment
+        let doneQuestion = question
+        let doneQuestionIDSet = new Set(doneQuestion.map(item => { return item.QuestionID }))
+        let undoneQuestion = _assignment.Questions.filter(i => {
+            return !doneQuestionIDSet.has(i.QuestionID)
+        })
+        let allQuestions = doneQuestion.concat(undoneQuestion)
+        delete _assignment.Questions
+        let timeEnd = new Date()
+        let doingTime = (timeEnd.getTime() - _assignment.TimeBegin.getTime()) / 60000
+        delete _assignment.TimeBegin
+        let finalData = { ..._assignment, Questions: allQuestions, DoingTime: doingTime }
+        return finalData
+    } catch{
+        console.log("Error")
+        return "Error"
+    }
+
+}

@@ -90,7 +90,6 @@ export default function PreviewAssignment({ dataCreate, close }) {
                         console.error(err)
                         setState({ loading: false, alert: true, title: 'Error. Try again!' })
                     })
-                setState(s => { return { ...s, loading: false } })
             }
             else if (role === 'STUDENT') {
                 setState(s => { return { ...s, loading: true } })
@@ -113,7 +112,6 @@ export default function PreviewAssignment({ dataCreate, close }) {
                         console.error(err)
                         setState({ loading: false, alert: true, title: 'Error. Try again!' })
                     })
-                setState(s => { return { ...s, loading: false } })
             }
         }
         return () => { mounted = false };//eslint-disable-next-line

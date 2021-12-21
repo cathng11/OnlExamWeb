@@ -7,6 +7,7 @@ import './index.css';
 import Routes from './routes';
 import DoAssignmentContext from './context/DoAssignmentContext';
 import QuestionContext from './context/QuestionContext';
+import AssignmentService from './services/assignment.service';
 
 const theme = createTheme({
   palette: {
@@ -46,14 +47,33 @@ function App() {
 
   const valueAssignment = React.useMemo(() => ({ assignment, setAssignment }), [assignment, setAssignment]);
   const valueQuestion = React.useMemo(() => ({ question, setQuestion }), [question, setQuestion]);
+  React.useState(() => {
+    let mounted = true;
+    if (localStorage.getItem('assignment')) {
+      let assignmentService = AssignmentService.getInstance()
+      assignmentService.submitAssignment(JSON.parse(localStorage.getItem('assignment')))
+        .then(items => {
+          if (mounted) {
+            if (items.status.Code === 200) {
+              localStorage.removeItem('assignment')
+            }
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+        });
+    }
+    return () => { mounted = false }
+  }, [])
+
   return (
-      <DoAssignmentContext.Provider value={valueAssignment} >
-        <QuestionContext.Provider value={valueQuestion}>
-          <Router>
-            <Routes />
-          </Router>
-        </QuestionContext.Provider>
-      </DoAssignmentContext.Provider>
+    <DoAssignmentContext.Provider value={valueAssignment} >
+      <QuestionContext.Provider value={valueQuestion}>
+        <Router>
+          <Routes />
+        </Router>
+      </QuestionContext.Provider>
+    </DoAssignmentContext.Provider>
   )
 }
 

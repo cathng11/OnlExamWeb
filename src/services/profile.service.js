@@ -51,4 +51,5 @@ export default class ProfileService {
         let method = "POST";
         return await this.request(url, method, data).then(res => res.json())
     }
+
 }

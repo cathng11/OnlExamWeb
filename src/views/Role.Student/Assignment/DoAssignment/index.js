@@ -14,9 +14,12 @@ import CountdownTimer from './Tool/CountdownTimer';
 import ExamBox from './Tool/ExamBox';
 import QuizProgress from './Tool/QuizProgress';
 import StudentDetails from './Tool/StudentDetails';
+import QuestionContext from './../../../../context/QuestionContext';
+import { handleDataAssignment } from '../../../../utils';
 
 export default function DoAssignment() {
-    const { setAssignment } = React.useContext(DoAssignmentContext)
+    const { assignment, setAssignment } = React.useContext(DoAssignmentContext)
+    const { question } = React.useContext(QuestionContext)
 
     let location = useLocation();
     let history = useHistory();
@@ -33,7 +36,12 @@ export default function DoAssignment() {
         title: ''
     })
     const [data, setData] = React.useState(null)
+    const backupData = () => {
+        let result = handleDataAssignment(assignment, question)
+        localStorage.setItem('assignment', JSON.stringify(result))
+    }
     useUnload(e => {
+        backupData()
         e.preventDefault();
         e.returnValue = '';
     });
@@ -71,7 +79,7 @@ export default function DoAssignment() {
                             setProgress(100 / item.Questions.length)
                         }
                         else {
-                            setState(s => { return { ...s, alert: true, title: `Cannot load data. Try again!` } })
+                            setState(s => { return { ...s, alert: true, title: items.message } })
                             history.goBack()
                         }
                     }
@@ -94,28 +102,47 @@ export default function DoAssignment() {
     }
     else
         return (
-            <Container maxWidth="full" sx={{ mt: 6, mb: 2 }}>
+            <Container maxWidth="full" sx={{
+                mt: 6, mb: 2,
+                WebkitUserSelect: 'none',
+                WebkitTouchCallout: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none',
+                userSelect: 'none',
+                color: '#cc0000',
+            }}>
                 <Prompt
                     when={blockReloadPage}
-                    message='You have unsaved changes, are you sure you want to leave?'
+                    message={(location, action) => {
+                        let result = window.confirm(`You have unsaved changes, are you sure you want to submit and leave?`)
+                        if (action === 'PUSH' && result) {
+                            let result = handleDataAssignment(assignment, question)
+                            let assignmentService = AssignmentService.getInstance()
+                            assignmentService.submitAssignment(result)
+                                .then(items => { console.log(items) })
+                                .catch((err) => {
+                                    console.error(err)
+                                });
+                        }
+                    }}
                 />
                 <LoadingAlert state={state} close={() => setState(s => { return { ...s, alert: false } })} />
 
                 <Grid container spacing={5}>
                     <Grid item xs={12} md={3} lg={3}>
-                        <Paper sx={{ p: 3, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
+                        <Paper sx={{ p: 3, boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',borderRadius: '10px' }}>
                             <StudentDetails data={data} />
                         </Paper>
                     </Grid>
                     <Grid container item xs={9} md={7} lg={7} spacing={2}>
                         <Grid item xs={12}>
-                            <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
+                            <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',borderRadius: '10px' }}>
                                 <QuizProgress progress={progress} />
                             </Paper>
 
                         </Grid>
                         <Grid item xs={12}>
-                            <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;' }}>
+                            <Paper sx={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',borderRadius: '10px' }}>
                                 <ExamBox
                                     data={data.Questions}
                                     setCurrentProgress={setCurrentProgress}
@@ -131,12 +158,11 @@ export default function DoAssignment() {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            <CountdownTimer unit={'seconds'} timevalue={60} activeStep={activeStep} />
                             <CountdownTimer unit={'minutes'} timevalue={data.Duration} activeStep={activeStep} />
                         </Box>
                     </Grid>
                 </Grid>
-            </Container>
+            </Container >
 
 
         )

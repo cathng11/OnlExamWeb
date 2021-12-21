@@ -117,7 +117,6 @@ export default function Steppers({ currentClass, classes, library }) {
                     console.error(err)
                     setState(s => { return { ...s, loading: false } })
                 });
-            setState(s => { return { ...s, loading: false } })
         }
 
     }

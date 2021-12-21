@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router';
+import { handleDataAssignment } from '../../../../../utils';
 import Essay from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/Essay';
 import MultipleChoice from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/MultipleChoice';
 import SingleChoice from '../../../../Role.Teacher/Classes/Results/DetailResult/QuizType/SingleChoice';
@@ -43,24 +44,11 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
 
     const handleAccept = () => {
         setState(s => { return { ...s, loading: true } })
+        setOpenDialog(false)
         let user = JSON.parse(localStorage.getItem("user"))
-        let _assignment = assignment
-        let doneQuestion = question
-        let doneQuestionIDSet = new Set(doneQuestion.map(item => { return item.QuestionID }))
-        let undoneQuestion = _assignment.Questions.filter(i => {
-            return !doneQuestionIDSet.has(i.QuestionID)
-        })
-
-        let allQuestions = doneQuestion.concat(undoneQuestion)
-        delete _assignment.Questions
-        let timeEnd = new Date()
-
-        let doingTime = timeEnd.getTime() - _assignment.TimeBegin.getTime()
-        delete _assignment.TimeBegin
-        let finalData = { ..._assignment, Questions: allQuestions, DoingTime: doingTime }
-
+        let result = handleDataAssignment(assignment, question)
         let assignmentService = AssignmentService.getInstance()
-        assignmentService.submitAssignment(finalData)
+        assignmentService.submitAssignment(result)
             .then(items => {
                 if (items.status.Code === 200) {
                     setState({ loading: false, alert: true, title: `Submitted your assignment!` })
@@ -78,8 +66,6 @@ export default function ExamBox({ data, setCurrentProgress, setDisableBlock }) {
                 console.error(err)
                 setState({ loading: false, alert: true, title: `Cannot submit. Try again!` })
             });
-        setState(s => { return { ...s, loading: false } })
-
     }
     const type = {
         'Single Choice': <SingleChoice Solution={data[activeStep].Solution} index={activeStep} />,
