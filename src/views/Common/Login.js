@@ -1,5 +1,5 @@
 import GoogleIcon from '@mui/icons-material/Google';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,7 +27,8 @@ function Login() {
         username: '',
         email: '',
         password: '',
-        conf: ''
+        conf: '',
+        role: 2
     })
     const [reset, setReset] = useState({
         username: '',
@@ -59,8 +60,9 @@ function Login() {
         if (history.location.pathname === '/register' && user.message && user.message.status.Code === 200) {
             setState(s => { return { loading: false, alert: true, title: "Signup Successfully" } })
             user.setMessage(null)
+            openLogin()
             history.replace('/login')
-        }
+        }// eslint-disable-next-line
     }, [mobileRes, TOKEN, user, state, history]);
 
 
@@ -77,11 +79,11 @@ function Login() {
             setState(s => { return { ...s, alert: true, title: 'Input fields are required' } });
         }
 
-    }
+    }   
 
     const handleSignUp = e => {
         e.preventDefault();
-        let { username, email, password, conf } = signupForm
+        let { username, email, password, conf, role } = signupForm
         if (isEmptyObject(signupForm)) {
             setState(s => { return { ...s, alert: true, title: 'Input fields are required!' } });
         }
@@ -92,7 +94,7 @@ function Login() {
             setState(s => { return { ...s, alert: true, title: 'Email is not valid!' } });
         }
         else if (password.length < 8) {
-            setState(s => { return { ...s, alert: true, title: 'Password must be 8 characters long1' } });
+            setState(s => { return { ...s, alert: true, title: 'Password must be 8 characters long!' } });
         }
         else if (password !== conf) {
             setState(s => { return { ...s, alert: true, title: 'Confirm password is not matched!' } });
@@ -103,6 +105,7 @@ function Login() {
                 username: username,
                 password: password,
                 email: email,
+                role: role,
                 isLogin: false
             });
         }
@@ -166,7 +169,7 @@ function Login() {
             .then(items => {
                 if (items.status.Code === 200) {
                     setState({ alert: true, title: 'Check your mail to get new password', loading: false });
-                    
+
                 }
                 else {
                     setState({ alert: true, title: items.message, loading: false });
@@ -240,6 +243,14 @@ function Login() {
                             value={signupForm.conf}
                             onChange={handleChangeSignup}
                             autoComplete="new-password" />
+                        <RadioGroup
+                            row
+                            name="role"
+                            value={signupForm.role} onChange={handleChangeSignup}
+                        >
+                            <FormControlLabel value={3} control={<Radio />} label="I'm Student" />
+                            <FormControlLabel value={2} control={<Radio />} label="I'm Teacher" />
+                        </RadioGroup>
                         <button onClick={handleSignUp}>Sign Up</button>
                         <button className="ghost-m" id="signIn" onClick={openLogin} >Sign In</button>
 
