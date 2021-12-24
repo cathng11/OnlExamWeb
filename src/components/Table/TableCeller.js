@@ -89,7 +89,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
             setOpenPreviewAssignment(true)
         }
         else if (status === 'Inactive') {
-            setState(s => { return { ...s, alert: true, title: 'It is not valid time to take!' } })
+            setState(s => { return { ...s, alert: true, title: 'It is invalid time to take!' } })
         }
     }
     const [openResultDialog, setOpenResultDialog] = React.useState(false)

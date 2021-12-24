@@ -38,7 +38,7 @@ export default function StudentDialog({ isSave, refresh }) {
         let list = members
         let member = email.current.value
         if (member === '') {
-            setState({ loading: false, alert: true, title: `Email is not valid` })
+            setState({ loading: false, alert: true, title: `Email is invalid` })
         }
         else if (member !== '') {
             let classService = ClassService.getInstance()

@@ -176,7 +176,6 @@ export default function RandQuizOptions() {
     React.useEffect(() => {
         let mounted = true;
         if (!randomQuestions.state) {
-            setState(s => { return { ...s, loading: true } })
             let libraryService = LibraryService.getInstance()
             libraryService.getQuestionsByLibID(assign.LibraryFolderID)
                 .then(items => {

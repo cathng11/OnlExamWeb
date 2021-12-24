@@ -17,15 +17,15 @@ export default function Summary({ data, label, index }) {
     const user = JSON.parse(localStorage.getItem('user'))
     React.useEffect(() => {
         if (data) {
-            if (index === 1) {// eslint-disable-next-line
+            if (index === 1) {
+                let arr = []// eslint-disable-next-line
                 data.filter(s => {
-                    let arr = []
                     arr.push({
                         date: s.TimeBegin?.toString().substring(5, 10).replace("-", "/"),
                         name: s.ExamName,
                     })
-                    setContent(arr)
                 })
+                setContent(arr)
             } else if (index === 2) {
                 if (user.RoleID === 3) {
                     setContent(
@@ -38,15 +38,16 @@ export default function Summary({ data, label, index }) {
                             name: 'GPA: ' + data.GPA,
                         }]
                     )
-                } else {// eslint-disable-next-line
-                    data.filter(s => {
-                        let arr = []
-                        arr.push({
+                } else {
+                    let arr = []// eslint-disable-next-line
+                    data.filter((s, i) => {// eslint-disable-next-line
+                        if (s.UserID > 99) return;
+                        else arr.push({
                             date: s.UserID,
                             name: s.Firstname + " " + s.Lastname,
                         })
-                        setContent(arr)
                     })
+                    setContent(arr)
                 }
             } else if (index === 3) {
                 if (user.RoleID === 3) {
@@ -116,7 +117,7 @@ export default function Summary({ data, label, index }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    pb:3
+                    pb: 3
                 }}><CircularProgress color="primary" /></Box>
             }
         </Item>

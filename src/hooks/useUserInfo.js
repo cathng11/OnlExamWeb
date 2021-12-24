@@ -7,8 +7,9 @@ export default function useUserInfo() {
         username: '',
         password: '',
         confirm_pass: '',
-        fullName: '',
+        email: '',
         imageURL: '',
+        role: '',
         isLogin: null,
     });
     const [message, setMessage] = useState(null)
@@ -37,15 +38,23 @@ export default function useUserInfo() {
         }
         function signup() {
             let authService = AuthService.getInstance();
-            authService.sendRequest({ username: userInfo.username, password: userInfo.password, email: userInfo.email }, 'signup')
+            authService.sendRequest({
+                username: userInfo.username,
+                password: userInfo.password,
+                email: userInfo.email,
+                RoleID: userInfo.role
+            }, 'signup')
                 .then(items => {
                     if (mounted) {
+                        console.log(items)
                         if (items.status.Code === 200) {
+                            setMessage(items)
                             setUserInfo({
                                 username: '',
                                 password: '',
                                 confirm_pass: '',
-                                fullName: '',
+                                email: '',
+                                role: '',
                                 imageURL: '',
                                 isLogin: null,
                             })
