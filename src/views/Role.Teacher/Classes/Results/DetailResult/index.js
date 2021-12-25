@@ -35,7 +35,7 @@ export default function DetailResult() {
                                 ExamID: examID,
                                 Mark: items.data.Mark,
                                 Feedback: items.data.Feedback,
-                                Accept: data.Accept,
+                                Accept: items.data.Accept,
                                 QMark: null
                             })
                         }

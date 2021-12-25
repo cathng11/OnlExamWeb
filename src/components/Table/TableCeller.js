@@ -82,7 +82,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         let query = new URLSearchParams(location.search)
         let classID = query.get("inClass")
         if (status === 'Active') {
-            history.push(`/student1/take-assignment?inClass=${classID}&examID=${row.ExamID}`);
+            history.push(`/${JSON.parse(localStorage.getItem('user')).Username}/take-assignment?inClass=${classID}&examID=${row.ExamID}`);
 
         } else if (status === 'Completed') {
             history.push(`${history.location.pathname}?previewExamID=${row.ExamID}`);
@@ -99,13 +99,13 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
         setOpenResultDialog(true)
     }
     function handleStatus(TimeBegin, TimeEnd) {
-        let timeBegin = new Date(TimeBegin)
-        let timeEnd = new Date(TimeEnd)
-        let today = new Date()
+        let timeBegin = new Date(TimeBegin).getTime()
+        let timeEnd = new Date(TimeEnd).getTime()
+        let today = new Date().getTime() + 7 * 3600000
         let status = '';
         if (timeEnd < today) status = 'Completed'
-        else if (timeEnd > today) status = 'Active'
-        else if (today < timeBegin) status = 'Inactive'
+        if (timeEnd > today) status = 'Active'
+        if (today < timeBegin) status = 'Inactive'
         return status
     }
     if (role === 'Teacher') {
@@ -148,7 +148,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                 <>
                     <TableCell align="left" component={'div'}>{row.UserID}</TableCell>
                     <TableCell align="left" component={'div'}>{row.Firstname + " " + row.Lastname}</TableCell>
-                    <TableCell align="center" component={'div'}>{row.DoingTime ? row.DoingTime : 'Not Submit'}</TableCell>
+                    <TableCell align="center" component={'div'}>{row.DoingTime ? row.DoingTime?.toFixed(2) : 'Not Submit'}</TableCell>
                     {row.Accept ? <TableCell align="left" component={'div'}>{row.Mark}</TableCell> : <TableCell align="left" component={'div'}><Chip label="Pending" sx={{ background: '#EBE645' }} /></TableCell>}
                     <TableCell align="left" component={'div'}>
                         <Chip label={row.Accept ? "Accepted" : "Not Accept"} color={statusColor[row.Accept]} /></TableCell>
@@ -240,7 +240,7 @@ export default function TableCeller({ view, role, row, setSelectedRow, labelId, 
                     <TableCell align="left" component={'div'}>{row.ClassName}</TableCell>
                     <TableCell align="left" component={'div'}>{row.TeacherFullname}</TableCell>
                     <TableCell align="left" component={'div'}>{row.ExamName}</TableCell>
-                    <TableCell align="left" component={'div'}>{row.DoingTime}</TableCell>
+                    <TableCell align="left" component={'div'}>{row.DoingTime?.toFixed(2)}</TableCell>
                     <TableCell align="left" component={'div'}>
                         <Chip label={row.Accept ? "Accepted" : "Not Accept"} color={statusColor[row.Accept]} />
                     </TableCell>

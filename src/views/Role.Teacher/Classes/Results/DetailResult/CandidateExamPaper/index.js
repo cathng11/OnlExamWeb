@@ -118,7 +118,9 @@ export default function CandidateExamPaper({ data }) {
             .then(items => {
                 if (items.status.Code === 200) {
                     setState({ loading: false, alert: true, title: `Updated result!` })
-                    history.goBack()
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 2000);
                 }
                 else {
                     setState({ loading: false, alert: true, title: items.message })

@@ -80,14 +80,18 @@ export default function DoAssignment() {
                         }
                         else {
                             setState(s => { return { ...s, alert: true, title: items.message } })
-                            history.goBack()
+                            setTimeout(() => {
+                                history.goBack()
+                            }, 2000);
                         }
                     }
                 })
                 .catch((err) => {
                     console.error(err)
                     setState(s => { return { ...s, alert: true, title: `Error. Try again!` } })
-                    history.goBack()
+                    setTimeout(() => {
+                        history.goBack()
+                    }, 2000);
                 });
         }
         return () => { mounted = false };// eslint-disable-next-line
