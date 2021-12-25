@@ -72,7 +72,6 @@ export default function PreviewAssignment({ dataCreate, close }) {
             setData(dataCreate)
         }
         if (examID) {
-            setState(s => { return { ...s, loading: true } })
             if (role === 'TEACHER') {
                 let assignmentService = AssignmentService.getInstance()
                 assignmentService.getDetailAssignment(examID)
@@ -92,7 +91,6 @@ export default function PreviewAssignment({ dataCreate, close }) {
                     })
             }
             else if (role === 'STUDENT') {
-                setState(s => { return { ...s, loading: true } })
                 let resultService = ResultService.getInstance()
                 resultService.reviewDoneAssignmentForStudent(examID)
                     .then(items => {

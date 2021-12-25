@@ -22,7 +22,7 @@ export default function Summary({ data, label, index }) {
                 data.filter(s => {
                     arr.push({
                         date: s.TimeBegin?.toString().substring(5, 10).replace("-", "/"),
-                        name: s.ExamName,
+                        name: s.ExamName+' - CL'+s.ClassID,
                     })
                 })
                 setContent(arr)
