@@ -140,13 +140,18 @@ const ListQuestions = [
 const ListResultsForStudent = [
     {
         id: 'id',
-        label: 'ID',
+        label: 'ClassName',
         disablePadding: false,
     },
 
     {
         id: 'name',
-        label: 'Name',
+        label: 'Teacher',
+        disablePadding: false,
+    },
+    {
+        id: 'name1',
+        label: 'Exam Name',
         disablePadding: false,
     },
     {
@@ -158,11 +163,6 @@ const ListResultsForStudent = [
         id: 'status',
         label: 'Status',
         disablePadding: false,
-    },
-    {
-        id: 'correct',
-        label: 'Correct',
-        disablePadding: true,
     },
     {
         id: 'grade',
