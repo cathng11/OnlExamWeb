@@ -72,8 +72,6 @@ export default function MyAccount() {
                     setState({ loading: false, alert: true, title: 'Error. Try again!' })
                 })
         }
-        setState(s => { return { ...s, loading: false } });
-
     }
     function handleLogout() {
         localStorage.clear("token");
