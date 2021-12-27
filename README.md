@@ -1,4 +1,4 @@
-A website application using ReactJS with the help of Material-UI and React-Router-Dom that supports users to create, plan and organize an examination, especially conduct assessments of students in universities, reduce the risk of exam cheating. 
+A website application using ReactJS (Hook- Function components) with the help of Material-UI and React-Router-Dom that supports users to create, plan and organize an examination, especially conduct assessments of students in universities, reduce the risk of exam cheating. 
 
 There are some GUI for student and teacher role
 -Dashboard 
